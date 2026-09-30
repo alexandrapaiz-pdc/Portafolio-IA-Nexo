@@ -1,0 +1,90 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995607441607",
+ "tasks": [
+  {
+   "gid": "1218995357043402",
+   "name": "Recommended: build SOP library from recorded sessions (Scribe / Zoom recordings)",
+   "done": false,
+   "due": "2026-10-19",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995613909636",
+   "name": "Recommended: design phase 2 automation — estimation (UPR × projected orders) and pricing-flow checks",
+   "done": false,
+   "due": "2026-10-19",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995356891617",
+   "name": "Open idea-to-launch ticket with Vikingo Tech for kickoff → KPI automation (incl. direct pull from Vikingo Planeación)",
+   "done": false,
+   "due": "2026-10-12",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995607999519",
+   "name": "Review Meli's Avon Portal",
+   "done": false,
+   "due": "2026-10-08",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995988493896",
+   "name": "Design separate handling for Children category in Avon data",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994985682054",
+   "name": "Draft To-Be re-engineering design (Vikingo Planeación as source, centralized cost/split/commission files)",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995342579591",
+   "name": "Scope automation of Avon data extraction: Excel base → KPI tables (7-week sprint)",
+   "done": false,
+   "due": "2026-10-08",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995988213565",
+   "name": "Get historical campaign base + how the sales DB was built (Carlos Escamilla, Diego Ortega's team)",
+   "done": false,
+   "due": "2026-10-06",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994985513617",
+   "name": "Name and map the 15-step Avon planning process (incl. the 3 process branches)",
+   "done": false,
+   "due": "2026-10-07",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994985474815",
+   "name": "Confirm Vikingo Planeación as To-Be data source (with Allan Trujillo & Cristian)",
+   "done": false,
+   "due": "2026-10-05",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995344286173",
+   "name": "Request the C7 kickoff presentation + access to category working folders (Lisa)",
+   "done": false,
+   "due": "2026-09-30",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995342312198",
+   "name": "Consolidate critical feedback on the new tool before it goes official",
+   "done": false,
+   "due": "2026-09-30",
+   "completedAt": null
+  }
+ ]
+}

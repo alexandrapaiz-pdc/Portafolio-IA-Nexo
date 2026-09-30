@@ -1,0 +1,41 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218994990199396",
+ "tasks": [
+  {
+   "gid": "1218995993912966",
+   "name": "Define portal access for staff without corporate email (personal-email login + permissions)",
+   "done": false,
+   "due": "2026-10-12",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995356420687",
+   "name": "Analyze vacation data: critical cases (>2 periods) by country and money at risk",
+   "done": false,
+   "due": "2026-10-07",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995356344910",
+   "name": "Collect inputs: SharePoint folder, vacation Excel and process videos (Luis Fernando) + Forms video/deck (Edgar)",
+   "done": false,
+   "due": "2026-10-01",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995605458725",
+   "name": "Design alert agent + leader and CAM report formats",
+   "done": false,
+   "due": "2026-10-19",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994983124484",
+   "name": "Write project card (cost-avoidance case, baseline, 3 Q4 hypotheses)",
+   "done": false,
+   "due": "2026-10-08",
+   "completedAt": null
+  }
+ ]
+}

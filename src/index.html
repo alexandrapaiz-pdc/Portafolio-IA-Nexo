@@ -198,6 +198,20 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
 .muted{color:var(--sub);font-size:14px}
 .pad{padding:16px 20px}
 
+/* Tasks */
+.task{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 20px;font-size:14px}
+.task .tdot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--faint)}
+.task.done .tdot{background:var(--strong);box-shadow:none}
+.task.done .tn{color:var(--faint);text-decoration:line-through;text-decoration-color:var(--line-2)}
+.task .tn a{color:inherit;text-decoration:none}.task .tn a:hover{text-decoration:underline}
+.task .tp{display:block;font-size:12px;color:var(--faint);margin-top:1px}
+.task .due{font-size:12px;color:var(--faint);white-space:nowrap}
+.task .due.late{color:var(--accent-ink);font-weight:600}
+.sync{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--faint)}
+.sync .err{color:var(--accent-ink)}
+.more{border:0;background:none;color:var(--sub);font-size:13px;padding:12px 20px;text-align:left;width:100%}
+.more:hover{color:var(--text)}
+
 /* Forms */
 .field{display:grid;gap:5px;font-size:12px;color:var(--sub);min-width:0}
 .field input,.field select,.field textarea{background:var(--raise);border:1px solid var(--line-2);border-radius:10px;padding:9px 11px;font-size:14px;width:100%;min-width:0}
@@ -216,7 +230,7 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
   <div class="wrap">
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
-    <div class="links"><a href="#stack-sec">Stack</a><a href="#proyectos">Proyectos</a><a href="#bitacora">Bitácora</a></div>
+    <div class="links"><a href="#stack-sec">Stack</a><a href="#proyectos">Proyectos</a><a href="#semana">Esta semana</a><a href="#bitacora">Bitácora</a></div>
     <span class="spacer"></span>
     <span class="edit" id="editChip" hidden>Modo edición</span>
     <span class="stamp" id="stamp"></span>
@@ -259,6 +273,16 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
     <div class="groups" id="waves"><div class="empty">Cargando proyectos…</div></div>
   </section>
 
+  <section class="block" id="semana">
+    <div class="sec-head">
+      <span class="eyebrow">Backlog en Asana</span>
+      <h2>Esta semana.</h2>
+      <p>Tareas vencidas y por vencer en los próximos 7 días, tomadas del backlog personal en Asana.</p>
+    </div>
+    <div class="sync" id="syncBar"></div>
+    <div class="group" id="week"><div class="empty">Cargando tareas…</div></div>
+  </section>
+
   <section class="block" id="bitacora">
     <div class="sec-head">
       <span class="eyebrow">Bitácora</span>
@@ -290,7 +314,7 @@ const PHASES=[["habilitacion","Habilitación"],["descubrimiento","Descubrimiento
 const STATUS={pendiente:"Pendiente",en_curso:"En curso",listo:"Listo"};
 const NEXT_STATUS={pendiente:"en_curso",en_curso:"listo",listo:"pendiente"};
 const TAGS=["Avance","Decisión","Bloqueo","Hito"];
-const S={db:null,canWrite:false,projects:[],components:[],updates:[],loaded:{p:false,c:false,u:false},filter:"all",open:null,editing:false};
+const S={db:null,canWrite:false,projects:[],components:[],updates:[],asana:{},asanaMeta:null,syncing:false,syncErr:"",showDone:false,loaded:{p:false,c:false,u:false,a:false},filter:"all",open:null,editing:false};
 try{const f=localStorage.getItem("pia.filter");if(f)S.filter=f}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -310,20 +334,27 @@ function savings(p){const s=p.savings||{};const saved=isNum(s.baseline)&&isNum(s
 function phaseLabel(p){if(p.paused)return"En pausa";return(PHASES.find(x=>x[0]===p.phase)||[0,"—"])[1]}
 function unlocks(cid){return S.projects.filter(p=>!p.enabler&&(p.needs||[]).includes(cid))}
 const pct=(a,b)=>b?Math.round(a/b*100):0;
+const tasksOf=p=>S.asana[p.id]?.tasks||null;
+function addDays(iso,n){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function taskStats(list){const t=today(),wk=addDays(t,7);const open=list.filter(x=>!x.done);return{done:list.length-open.length,total:list.length,late:open.filter(x=>x.due&&x.due<t).length,week:open.filter(x=>x.due&&x.due>=t&&x.due<=wk).length}}
+function progressOf(p){const t=tasksOf(p);if(t&&t.length){const st=taskStats(t);return{label:"Tareas",done:st.done,total:st.total,late:st.late}}const d=discovery(p);return{label:"Descubrimiento",done:d.done,total:d.total,late:0}}
+const asanaUrl=gid=>"https://app.asana.com/0/0/"+encodeURIComponent(gid);
+function ago(iso){if(!iso)return"";const m=Math.round((Date.now()-new Date(iso).getTime())/60000);if(m<1)return"hace un momento";if(m<60)return"hace "+m+" min";const h=Math.round(m/60);if(h<24)return"hace "+h+" h";return fdate(iso.slice(0,10))}
 
 /* ---------- render ---------- */
-function renderAll(){renderStamp();renderStats();renderStack();renderWaves();renderFeed();if(S.open&&!S.editing&&!(document.querySelector("#uText")?.value))renderSheet()}
+function renderAll(){renderStamp();renderStats();renderStack();renderWaves();renderWeek();renderFeed();if(S.open&&!S.editing&&!(document.querySelector("#uText")?.value))renderSheet()}
 function renderStamp(){const d=S.updates[0]?.date;$("#stamp").textContent=d?"Actualizado "+fdate(d):""}
 function renderStats(){
   const comps=S.components,ready=comps.filter(c=>c.status==="listo").length;
   const kpis=S.projects.flatMap(p=>p.kpis||[]);const measured=kpis.filter(k=>isNum(k.baseline)).length;
   const byUnit={};S.projects.forEach(p=>{const s=savings(p);if(isNum(s.baseline))byUnit[s.unit]=(byUnit[s.unit]||0)+s.baseline});
   const units=Object.entries(byUnit);
-  const disc=S.projects.reduce((a,p)=>{const d=discovery(p);return[a[0]+d.done,a[1]+d.total]},[0,0]);
+  const disc=S.projects.reduce((a,p)=>{const d=progressOf(p);return[a[0]+d.done,a[1]+d.total,a[2]+d.late]},[0,0,0]);
+  const hasAsana=S.projects.some(p=>tasksOf(p)?.length);
   const hv=units.length?`${nf(units[0][1])}<small>${esc(units[0][0])}</small>`:`—`;
   $("#stats").innerHTML=[
     ["Stack listo",`${ready}<small>de ${comps.length||0}</small>`,"",`${comps.filter(c=>c.status==="en_curso").length} componentes en curso`],
-    ["Descubrimiento",`${pct(disc[0],disc[1])}<small>%</small>`,"",`${disc[0]} de ${disc[1]} entregables`],
+    [hasAsana?"Tareas cerradas":"Descubrimiento",`${pct(disc[0],disc[1])}<small>%</small>`,"",`${disc[0]} de ${disc[1]}`+(disc[2]?` · ${disc[2]} vencidas`:"")],
     ["Líneas base medidas",`${measured}<small>de ${kpis.length}</small>`,"","KPIs con punto de partida"],
     ["Trabajo manual en alcance",hv,"acc",units.length>1?units.slice(1).map(([u,v])=>nf(v)+" "+u).join(" · "):"Horas medidas a la fecha"]
   ].map(([k,v,c,s])=>`<div class="stat"><span class="k">${k}</span><span class="v num ${c}">${v}</span><span class="s">${esc(s)}</span></div>`).join("");
@@ -342,7 +373,7 @@ function renderStack(){
     ${statusEl(c)}</div>`}).join("");
 }
 function projRow(p){
-  const r=readiness(p),d=discovery(p),s=savings(p);
+  const r=readiness(p),d=progressOf(p),s=savings(p);
   let imp;
   if(p.enabler)imp=`<div class="v">Base</div><div class="k">${esc(p.impactLabel||"Habilita el portafolio")}</div>`;
   else if(s.saved)imp=`<div class="v acc num">${nf(s.saved)} ${esc(s.unit)}</div><div class="k">liberadas</div>`;
@@ -353,7 +384,7 @@ function projRow(p){
     <span class="rank num ${p.enabler?"base":""}">${p.enabler?"Base":esc(p.priority)}</span>
     <div style="min-width:0"><div class="name">${esc(p.name)}</div><div class="meta">${esc([p.sponsor,phaseLabel(p)].filter(Boolean).join(" · "))}</div>${flags?`<div class="flags">${flags}</div>`:""}</div>
     <div class="mini"><div class="l"><span>Stack</span><b class="num">${r.ready}/${r.total}</b></div><div class="bar"><i style="width:${pct(r.ready,r.total)}%"></i></div>
-      <div class="l" style="margin-top:4px"><span>Descubrimiento</span><b class="num">${d.done}/${d.total}</b></div><div class="bar"><i style="width:${pct(d.done,d.total)}%"></i></div></div>
+      <div class="l" style="margin-top:4px"><span>${d.label}</span><b class="num">${d.done}/${d.total}</b></div><div class="bar"><i style="width:${pct(d.done,d.total)}%"></i></div></div>
     <div class="impact">${imp}</div>
     <span class="chev" aria-hidden="true">›</span>
   </button>`;
@@ -368,6 +399,20 @@ function renderWaves(){
            ["2","Ola 2","Arrancan cuando el stack esté arriba.",p=>!p.enabler&&Number(p.wave)===2]];
   el.innerHTML=G.filter(([id])=>S.filter==="all"||id===S.filter||(id==="base"&&S.filter==="1")).map(([id,t,sub,fn])=>{const list=ps.filter(fn);if(!list.length)return"";
     return`<div><div class="group-title"><b>${t}</b><span>${sub}</span></div><div class="group">${list.map(projRow).join("")}</div></div>`}).join("")||`<div class="empty">No hay proyectos en esta ola.</div>`;
+}
+function taskRow(t,proj){const late=!t.done&&t.due&&t.due<today();
+  return`<div class="row task ${t.done?"done":""}"><span class="tdot" aria-hidden="true"></span>
+    <span class="tn" style="min-width:0"><a href="${asanaUrl(t.gid)}" target="_blank" rel="noopener">${esc(t.name)}</a>${proj?`<span class="tp">${esc(proj.name)}</span>`:""}</span>
+    <span class="due num ${late?"late":""}">${t.done?(t.completedAt?"Cerrada "+fdate(t.completedAt):"Cerrada"):t.due?(late?"Vencida · ":"")+fdate(t.due):"Sin fecha"}</span></div>`}
+function renderWeek(){
+  const m=S.asanaMeta;
+  $("#syncBar").innerHTML=(m?.syncedAt?`<span>Sincronizado con Asana ${ago(m.syncedAt)}</span>`:`<span>Aún no se ha sincronizado con Asana.</span>`)+
+    (S.canWrite&&S.mcp?`<button type="button" class="btn ghost" data-sync ${S.syncing?"disabled":""}>${S.syncing?"Sincronizando…":"Sincronizar Asana"}</button>`:"")+
+    (S.syncErr?`<span class="err">${esc(S.syncErr)}</span>`:"");
+  if(!S.loaded.a||!S.loaded.p)return;
+  const t=today(),wk=addDays(t,7);
+  const rows=S.projects.flatMap(p=>(tasksOf(p)||[]).filter(x=>!x.done&&x.due&&x.due<=wk).map(x=>({t:x,p}))).sort((a,b)=>a.t.due.localeCompare(b.t.due));
+  $("#week").innerHTML=rows.length?rows.map(r=>taskRow(r.t,r.p)).join(""):`<div class="empty">${m?"Nada vence en los próximos 7 días.":"Sincroniza con Asana para ver las tareas."}</div>`;
 }
 function updRow(u,showProj){
   const p=S.projects.find(x=>x.id===u.projectId);const k=p&&u.kpiId?(p.kpis||[]).find(x=>x.id===u.kpiId):null;
@@ -408,6 +453,7 @@ function kpiTile(p,k,i){
 function renderSheet(){
   const p=S.projects.find(x=>x.id===S.open);if(!p){closeSheet();return}
   const r=readiness(p),s=savings(p),d=discovery(p),pi=PHASES.findIndex(x=>x[0]===p.phase);
+  const at=tasksOf(p),ats=at?taskStats(at):null;
   const ups=S.updates.filter(u=>u.projectId===p.id),E=S.editing;
   $("#sheetTitle").textContent=p.enabler?"Base":"Prioridad "+p.priority;
   $("#sheetBody").innerHTML=`
@@ -430,10 +476,14 @@ function renderSheet(){
       <div class="gh"><div class="l"><span>Componentes listos</span><b class="num">${r.ready} de ${r.total}</b></div><div class="bar"><i style="width:${pct(r.ready,r.total)}%"></i></div></div>
       ${r.list.map(c=>`<div class="row item" style="grid-template-columns:minmax(0,1fr) auto"><span>${esc(c.name)}</span><span class="status ${esc(c.status)}"><i></i>${STATUS[c.status]||""}</span></div>`).join("")||`<div class="row muted">No depende de componentes.</div>`}
     </div></div>
-    <div><h5>${p.enabler?"Hitos":"Descubrimiento"}</h5><div class="group">
+    ${at&&at.length?`<div><h5>Tareas en Asana</h5><div class="group">
+      <div class="gh"><div class="l"><span>Cerradas${ats.late?` · <span style="color:var(--accent-ink)">${ats.late} vencidas</span>`:""}</span><b class="num">${ats.done} de ${ats.total}</b></div><div class="bar"><i style="width:${pct(ats.done,ats.total)}%"></i></div></div>
+      ${at.filter(x=>!x.done).sort((a,b)=>(a.due||"9").localeCompare(b.due||"9")).map(x=>taskRow(x)).join("")}
+      ${ats.done?(S.showDone?at.filter(x=>x.done).map(x=>taskRow(x)).join("")+`<button type="button" class="more" data-done>Ocultar cerradas</button>`:`<button type="button" class="more" data-done>Mostrar ${ats.done} cerradas</button>`):""}
+    </div></div>`:`<div><h5>${p.enabler?"Hitos":"Descubrimiento"}</h5><div class="group">
       <div class="gh"><div class="l"><span>Cerrados</span><b class="num">${d.done} de ${d.total}</b></div><div class="bar"><i style="width:${pct(d.done,d.total)}%"></i></div></div>
       ${(p.discovery||[]).map((x,i)=>`<label class="row item ${x.done?"done":""}"><input type="checkbox" data-disc="${i}" ${x.done?"checked":""} ${S.canWrite?"":"disabled"}><span class="lbl">${esc(x.label)}</span><span class="due num">${x.due?fdate(x.due):""}</span></label>`).join("")}
-    </div></div>
+    </div></div>`}
   </div>
 
   ${p.enabler?"":`<div><h5>Tiempo manual</h5><div class="group">${E?`<div class="pad" style="display:grid;gap:10px"><div class="fr">
@@ -467,6 +517,29 @@ $("#closeSheet").addEventListener("click",closeSheet);
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
 $("#sheet").addEventListener("close",()=>{S.open=null;S.editing=false});
 
+/* ---------- Asana sync ---------- */
+const ASANA="Asana",OPT="name,subtasks.name,subtasks.completed,subtasks.completed_at,subtasks.due_on";
+const SYNC_MSG={needs_reauth:"Reconecta Asana en claude.ai › Ajustes › Conectores.",server_not_connected:"Agrega el conector de Asana en claude.ai › Ajustes › Conectores.",selection_required:"Elige cuál conector de Asana usar e intenta de nuevo.",not_in_manifest:"Asana no está permitido para esta página. Actívalo en los permisos de la página.",blocked_by_policy:"La política de tu organización bloquea Asana aquí.",approval_required:"Tu organización requiere aprobación para esta herramienta de Asana.",server_unavailable:"Asana no respondió. Intenta en un momento.",tool_error:"Asana devolvió un error: "};
+async function fetchTask(gid){
+  let res;try{res=await S.mcp.callTool(ASANA,"asana_get_task",{task_id:gid,opt_fields:OPT},{cache:false})}
+  catch(e){if(e&&e.retryable){await new Promise(r=>setTimeout(r,(e.retryAfterMs||1500)+Math.random()*800));res=await S.mcp.callTool(ASANA,"asana_get_task",{task_id:gid,opt_fields:OPT},{cache:false})}else throw e}
+  let pl=res.payload;if(typeof pl==="string"){try{pl=JSON.parse(pl)}catch(_){}}
+  const t=pl&&pl.data?pl.data:pl;if(!t||!Array.isArray(t.subtasks))throw{code:"tool_error",message:"respuesta sin subtareas"};return t;
+}
+async function syncAsana(){
+  if(!S.canWrite||!S.mcp||S.syncing)return;S.syncing=true;S.syncErr="";renderWeek();
+  try{
+    const linked=S.projects.filter(p=>p.asana&&p.asana.gid);const gids=[...new Set(linked.map(p=>p.asana.gid))];const byGid={};
+    for(const g of gids)byGid[g]=await fetchTask(g);
+    const now=new Date().toISOString();
+    for(const p of linked){const a=p.asana,inc=a.include?new RegExp(a.include,"i"):null,exc=a.exclude?new RegExp(a.exclude,"i"):null;
+      const tasks=byGid[a.gid].subtasks.filter(x=>(!inc||inc.test(x.name))&&(!exc||!exc.test(x.name))).map(x=>({gid:String(x.gid),name:String(x.name||""),done:!!x.completed,due:x.due_on||null,completedAt:x.completed_at||null}));
+      await S.db.doc("asana/"+p.id).set({syncedAt:now,parentGid:a.gid,tasks})}
+    await S.db.doc("asanaMeta/sync").set({syncedAt:now});toast("Asana sincronizado");
+  }catch(e){const c=e&&e.code;S.syncErr=(SYNC_MSG[c]||"No se pudo sincronizar con Asana. ")+(c==="tool_error"&&e.message?e.message:"")}
+  S.syncing=false;renderWeek();
+}
+
 /* ---------- writes ---------- */
 const pdoc=id=>S.db.doc("projects/"+id);
 async function write(fn,ok){try{await fn();if(ok)toast(ok)}catch(e){toast(e&&e.code==="invalid_argument"?"No tienes permiso para editar esta página.":"No se pudo guardar. Intenta de nuevo.")}}
@@ -475,7 +548,9 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 document.addEventListener("click",async e=>{
   const o=e.target.closest("[data-open]");if(o){openSheet(o.dataset.open);return}
   const sg=e.target.closest("#seg button");if(sg){S.filter=sg.dataset.f;try{localStorage.setItem("pia.filter",S.filter)}catch(_){}renderWaves();return}
+  if(e.target.closest("[data-done]")){S.showDone=!S.showDone;renderSheet();return}
   if(!S.canWrite)return;
+  if(e.target.closest("[data-sync]")){syncAsana();return}
   const c=e.target.closest("[data-comp]");if(c){const comp=compById(c.dataset.comp);if(!comp)return;const ns=NEXT_STATUS[comp.status]||"en_curso";
     await write(()=>S.db.doc("components/"+comp.id).update({status:ns,updated:today()}),comp.name+": "+STATUS[ns]);return}
   const del=e.target.closest("[data-del]");if(del){if(del.dataset.confirm!=="1"){del.dataset.confirm="1";del.textContent="¿Eliminar?";setTimeout(()=>{del.dataset.confirm="";del.textContent="Eliminar"},3000);return}
@@ -513,16 +588,20 @@ document.addEventListener("submit",async e=>{
 /* ---------- boot ---------- */
 renderAll();
 (async()=>{
-  const cl=window.claude;if(!cl||!cl.use){["p","c","u"].forEach(k=>S.loaded[k]=true);renderAll();return}
-  const [db,user]=await Promise.all([cl.use("db"),cl.use("user")]);
-  S.db=db;
+  const cl=window.claude;if(!cl||!cl.use){["p","c","u","a"].forEach(k=>S.loaded[k]=true);renderAll();return}
+  const [db,user,mcp]=await Promise.all([cl.use("db"),cl.use("user"),cl.use("mcp")]);
+  S.db=db;S.mcp=mcp;
   if(user){try{S.canWrite=await user.canEdit()}catch(e){S.canWrite=false}}
   $("#editChip").hidden=!S.canWrite;
-  if(!db){["p","c","u"].forEach(k=>S.loaded[k]=true);$("#waves").innerHTML=`<div class="empty">Inicia sesión en claude.ai para ver los proyectos.</div>`;$("#stack").innerHTML="";$("#feed").innerHTML="";return}
+  if(!db){["p","c","u","a"].forEach(k=>S.loaded[k]=true);$("#waves").innerHTML=`<div class="empty">Inicia sesión en claude.ai para ver los proyectos.</div>`;$("#stack").innerHTML="";$("#feed").innerHTML="";return}
   const err=()=>toast("Se perdió la conexión con los datos. Recarga la página.");
-  db.collection("projects").onSnapshot(s=>{S.projects=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.p=true;renderAll();
+  db.collection("projects").onSnapshot(s=>{S.projects=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.p=true;renderAll();S.autoSync&&S.autoSync();
     if(!S.open&&location.hash.length>1){const id=location.hash.slice(1);if(S.projects.some(p=>p.id===id))openSheet(id)}},err);
   db.collection("components").onSnapshot(s=>{S.components=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.c=true;renderAll()},err);
+  db.collection("asana").onSnapshot(s=>{S.asana={};s.docs.forEach(d=>S.asana[d.id]=d.data());S.loaded.a=true;renderAll()},err);
+  let autoSynced=false,metaLoaded=false;
+  S.autoSync=()=>{if(autoSynced||!metaLoaded||!S.loaded.p||!S.canWrite||!S.mcp)return;const age=S.asanaMeta?.syncedAt?Date.now()-new Date(S.asanaMeta.syncedAt).getTime():Infinity;if(age>30*60000){autoSynced=true;syncAsana()}};
+  db.doc("asanaMeta/sync").onSnapshot(d=>{S.asanaMeta=d.exists?d.data():null;metaLoaded=true;renderWeek();S.autoSync()},err);
   db.collection("updates").orderBy("date","desc").limit(300).onSnapshot(s=>{S.updates=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.createdAt||"").localeCompare(a.createdAt||""));S.loaded.u=true;renderAll()},err);
 })();
 </script>

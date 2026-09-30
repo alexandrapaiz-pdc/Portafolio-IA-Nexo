@@ -1,0 +1,13 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995343549245",
+ "tasks": [
+  {
+   "gid": "1218995345424270",
+   "name": "Review Rodny's documentation + PoC and draft the staged validation flow per area",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  }
+ ]
+}

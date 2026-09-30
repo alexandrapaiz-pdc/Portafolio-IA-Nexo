@@ -1,0 +1,69 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995612338724",
+ "tasks": [
+  {
+   "gid": "1219040037391913",
+   "name": "Q4 solution-definition sessions with Ada (AP/expenses) and José (inventory purchases)",
+   "done": false,
+   "due": "2026-10-06",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995356246373",
+   "name": "Write Contraloría project card (need, KPIs, baseline and target, as-is / to-be, hypotheses)",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994991081377",
+   "name": "Recommended quick win: propose a single document intake channel for Tráfico (before the agent)",
+   "done": false,
+   "due": "2026-10-08",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995612934468",
+   "name": "Get access to the pending-settlements AI view and the shared Tráfico → Contraloría folder",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995605611160",
+   "name": "Prepare 30-min Claude mini-course for the MegaMás team (what it is, prompting, traceability when editing files)",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995605254789",
+   "name": "Map accounts payable / expenses process (credit cards, advances, utilities)",
+   "done": false,
+   "due": "2026-10-19",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995985579840",
+   "name": "Spec the document-matching + ERP registration agent (incl. retentions rules)",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994982766077",
+   "name": "Build baseline: non-deductible VAT, overdue payments, documents missing per month",
+   "done": false,
+   "due": "2026-10-07",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995605070962",
+   "name": "Map inventory-purchase document flow (Tráfico → Contraloría → ERP) and define agent scope",
+   "done": false,
+   "due": "2026-10-06",
+   "completedAt": null
+  }
+ ]
+}

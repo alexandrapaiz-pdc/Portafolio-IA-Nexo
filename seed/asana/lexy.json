@@ -1,0 +1,27 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995352829981",
+ "tasks": [
+  {
+   "gid": "1219009968671416",
+   "name": "Recommended: scope Avon Item Data validation agent (folleto vs. IDF)",
+   "done": false,
+   "due": "2026-10-19",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994991514055",
+   "name": "Inventory support content: SharePoint docs + OTRS ticket export by category",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995338452974",
+   "name": "Scope IT support knowledge base",
+   "done": false,
+   "due": "2026-10-12",
+   "completedAt": null
+  }
+ ]
+}

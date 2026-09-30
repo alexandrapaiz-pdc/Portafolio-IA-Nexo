@@ -1,0 +1,27 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995598415931",
+ "tasks": [
+  {
+   "gid": "1219040036954736",
+   "name": "Brainstorm scalable agent deployment model (sandbox, agents portal, deployment guide) + review Citizen project with JP",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1219039716113071",
+   "name": "Publish Tier 1 & Tier 2 protocols in personal GitHub (migrate to enterprise when ready)",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1219039912652625",
+   "name": "Meet Benji: define cybersecurity protocols for Tier 1 & Tier 2 (API keys, secrets, .env, recommended settings)",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  }
+ ]
+}

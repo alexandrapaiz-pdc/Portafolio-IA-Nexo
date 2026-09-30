@@ -1,0 +1,20 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995598415931",
+ "tasks": [
+  {
+   "gid": "1219040095189778",
+   "name": "Decide orchestration with Edgar: keep N8N vs. move to code (Temporal/LangGraph) for Portales de Mundos",
+   "done": false,
+   "due": "2026-10-06",
+   "completedAt": null
+  },
+  {
+   "gid": "1219039912830375",
+   "name": "Portales de Mundos: get frontend repo + N8N flow JSON export from Jorge, re-import in own instance",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  }
+ ]
+}

@@ -1,0 +1,90 @@
+{
+ "syncedAt": "2026-09-30T19:00:00Z",
+ "parentGid": "1218995598415931",
+ "tasks": [
+  {
+   "gid": "1219040095058664",
+   "name": "Polish AI stack presentation: add cybersecurity, governance, controls + EXO standards (PII Anonymizer)",
+   "done": false,
+   "due": "2026-10-05",
+   "completedAt": null
+  },
+  {
+   "gid": "1219039977800397",
+   "name": "Request Temporal Cloud (pay-as-you-go) and reactivate enterprise GitHub account",
+   "done": false,
+   "due": "2026-10-06",
+   "completedAt": null
+  },
+  {
+   "gid": "1219039715991026",
+   "name": "Get Azure admin account with IT (unblocks Databricks, Entra ID, Key Vault, agent marketplace)",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995603726392",
+   "name": "Claude licenses: send final request to Luis Carlos Hurtado (Luisca)",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995983967110",
+   "name": "Claude licenses: decide scope (categories, subcategories, or both)",
+   "done": false,
+   "due": "2026-10-01",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994981177242",
+   "name": "Claude licenses: compile list of everyone requesting (Jenny/Lisa list + Personal Care)",
+   "done": false,
+   "due": "2026-10-01",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994981079083",
+   "name": "Consolidate the ~10 AI projects into one view for Óscar's go-ahead",
+   "done": false,
+   "due": "2026-10-08",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995983602381",
+   "name": "Build agents portal template (Ecosol-style project cards)",
+   "done": false,
+   "due": "2026-10-07",
+   "completedAt": null
+  },
+  {
+   "gid": "1218994980868681",
+   "name": "Design controls & permissions model (agent registry, policy engine, escalation, audit logs)",
+   "done": false,
+   "due": "2026-10-09",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995983263366",
+   "name": "Set Databricks rollout owner and timeline + n8n interim fallback plan",
+   "done": false,
+   "due": "2026-10-06",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995333698876",
+   "name": "Open idea-to-launch ticket(s) for Vikingo support (JDE connector, data warehouse access, agents portal domain)",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  },
+  {
+   "gid": "1218995333544648",
+   "name": "Define Nexo AI stack components (Azure, Databricks, Temporal, LangGraph, model router)",
+   "done": false,
+   "due": "2026-10-02",
+   "completedAt": null
+  }
+ ]
+}
