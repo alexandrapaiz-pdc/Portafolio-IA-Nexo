@@ -212,6 +212,40 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
 .more{border:0;background:none;color:var(--sub);font-size:13px;padding:12px 20px;text-align:left;width:100%}
 .more:hover{color:var(--text)}
 
+/* Views & tickets */
+.tabs{display:flex;gap:4px;margin-left:14px}
+.tabs button{border:0;background:none;font-size:13px;font-weight:500;color:var(--sub);padding:5px 12px;border-radius:999px}
+.tabs button[aria-current="page"]{background:var(--group);color:var(--text)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.steps div{padding:18px 18px 0 0;display:grid;gap:4px;min-width:0}
+.steps div+div{padding-left:18px;border-left:1px solid var(--line)}
+.steps b{font-size:13px;color:var(--accent);font-weight:600}
+.steps span{font-size:15px;font-weight:600;letter-spacing:-.02em}
+.steps p{font-size:13px;color:var(--sub)}
+@media (max-width:760px){.steps{grid-template-columns:1fr 1fr}.steps div:nth-child(3){padding-left:0;border-left:0}}
+.note-banner{font-size:13px;color:var(--sub);background:var(--group);border-radius:var(--r-sm);padding:12px 16px}
+.tk{grid-template-columns:minmax(0,1fr) 120px 110px 16px;width:100%;border:0;background:none;text-align:left;cursor:pointer}
+.tk:hover{background:rgba(0,0,0,.025)}
+.tk .name{font-size:16px;font-weight:600;letter-spacing:-.02em}
+.tk .meta{font-size:13px;color:var(--sub);margin-top:2px}
+.tk .code{font-size:12px;color:var(--faint);margin-right:8px;font-weight:500}
+.tk .hrs{text-align:right;font-size:15px;font-weight:600}
+.tk .hrs small{display:block;font-size:12px;color:var(--faint);font-weight:400}
+.tstat{font-size:13px;color:var(--sub);display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.tstat i{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--faint)}
+.tstat.nuevo{color:var(--accent-ink)}.tstat.nuevo i{background:var(--accent);box-shadow:none}
+.tstat.evaluacion i{background:var(--faint);box-shadow:none}
+.tstat.aprobado,.tstat.proyecto{color:var(--strong)}.tstat.aprobado i,.tstat.proyecto i{background:var(--strong);box-shadow:none}
+.tstat.descartado{color:var(--faint)}
+@media (max-width:700px){.tk{grid-template-columns:minmax(0,1fr) auto 16px}.tk .hrs{display:none}}
+.kv{display:grid;grid-template-columns:170px minmax(0,1fr);gap:0}
+.kv>div{padding:12px 20px;border-top:1px solid var(--line);font-size:14px;min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.kv>div:nth-child(-n+2){border-top:0}
+.kv .k{color:var(--sub);font-size:13px}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv .k{padding-bottom:0;border-top:1px solid var(--line)}.kv .k+div{border-top:0;padding-top:2px}}
+.form{display:grid;gap:14px}
+.form .hint{font-size:12px;color:var(--faint)}
+
 /* Forms */
 .field{display:grid;gap:5px;font-size:12px;color:var(--sub);min-width:0}
 .field input,.field select,.field textarea{background:var(--raise);border:1px solid var(--line-2);border-radius:10px;padding:9px 11px;font-size:14px;width:100%;min-width:0}
@@ -230,14 +264,15 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
   <div class="wrap">
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
-    <div class="links"><a href="#stack-sec">Stack</a><a href="#proyectos">Proyectos</a><a href="#semana">Esta semana</a><a href="#bitacora">Bitácora</a></div>
+    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="portafolio" aria-current="page">Portafolio</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
+    <div class="links" id="navLinks"><a href="#stack-sec">Stack</a><a href="#proyectos">Proyectos</a><a href="#semana">Esta semana</a><a href="#bitacora">Bitácora</a></div>
     <span class="spacer"></span>
     <span class="edit" id="editChip" hidden>Modo edición</span>
     <span class="stamp" id="stamp"></span>
   </div>
 </nav>
 
-<main class="wrap">
+<main class="wrap" id="viewPortfolio">
   <section class="hero">
     <div class="eyebrow">Nexo · Inteligencia artificial · Q4 2026</div>
     <h1>Portafolio de IA.<br><span>Primero el stack.</span></h1>
@@ -296,6 +331,52 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
     <span>Fuentes: reuniones en Granola y backlog en Asana. “Pendiente” indica una línea base aún no medida.</span>
   </footer>
 </main>
+
+<main class="wrap" id="viewTickets" hidden>
+  <section class="hero">
+    <div class="eyebrow">Solicitudes de IA · Nexo</div>
+    <h1>¿Qué deberíamos<br><span>automatizar?</span></h1>
+    <p class="lead">Cuéntanos qué proceso te quita tiempo. Cada solicitud se evalúa por horas manuales, impacto y factibilidad, y entra al backlog de proyectos de IA.</p>
+    <div><button type="button" class="btn acc" data-newticket>Nueva solicitud</button></div>
+  </section>
+
+  <div class="steps">
+    <div><b>1</b><span>Envías</span><p>Describes el problema y cuánto tiempo toma hoy.</p></div>
+    <div><b>2</b><span>Evaluamos</span><p>IA Nexo revisa impacto, datos y factibilidad.</p></div>
+    <div><b>3</b><span>Priorizamos</span><p>Entra al backlog con una prioridad visible.</p></div>
+    <div><b>4</b><span>Construimos</span><p>Las aprobadas se convierten en proyecto del portafolio.</p></div>
+  </div>
+
+  <section class="block" style="padding-top:64px">
+    <div class="sec-head">
+      <span class="eyebrow">Backlog</span>
+      <h2>Solicitudes recibidas.</h2>
+    </div>
+    <div class="stats" id="tStats"></div>
+    <div class="seg" role="group" aria-label="Filtrar solicitudes" id="tseg">
+      <button type="button" data-tf="abiertas" aria-pressed="true">Abiertas</button>
+      <button type="button" data-tf="todas" aria-pressed="false">Todas</button>
+      <button type="button" data-tf="cerradas" aria-pressed="false">Cerradas</button>
+    </div>
+    <div class="group" id="tList"><div class="empty">Cargando solicitudes…</div></div>
+    <p class="note-banner">Mientras se habilita el estándar en Azure, las solicitudes se guardan en esta página. Se migrarán al sistema definitivo cuando esté listo.</p>
+  </section>
+
+  <footer>
+    <span>Grupo PDC · Nexo · Liderazgo de IA</span>
+    <span>Dudas: Alexandra Paiz, Líder de IA y Herramientas</span>
+  </footer>
+</main>
+
+<dialog class="sheet" id="tsheet" aria-labelledby="tsheetTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="tsheetTitle"></span>
+      <button class="close" type="button" data-tclose aria-label="Cerrar">✕</button>
+    </div>
+    <div class="sheet-body" id="tsheetBody"></div>
+  </div>
+</dialog>
 
 <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
   <div class="sheet-in">
@@ -512,10 +593,86 @@ function renderSheet(){
 
 /* ---------- sheet ---------- */
 function openSheet(id){S.open=id;S.editing=false;renderSheet();const d=$("#sheet");if(!d.open)d.showModal();try{history.replaceState(null,"","#"+id)}catch(e){}}
-function closeSheet(){S.open=null;S.editing=false;const d=$("#sheet");if(d.open)d.close();try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+function closeSheet(){S.open=null;S.editing=false;const d=$("#sheet");if(d.open)d.close();try{if(S.view==="portafolio")history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
 $("#closeSheet").addEventListener("click",closeSheet);
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
 $("#sheet").addEventListener("close",()=>{S.open=null;S.editing=false});
+
+/* ---------- Solicitudes ---------- */
+const AREAS=["Nexo","MegaMás","Avon","PDC Brands","Vikingo","Otra"];
+const TTYPES=["Automatización o agente","Portal o tablero","Análisis de datos","Licencia o acceso a Claude","Otro"];
+const URG=["Baja","Media","Alta"];
+const TSTATUS=[["nuevo","Nueva"],["evaluacion","En evaluación"],["aprobado","Aprobada"],["proyecto","En portafolio"],["descartado","Descartada"]];
+const tLabel=st=>(TSTATUS.find(x=>x[0]===st)||TSTATUS[0])[1];
+S.tickets=[];S.triage={};S.tFilter="abiertas";S.me=null;S.names={};S.view="portafolio";S.tOpen=null;S.loaded.t=false;
+const tStatus=t=>S.triage[t.id]?.status||"nuevo";
+const isOpenT=t=>!["proyecto","descartado"].includes(tStatus(t));
+function setView(v){S.view=v;$("#viewPortfolio").hidden=v!=="portafolio";$("#viewTickets").hidden=v!=="solicitudes";$("#navLinks").style.visibility=v==="portafolio"?"visible":"hidden";
+  document.querySelectorAll("[data-view]").forEach(b=>b.dataset.view===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+  try{history.replaceState(null,"",v==="solicitudes"?"#solicitudes":location.pathname+location.search)}catch(e){}window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
+async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.tickets.map(t=>t.createdBy).filter(Boolean))];if(!ids.length)return;
+  try{const ps=await S.user.profiles(ids);let ch=false;ids.forEach(id=>{const n=ps[id]?.name||"";if(S.names[id]!==n){S.names[id]=n;ch=true}});if(ch)renderTickets()}catch(e){}}
+const who=id=>S.names[id]||"Colaborador";
+function renderTickets(){
+  if(!S.loaded.t)return;
+  document.querySelectorAll("#tseg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tf===S.tFilter)));
+  const all=[...S.tickets].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+  const open=all.filter(isOpenT),nuevos=all.filter(t=>tStatus(t)==="nuevo").length,evalu=all.filter(t=>tStatus(t)==="evaluacion").length;
+  const hrs=open.reduce((a,t)=>a+(isNum(t.hours)?t.hours:0),0);
+  $("#tStats").innerHTML=[["Solicitudes abiertas",open.length,"",`${all.length} en total`],["Nuevas",nuevos,nuevos?"acc":"","Sin revisar"],["En evaluación",evalu,"","Impacto y factibilidad"],["Horas manuales al mes",nf(hrs),"","Estimadas por solicitantes"]]
+    .map(([k,v,c,sub])=>`<div class="stat"><span class="k">${k}</span><span class="v num ${c}">${v}</span><span class="s">${esc(sub)}</span></div>`).join("");
+  const list=S.tFilter==="abiertas"?open:S.tFilter==="cerradas"?all.filter(t=>!isOpenT(t)):all;
+  const pr={Alta:0,Media:1,Baja:2};
+  if(S.tFilter==="abiertas")list.sort((a,b)=>(S.triage[a.id]?.priority??99)-(S.triage[b.id]?.priority??99)||(pr[a.urgency]??3)-(pr[b.urgency]??3)||(b.hours||0)-(a.hours||0));
+  $("#tList").innerHTML=list.length?list.map(t=>{const st=tStatus(t),tr=S.triage[t.id]||{};return`<button type="button" class="row tk" data-ticket="${esc(t.id)}">
+    <div style="min-width:0"><div class="name"><span class="code num">${esc(t.code||"")}</span>${esc(t.title)}</div>
+      <div class="meta">${esc([t.area,t.type,who(t.createdBy),fdate((t.createdAt||"").slice(0,10))].filter(Boolean).join(" · "))}${tr.priority?` · Prioridad ${esc(tr.priority)}`:""}</div></div>
+    <span class="hrs num">${isNum(t.hours)?nf(t.hours)+" h":"—"}<small>al mes · ${esc(t.urgency||"")}</small></span>
+    <span class="tstat ${st}"><i></i>${tLabel(st)}</span><span class="chev" aria-hidden="true">›</span></button>`}).join("")
+    :`<div class="empty">${S.tFilter==="abiertas"?"No hay solicitudes abiertas. Envía la primera con “Nueva solicitud”.":"No hay solicitudes aquí."}</div>`;
+}
+function openT(mode,id){S.tOpen={mode,id};renderTSheet();const d=$("#tsheet");if(!d.open)d.showModal()}
+function closeT(){S.tOpen=null;const d=$("#tsheet");if(d.open)d.close()}
+function renderTSheet(){
+  const o=S.tOpen;if(!o)return;const B=$("#tsheetBody");
+  if(o.mode==="new"){
+    $("#tsheetTitle").textContent="Nueva solicitud";
+    if(!S.db||!S.me){B.innerHTML=`<div style="display:grid;gap:12px"><h2>Nueva solicitud</h2><p class="lede">Inicia sesión en claude.ai con tu cuenta de Grupo PDC para enviar una solicitud.</p></div>`;return}
+    B.innerHTML=`<div style="display:grid;gap:10px"><h2>Nueva solicitud</h2><p class="lede">Entre más concreto, más rápido se evalúa. Los números aproximados están bien.</p></div>
+    <form class="form" id="tForm">
+      <label class="field">Título<input id="tTitle" required maxlength="120" placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra"></label>
+      <div class="fr"><label class="field">Área<select id="tArea">${AREAS.map(a=>`<option>${a}</option>`).join("")}</select></label>
+        <label class="field">Tipo<select id="tType">${TTYPES.map(a=>`<option>${a}</option>`).join("")}</select></label>
+        <label class="field">Urgencia<select id="tUrg">${URG.map(a=>`<option ${a==="Media"?"selected":""}>${a}</option>`).join("")}</select></label></div>
+      <label class="field">¿Qué problema quieres resolver?<textarea id="tProblem" required placeholder="Qué duele hoy y a quién afecta."></textarea></label>
+      <label class="field">¿Cómo se hace hoy?<textarea id="tCurrent" placeholder="Pasos, herramientas y quién participa."></textarea></label>
+      <div class="fr"><label class="field">Horas manuales al mes<input id="tHours" type="number" min="0" step="any" placeholder="Ej. 20"></label>
+        <label class="field">Personas involucradas<input id="tPeople" type="number" min="0" step="1" placeholder="Ej. 3"></label>
+        <label class="field">Fecha deseada<input id="tWanted" type="date"></label></div>
+      <label class="field">¿Cómo sabremos que funcionó?<input id="tImpact" placeholder="Ej. Cerrar el mes 3 días antes; 0 facturas vencidas"></label>
+      <label class="field">Sistemas y datos<input id="tSystems" placeholder="Ej. Excel, JD Edwards, SharePoint, correo"></label>
+      <p class="hint">Tu solicitud será visible para quienes tengan acceso a esta página.</p>
+      <div class="actions"><button type="button" class="btn ghost" data-tclose>Cancelar</button><button type="submit" class="btn acc">Enviar solicitud</button></div>
+    </form>`;return}
+  const t=S.tickets.find(x=>x.id===o.id);if(!t){closeT();return}
+  const tr=S.triage[t.id]||{},st=tStatus(t);
+  $("#tsheetTitle").textContent=t.code||"Solicitud";
+  const F=[["Área",t.area],["Tipo",t.type],["Solicitante",who(t.createdBy)],["Enviada",fdate((t.createdAt||"").slice(0,10))],["Urgencia",t.urgency],["Fecha deseada",t.wanted?fdate(t.wanted):""],["Horas manuales al mes",isNum(t.hours)?nf(t.hours)+" h":""],["Personas involucradas",isNum(t.people)?String(t.people):""],["Cómo se hace hoy",t.current],["Cómo sabremos que funcionó",t.impact],["Sistemas y datos",t.systems]].filter(x=>x[1]);
+  B.innerHTML=`<div style="display:grid;gap:12px">
+    <div class="kicker"><span class="tstat ${st}"><i></i>${tLabel(st)}</span>${tr.priority?`<b>Prioridad ${esc(tr.priority)}</b>`:""}<span>${esc(t.code||"")}</span></div>
+    <h2>${esc(t.title)}</h2><p class="lede">${esc(t.problem)}</p></div>
+    <div><h5>Detalle</h5><div class="group kv">${F.map(([k,v])=>`<div class="k">${k}</div><div>${esc(v)}</div>`).join("")}</div></div>
+    ${tr.note&&!S.canWrite?`<div><h5>Comentario de IA Nexo</h5><div class="group pad">${esc(tr.note)}</div></div>`:""}
+    ${S.canWrite?`<div><h5>Evaluación</h5><form class="group pad form" id="triageForm">
+      <div class="fr"><label class="field">Estado<select id="trStatus">${TSTATUS.map(([v,l])=>`<option value="${v}" ${v===st?"selected":""}>${l}</option>`).join("")}</select></label>
+        <label class="field">Prioridad en backlog<input id="trPrio" type="number" min="1" step="1" value="${isNum(tr.priority)?tr.priority:""}" placeholder="1 = primero"></label><span></span></div>
+      <label class="field">Comentario visible para el solicitante<textarea id="trNote">${esc(tr.note)}</textarea></label>
+      <div class="actions">${S.confirmDel===t.id?`<button type="button" class="btn ghost" data-tdel="${esc(t.id)}">Confirmar eliminación</button>`:`<button type="button" class="btn ghost" data-tdel="${esc(t.id)}">Eliminar</button>`}<button type="submit" class="btn">Guardar evaluación</button></div>
+    </form></div>`:""}`;
+}
+function tcode(){const d=new Date(),a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";return"SOL-"+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+a[Math.floor(Math.random()*a.length)]+a[Math.floor(Math.random()*a.length)]}
+$("#tsheet").addEventListener("click",e=>{if(e.target.id==="tsheet")closeT()});
+$("#tsheet").addEventListener("close",()=>{S.tOpen=null;S.confirmDel=null});
 
 /* ---------- Asana sync ---------- */
 const ASANA="Asana",OPT="name,subtasks.name,subtasks.completed,subtasks.completed_at,subtasks.due_on";
@@ -548,6 +705,13 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 document.addEventListener("click",async e=>{
   const o=e.target.closest("[data-open]");if(o){openSheet(o.dataset.open);return}
   const sg=e.target.closest("#seg button");if(sg){S.filter=sg.dataset.f;try{localStorage.setItem("pia.filter",S.filter)}catch(_){}renderWaves();return}
+  const v=e.target.closest("[data-view]");if(v){setView(v.dataset.view);return}
+  if(e.target.closest("[data-newticket]")){openT("new");return}
+  if(e.target.closest("[data-tclose]")){closeT();return}
+  const tk=e.target.closest("[data-ticket]");if(tk){openT("view",tk.dataset.ticket);return}
+  const tf=e.target.closest("#tseg button");if(tf){S.tFilter=tf.dataset.tf;renderTickets();return}
+  const td=e.target.closest("[data-tdel]");if(td&&S.canWrite){const id=td.dataset.tdel;if(S.confirmDel!==id){S.confirmDel=id;renderTSheet();return}
+    S.confirmDel=null;closeT();await write(async()=>{await S.db.doc("tickets/"+id).delete();await S.db.doc("triage/"+id).delete()},"Solicitud eliminada");return}
   if(e.target.closest("[data-done]")){S.showDone=!S.showDone;renderSheet();return}
   if(!S.canWrite)return;
   if(e.target.closest("[data-sync]")){syncAsana();return}
@@ -574,6 +738,15 @@ document.addEventListener("change",async e=>{
   const disc=clone(p.discovery||[]);disc[+d.dataset.disc].done=d.checked;await write(()=>pdoc(p.id).update({discovery:disc}));
 });
 document.addEventListener("submit",async e=>{
+  if(e.target.id==="tForm"){e.preventDefault();const g=id=>$("#"+id).value.trim(),n=id=>{const x=$("#"+id).value;return x===""?null:Number(x)};
+    if(!g("tTitle")||!g("tProblem")){(g("tTitle")?$("#tProblem"):$("#tTitle")).focus();return}
+    const btn=e.target.querySelector("button[type=submit]");btn.disabled=true;
+    const doc={code:tcode(),title:g("tTitle"),area:$("#tArea").value,type:$("#tType").value,urgency:$("#tUrg").value,problem:g("tProblem"),current:g("tCurrent"),hours:n("tHours"),people:n("tPeople"),wanted:$("#tWanted").value||null,impact:g("tImpact"),systems:g("tSystems"),createdBy:S.me,createdAt:new Date().toISOString()};
+    try{await S.db.collection("tickets").add(doc);closeT();toast("Solicitud enviada: "+doc.code)}
+    catch(err){btn.disabled=false;toast(err&&err.code==="invalid_argument"?"Tu acceso a esta página es de solo lectura. Pide acceso de colaborador para enviar solicitudes.":"No se pudo enviar. Intenta de nuevo.")}
+    return}
+  if(e.target.id==="triageForm"){e.preventDefault();const id=S.tOpen?.id;if(!id||!S.canWrite)return;const pv=$("#trPrio").value;
+    await write(()=>S.db.doc("triage/"+id).set({status:$("#trStatus").value,priority:pv===""?null:Number(pv),note:$("#trNote").value.trim(),updatedAt:new Date().toISOString()}),"Evaluación guardada");return}
   if(e.target.id!=="postForm")return;e.preventDefault();const p=S.projects.find(x=>x.id===S.open);if(!p)return;
   const text=$("#uText").value.trim();if(!text){$("#uText").focus();return}
   const kpiId=$("#uKpi").value||null,vr=$("#uVal").value,value=vr===""?null:Number(vr),date=$("#uDate").value||today();
@@ -587,17 +760,21 @@ document.addEventListener("submit",async e=>{
 
 /* ---------- boot ---------- */
 renderAll();
+if(location.hash==="#solicitudes")setView("solicitudes");
 (async()=>{
   const cl=window.claude;if(!cl||!cl.use){["p","c","u","a"].forEach(k=>S.loaded[k]=true);renderAll();return}
   const [db,user,mcp]=await Promise.all([cl.use("db"),cl.use("user"),cl.use("mcp")]);
-  S.db=db;S.mcp=mcp;
+  S.db=db;S.mcp=mcp;S.user=user;
+  if(user){try{S.me=await user.id()}catch(e){S.me=null}}
   if(user){try{S.canWrite=await user.canEdit()}catch(e){S.canWrite=false}}
   $("#editChip").hidden=!S.canWrite;
-  if(!db){["p","c","u","a"].forEach(k=>S.loaded[k]=true);$("#waves").innerHTML=`<div class="empty">Inicia sesión en claude.ai para ver los proyectos.</div>`;$("#stack").innerHTML="";$("#feed").innerHTML="";return}
+  if(!db){["p","c","u","a","t"].forEach(k=>S.loaded[k]=true);renderTickets();$("#waves").innerHTML=`<div class="empty">Inicia sesión en claude.ai para ver los proyectos.</div>`;$("#stack").innerHTML="";$("#feed").innerHTML="";return}
   const err=()=>toast("Se perdió la conexión con los datos. Recarga la página.");
   db.collection("projects").onSnapshot(s=>{S.projects=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.p=true;renderAll();S.autoSync&&S.autoSync();
     if(!S.open&&location.hash.length>1){const id=location.hash.slice(1);if(S.projects.some(p=>p.id===id))openSheet(id)}},err);
   db.collection("components").onSnapshot(s=>{S.components=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.c=true;renderAll()},err);
+  db.collection("tickets").orderBy("createdAt","desc").limit(500).onSnapshot(s=>{S.tickets=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.t=true;renderTickets();resolveNames();if(S.tOpen?.mode==="view")renderTSheet()},err);
+  db.collection("triage").onSnapshot(s=>{S.triage={};s.docs.forEach(d=>S.triage[d.id]=d.data());renderTickets();if(S.tOpen?.mode==="view")renderTSheet()},err);
   db.collection("asana").onSnapshot(s=>{S.asana={};s.docs.forEach(d=>S.asana[d.id]=d.data());S.loaded.a=true;renderAll()},err);
   let autoSynced=false,metaLoaded=false;
   S.autoSync=()=>{if(autoSynced||!metaLoaded||!S.loaded.p||!S.canWrite||!S.mcp)return;const age=S.asanaMeta?.syncedAt?Date.now()-new Date(S.asanaMeta.syncedAt).getTime():Infinity;if(age>30*60000){autoSynced=true;syncAsana()}};
