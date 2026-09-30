@@ -1,8 +1,8 @@
 {
  "order": 3,
- "name": "GitHub corporativo",
+ "name": "GitHub empresarial",
  "owner": "Alexandra",
  "status": "pendiente",
- "note": "Repositorio y versionado estándar para todos los proyectos.",
+ "note": "Código solo en repositorios privados. Mientras tanto, GitHub personal privado y luego se migra.",
  "updated": "2026-09-30"
 }

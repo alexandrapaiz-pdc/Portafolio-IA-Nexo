@@ -8,8 +8,8 @@ Página para presentar y dar seguimiento a los proyectos de IA de Nexo (Grupo PD
 ## Estructura
 
 - `src/index.html` — la página (HTML/CSS/JS sin dependencias).
-- `src/assets/` — tipografía Museo Sans Rounded y logos de Grupo PDC.
-- `build.py` — incrusta fuentes y logos como data URIs y genera `dist/index.html`.
+- `src/assets/` — logos de Grupo PDC (la tipografía Geist se carga de Google Fonts).
+- `build.py` — incrusta los logos como data URIs y genera `dist/index.html`.
 - `seed/make_seed.py` — datos iniciales (backlog de Asana + reuniones de Granola, sep 2026); genera los JSON de `seed/`.
 
 ## Publicar cambios

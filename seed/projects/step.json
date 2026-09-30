@@ -1,6 +1,6 @@
 {
- "priority": 7,
- "wave": 2,
+ "priority": 4,
+ "wave": 1,
  "bu": "Nexo",
  "name": "Generación de Códigos STEP",
  "sponsor": "Rodny",
@@ -79,5 +79,6 @@
   "note": "Horas de redigitación y reproceso: línea base pendiente."
  },
  "next": "Flujo de validación por área — 9 oct.",
- "paused": false
+ "paused": false,
+ "noAzure": true
 }

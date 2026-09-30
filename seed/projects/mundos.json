@@ -1,5 +1,5 @@
 {
- "priority": 4,
+ "priority": 2,
  "wave": 1,
  "bu": "Grupo PDC",
  "name": "Portal de Mundos",
@@ -8,6 +8,7 @@
  "phase": "piloto",
  "summary": "Un tablero por mundo con métricas semanales y mensuales, cadenas de valor, proyectos clave, metas y proyecciones, para reemplazar las presentaciones del comité. Piloto: PDC Brands.",
  "pains": [
+  "Con la salida de Jorge se pierde su instancia local de n8n.",
   "El comité ejecutivo revisa el desempeño con presentaciones armadas a mano.",
   "Excel es una fuente de datos frágil (se mantiene por gestión del cambio).",
   "Los flujos de n8n no se pueden versionar en Git en la instalación actual.",
@@ -21,7 +22,7 @@
   "dominio",
   "controles"
  ],
- "blocker": "Migrar los flujos de n8n a una instancia propia de la compañía.",
+ "blocker": "Salida de Jorge: su instancia local de n8n se pierde si no se independiza.",
  "discovery": [
   {
    "label": "Jorge comparte el frontend en GitHub",
@@ -85,5 +86,6 @@
   "note": "Horas de preparación de presentaciones por revisión: línea base pendiente."
  },
  "next": "Frontend en GitHub y flujos exportados (Jorge).",
- "paused": false
+ "paused": false,
+ "noAzure": true
 }

@@ -1,4 +1,4 @@
-"""Inline fonts and logos as data URIs so the page is a single self-contained HTML file."""
+"""Inline logos as data URIs so the page is a single self-contained HTML file."""
 import base64, pathlib, re
 root = pathlib.Path(__file__).parent
 src = (root / "src/index.html").read_text()

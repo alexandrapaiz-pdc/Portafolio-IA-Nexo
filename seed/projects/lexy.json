@@ -1,10 +1,10 @@
 {
- "priority": 5,
+ "priority": 6,
  "wave": 2,
  "bu": "MegaMás",
  "name": "MegaMás · Lexy / Soporte IT",
  "sponsor": "Jackeline Luna",
- "tagline": "Base de conocimiento para soporte",
+ "tagline": "Menos urgente según prioridad del 30 sep",
  "phase": "descubrimiento",
  "summary": "Base de conocimiento de soporte IT para que los agentes resuelvan tickets sin buscar entre documentos. El más fácil de arrancar cuando exista la capa de datos.",
  "pains": [

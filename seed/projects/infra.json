@@ -1,6 +1,6 @@
 {
- "priority": 1,
- "wave": 1,
+ "priority": 0,
+ "wave": 0,
  "bu": "Nexo",
  "name": "Infraestructura IA Nexo",
  "sponsor": "Alexandra Paiz",
@@ -26,7 +26,7 @@
   "orquestacion",
   "dominio"
  ],
- "blocker": "Suscripción Azure pendiente (Luis Carlos).",
+ "blocker": "Cuenta admin de Azure con IT.",
  "discovery": [
   {
    "label": "Definir componentes del stack",
@@ -108,5 +108,6 @@
  ],
  "savings": {},
  "next": "Stack definido y ticket con Vikingo abierto — 2 oct.",
- "paused": false
+ "paused": false,
+ "impactLabel": "Habilita los 7 proyectos"
 }

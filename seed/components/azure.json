@@ -1,8 +1,9 @@
 {
  "order": 2,
- "name": "Suscripción Azure",
- "owner": "Luis Carlos",
+ "name": "Cuenta admin de Azure",
+ "owner": "IT · Luis Carlos",
  "status": "pendiente",
- "note": "Luis Carlos creará la suscripción.",
- "updated": "2026-09-30"
+ "note": "Bloqueador principal. Desbloquea Databricks, Entra ID, Key Vault y el marketplace de agentes; luego conexiones a SharePoint y JD Edwards.",
+ "updated": "2026-09-30",
+ "key": true
 }

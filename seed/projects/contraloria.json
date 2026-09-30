@@ -1,5 +1,5 @@
 {
- "priority": 2,
+ "priority": 3,
  "wave": 1,
  "bu": "MegaMás",
  "name": "MegaMás · Contraloría",
@@ -8,6 +8,7 @@
  "phase": "descubrimiento",
  "summary": "Agente de conciliación documental y registro en ERP (incluye retenciones) para el flujo de compras de inventario Tráfico → Contraloría → ERP.",
  "pains": [
+  "Contratos vencen por falta de ejecución.",
   "Facturas antiguas vuelven gastos no deducibles y se pierde crédito de IVA.",
   "Facturas de hasta un año quedan en prepasivo sin registrarse como cuenta por pagar.",
   "2 de 3 agentes nacionales suspendieron servicio por falta de pago.",

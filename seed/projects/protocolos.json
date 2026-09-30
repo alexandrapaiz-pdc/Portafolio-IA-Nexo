@@ -1,0 +1,76 @@
+{
+ "priority": 0.5,
+ "wave": 0,
+ "bu": "Nexo",
+ "enabler": true,
+ "noAzure": true,
+ "paused": false,
+ "name": "Protocolos de IA",
+ "sponsor": "Benji (ciberseguridad) · Óscar",
+ "tagline": "Estándares por tier de usuario",
+ "impactLabel": "Uso seguro para todos los usuarios",
+ "phase": "habilitacion",
+ "summary": "Estándares y buenas prácticas por tier: Tier 1 usa Claude como chat, Tier 2 despliega portales y páginas estáticas con Claude Code, Tier 3 despliega agentes propios (no es prioridad inmediata).",
+ "pains": [
+  "Usuarios ya crean soluciones con Claude sin documentación ni estándar.",
+  "Riesgo con API keys, secrets y archivos .env.",
+  "El código no debe quedar en repositorios públicos.",
+  "Todo el despliegue no puede centralizarse en el líder de IA."
+ ],
+ "needs": [
+  "github",
+  "controles"
+ ],
+ "blocker": "",
+ "discovery": [
+  {
+   "label": "Definir protocolos de ciberseguridad con Benji",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Estándares Tier 1: seguridad, settings recomendados, conectores y plugins",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Estándares Tier 2: portal de Diego Villatoro, GitHub privado, inner source",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Publicar protocolos en GitHub personal y migrar al empresarial",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Modelo escalable de despliegue de agentes: sandbox, portal y guía",
+   "due": null,
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "tier1",
+   "name": "Usuarios Tier 1 con protocolo aplicado",
+   "unit": "",
+   "baseline": 0,
+   "target": null,
+   "current": 0,
+   "updated": "2026-09-30",
+   "note": ""
+  },
+  {
+   "id": "tier2",
+   "name": "Portales Tier 2 en el portal corporativo",
+   "unit": "",
+   "baseline": 0,
+   "target": null,
+   "current": 0,
+   "updated": "2026-09-30",
+   "note": "Requiere Entra ID."
+  }
+ ],
+ "savings": {},
+ "next": "Reunión con Benji para definir protocolos."
+}

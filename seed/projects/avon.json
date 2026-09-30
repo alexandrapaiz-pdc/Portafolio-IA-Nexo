@@ -1,13 +1,14 @@
 {
- "priority": 3,
+ "priority": 1,
  "wave": 1,
  "bu": "Avon",
- "name": "Avon · APT y planeación de campaña",
+ "name": "Avon · Kickoff y APT",
  "sponsor": "Planeación Avon",
- "tagline": "Reemplazo de APT y fase 2 de reingeniería",
+ "tagline": "Prioridad 1, acordada con Lisa",
  "phase": "descubrimiento",
- "summary": "El APT heredado se retiró; el reemplazo lee, valida y transforma el archivo de colores para generar Macro Revista y Leader List. La fase 2 automatiza la planeación: base de ventas → tablas de KPIs → estimación → precios.",
+ "summary": "Automatizar el kickoff de campaña: de la base de ventas a las tablas de KPIs sin extracción manual. Elimina 15 h de trabajo manual por campaña. Incluye el reemplazo de APT (Macro Revista y Leader List).",
  "pains": [
+  "El kickoff de cada campaña toma 15 h de trabajo manual.",
   "Los datos de ventas se descargan por campaña y país y se consolidan a mano en Excel.",
   "APT perdió funciones de paginación y depende de macros externas.",
   "Children no tiene clasificación propia; se separa a mano.",
@@ -90,7 +91,11 @@
   }
  ],
  "savings": {
-  "note": "~300 h de trabajo manual en alcance (estimado, sin fuente verificada en reuniones). Convertir a h/mes al medir la línea base."
+  "baseline": 15,
+  "current": 15,
+  "target": null,
+  "unit": "h/campaña",
+  "note": "Acordado con Lisa: el kickoff toma 15 h de trabajo manual por campaña. Meta por definir."
  },
  "next": "Mapa de 15 pasos y alcance Excel → KPIs — 7–8 oct.",
  "paused": false
