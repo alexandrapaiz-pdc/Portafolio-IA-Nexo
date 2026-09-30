@@ -1,0 +1,61 @@
+{
+ "priority": 8,
+ "wave": 2,
+ "bu": "Nexo",
+ "name": "Cerebro PMO",
+ "sponsor": "Sebas Xoy",
+ "tagline": "Agentes para la gestión de proyectos",
+ "phase": "descubrimiento",
+ "summary": "Agentes de apoyo a la PMO. Se define el alcance con Sebas Xoy cuando la infraestructura y MegaMás estén en marcha.",
+ "pains": [
+  "Solo 44% de los proyectos va a tiempo; la PMO está en rojo.",
+  "Se mezclan entregables de sprint, tareas del MVP y backlog.",
+  "Metodología y hoja de ruta macro por alinear."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "orquestacion",
+  "licencias"
+ ],
+ "blocker": "Definición del stack.",
+ "discovery": [
+  {
+   "label": "Sesión de alcance con Sebas Xoy",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Ficha del proyecto",
+   "due": null,
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "ontime",
+   "name": "Proyectos a tiempo",
+   "unit": "%",
+   "baseline": 44,
+   "target": null,
+   "current": 44,
+   "updated": "2026-09-30",
+   "note": ""
+  },
+  {
+   "id": "pmo_hours",
+   "name": "Horas de reporte PMO por mes",
+   "unit": "h",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  }
+ ],
+ "savings": {
+  "note": "Horas de reporte PMO: línea base pendiente."
+ },
+ "next": "Sesión de alcance con Sebas Xoy.",
+ "paused": false
+}

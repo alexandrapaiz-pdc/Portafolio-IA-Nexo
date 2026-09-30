@@ -1,0 +1,99 @@
+{
+ "priority": 6,
+ "wave": 2,
+ "bu": "MegaMás",
+ "name": "MegaMás · Portal Gestión Humana",
+ "sponsor": "Luis Fernando Chang",
+ "tagline": "Alertas de vacaciones acumuladas",
+ "phase": "descubrimiento",
+ "summary": "Portal y agente de alertas para que las vacaciones acumuladas no aparezcan hasta la liquidación. Caso de costo evitado.",
+ "pains": [
+  "Los días de vacaciones se acumulan sin controles ni alertas y solo se ven en la liquidación.",
+  "Hay vacaciones tomadas sin reportar; los registros no cuadran con lo real.",
+  "El portal debe llegar al 100% del personal, incluido quien no tiene correo corporativo.",
+  "El manejo de vacaciones y el reporte de costo de personal son manuales y no estandarizados entre países."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "datos",
+  "orquestacion",
+  "dominio",
+  "controles"
+ ],
+ "blocker": "Recibir insumos: SharePoint, Excel de vacaciones y línea base de liquidaciones 2026.",
+ "discovery": [
+  {
+   "label": "Insumos: SharePoint, Excel de vacaciones, videos, liquidaciones 2026",
+   "due": "2026-10-01",
+   "done": false
+  },
+  {
+   "label": "Análisis: casos críticos por país y dinero en riesgo",
+   "due": "2026-10-07",
+   "done": false
+  },
+  {
+   "label": "Ficha del proyecto (costo evitado, 3 hipótesis Q4)",
+   "due": "2026-10-08",
+   "done": false
+  },
+  {
+   "label": "Acceso al portal sin correo corporativo",
+   "due": "2026-10-12",
+   "done": false
+  },
+  {
+   "label": "Diseño del agente de alertas y reportes a líderes y CAM",
+   "due": "2026-10-19",
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "critical",
+   "name": "Casos críticos (> 2 periodos acumulados)",
+   "unit": "",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  },
+  {
+   "id": "payout",
+   "name": "Vacaciones pagadas en liquidaciones 2026",
+   "unit": "Q",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": "Luis Fernando obtiene la línea base de planilla."
+  },
+  {
+   "id": "days",
+   "name": "Días de vacaciones acumulados",
+   "unit": "días",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  },
+  {
+   "id": "coverage",
+   "name": "Personal con acceso al portal",
+   "unit": "%",
+   "baseline": null,
+   "target": 100,
+   "current": null,
+   "updated": "",
+   "note": ""
+  }
+ ],
+ "savings": {
+  "note": "Horas de reporte manual de vacaciones y costo de personal: línea base pendiente."
+ },
+ "next": "Análisis de casos críticos — 7 oct.",
+ "paused": false
+}

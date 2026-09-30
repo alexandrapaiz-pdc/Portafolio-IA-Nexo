@@ -1,0 +1,78 @@
+{
+ "priority": 5,
+ "wave": 2,
+ "bu": "MegaMás",
+ "name": "MegaMás · Lexy / Soporte IT",
+ "sponsor": "Jackeline Luna",
+ "tagline": "Base de conocimiento para soporte",
+ "phase": "descubrimiento",
+ "summary": "Base de conocimiento de soporte IT para que los agentes resuelvan tickets sin buscar entre documentos. El más fácil de arrancar cuando exista la capa de datos.",
+ "pains": [
+  "Los tickets llegan por correo a OTRS: correos sin asunto crean tickets sin título y las respuestas generan duplicados.",
+  "Se perdió el repositorio compartido anterior.",
+  "SharePoint es difícil de buscar (“mil documentos”).",
+  "La validación de Item Data de Avon (folleto vs. IDF) es 100% manual y toma días."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "datos",
+  "orquestacion",
+  "licencias"
+ ],
+ "blocker": "Capa de datos del stack.",
+ "discovery": [
+  {
+   "label": "Inventario de contenido: SharePoint + exportación de OTRS",
+   "due": "2026-10-09",
+   "done": false
+  },
+  {
+   "label": "Alcance de la base de conocimiento",
+   "due": "2026-10-12",
+   "done": false
+  },
+  {
+   "label": "Alcance del agente de validación Item Data de Avon",
+   "due": "2026-10-19",
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "dup_tickets",
+   "name": "Tickets duplicados o sin título por mes",
+   "unit": "",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  },
+  {
+   "id": "kb_resolved",
+   "name": "Tickets resueltos con la base de conocimiento",
+   "unit": "%",
+   "baseline": 0,
+   "target": null,
+   "current": 0,
+   "updated": "2026-09-30",
+   "note": ""
+  },
+  {
+   "id": "item_data",
+   "name": "Validación de Item Data Avon",
+   "unit": "días",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": "Hoy toma días; meta: minutos."
+  }
+ ],
+ "savings": {
+  "note": "Tiempo de búsqueda de los agentes de soporte: línea base pendiente."
+ },
+ "next": "Inventario de contenido — 9 oct.",
+ "paused": false
+}

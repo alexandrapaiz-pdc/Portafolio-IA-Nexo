@@ -1,0 +1,111 @@
+{
+ "priority": 2,
+ "wave": 1,
+ "bu": "MegaMás",
+ "name": "MegaMás · Contraloría",
+ "sponsor": "César Paz",
+ "tagline": "Documentos, IVA y cuentas por pagar",
+ "phase": "descubrimiento",
+ "summary": "Agente de conciliación documental y registro en ERP (incluye retenciones) para el flujo de compras de inventario Tráfico → Contraloría → ERP.",
+ "pains": [
+  "Facturas antiguas vuelven gastos no deducibles y se pierde crédito de IVA.",
+  "Facturas de hasta un año quedan en prepasivo sin registrarse como cuenta por pagar.",
+  "2 de 3 agentes nacionales suspendieron servicio por falta de pago.",
+  "Documentos de Tráfico se extravían: 130–140 reubicados, 40 aún sin ubicar; llegan en lotes de 200–400.",
+  "Un proyecto previo de RPA con Becker se canceló."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "github",
+  "controles",
+  "jde",
+  "orquestacion",
+  "licencias"
+ ],
+ "blocker": "Acceso a la vista de liquidaciones pendientes y a la carpeta compartida de Tráfico.",
+ "discovery": [
+  {
+   "label": "Acceso a vista de liquidaciones y carpeta de Tráfico",
+   "due": "2026-10-02",
+   "done": false
+  },
+  {
+   "label": "Mapa del flujo documental y alcance del agente",
+   "due": "2026-10-06",
+   "done": false
+  },
+  {
+   "label": "Línea base: IVA no deducible, pagos vencidos, documentos faltantes",
+   "due": "2026-10-07",
+   "done": false
+  },
+  {
+   "label": "Canal único de recepción de documentos (quick win)",
+   "due": "2026-10-08",
+   "done": false
+  },
+  {
+   "label": "Ficha del proyecto",
+   "due": "2026-10-09",
+   "done": false
+  },
+  {
+   "label": "Especificación del agente de conciliación + ERP",
+   "due": "2026-10-09",
+   "done": false
+  },
+  {
+   "label": "Mini-curso de Claude (30 min) para el equipo",
+   "due": "2026-10-09",
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "iva",
+   "name": "IVA no deducible",
+   "unit": "Q",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": "Monto no disponible en la reunión; se mide en la línea base."
+  },
+  {
+   "id": "docs_missing",
+   "name": "Documentos de Tráfico sin ubicar",
+   "unit": "",
+   "baseline": 40,
+   "target": 0,
+   "current": 40,
+   "updated": "2026-09-30",
+   "note": "130–140 ya reubicados al 29 sep."
+  },
+  {
+   "id": "aged_invoices",
+   "name": "Facturas en prepasivo > 30 días",
+   "unit": "",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": "Algunas con hasta un año de antigüedad."
+  },
+  {
+   "id": "agents_suspended",
+   "name": "Agentes nacionales con servicio suspendido",
+   "unit": "",
+   "baseline": 2,
+   "target": 0,
+   "current": 2,
+   "updated": "2026-09-30",
+   "note": "2 de 3 suspendieron por falta de pago."
+  }
+ ],
+ "savings": {
+  "note": "Horas de conciliación y registro manual: línea base pendiente."
+ },
+ "next": "Línea base de IVA, pagos vencidos y documentos — 7 oct.",
+ "paused": false
+}

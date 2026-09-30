@@ -1,0 +1,83 @@
+{
+ "priority": 7,
+ "wave": 2,
+ "bu": "Nexo",
+ "name": "Generación de Códigos STEP",
+ "sponsor": "Rodny",
+ "tagline": "Creación y validación de códigos por área",
+ "phase": "descubrimiento",
+ "summary": "Flujo de validación por etapas (Marca → Soporte de marcas → Inventarios → Ingeniería → Manufactura → Catálogos) para crear códigos en STEP sin redigitar.",
+ "pains": [
+  "Artículos listos en bodega no se pueden facturar por atributos mal configurados en JD Edwards.",
+  "El gerente de marca copia un Excel anterior porque no domina los campos técnicos.",
+  "Catálogos vuelve a ingresar los datos en el sistema.",
+  "Errores como costeo incorrecto o producto manufacturado registrado como comprado."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "n8n",
+  "datos",
+  "jde"
+ ],
+ "blocker": "Decisión Databricks / n8n.",
+ "discovery": [
+  {
+   "label": "Revisar documentación y PoC de Rodny",
+   "due": "2026-10-09",
+   "done": false
+  },
+  {
+   "label": "Flujo de validación por área",
+   "due": "2026-10-09",
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "errors",
+   "name": "Códigos con errores de configuración por mes",
+   "unit": "",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  },
+  {
+   "id": "blocked",
+   "name": "Artículos bloqueados para facturar",
+   "unit": "",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  },
+  {
+   "id": "impact",
+   "name": "Impacto económico por errores",
+   "unit": "US$",
+   "baseline": 33000,
+   "target": 0,
+   "current": 33000,
+   "updated": "2026-09-30",
+   "note": "Estimación muy preliminar del caso Ayudín 3X."
+  },
+  {
+   "id": "time",
+   "name": "Tiempo de creación de un código",
+   "unit": "días",
+   "baseline": null,
+   "target": null,
+   "current": null,
+   "updated": "",
+   "note": ""
+  }
+ ],
+ "savings": {
+  "note": "Horas de redigitación y reproceso: línea base pendiente."
+ },
+ "next": "Flujo de validación por área — 9 oct.",
+ "paused": false
+}

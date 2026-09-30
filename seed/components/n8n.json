@@ -1,0 +1,8 @@
+{
+ "order": 5,
+ "name": "n8n propio y migración de flujos de George",
+ "owner": "Edgar · Jorge",
+ "status": "en_curso",
+ "note": "Flujos en licencia a nombre de George; se exportan a JSON y se migran.",
+ "updated": "2026-09-30"
+}

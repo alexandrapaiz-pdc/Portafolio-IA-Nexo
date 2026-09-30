@@ -1,0 +1,97 @@
+{
+ "priority": 3,
+ "wave": 1,
+ "bu": "Avon",
+ "name": "Avon · APT y planeación de campaña",
+ "sponsor": "Planeación Avon",
+ "tagline": "Reemplazo de APT y fase 2 de reingeniería",
+ "phase": "descubrimiento",
+ "summary": "El APT heredado se retiró; el reemplazo lee, valida y transforma el archivo de colores para generar Macro Revista y Leader List. La fase 2 automatiza la planeación: base de ventas → tablas de KPIs → estimación → precios.",
+ "pains": [
+  "Los datos de ventas se descargan por campaña y país y se consolidan a mano en Excel.",
+  "APT perdió funciones de paginación y depende de macros externas.",
+  "Children no tiene clasificación propia; se separa a mano.",
+  "La planeación de una campaña toma 15–20 días."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "github",
+  "datos"
+ ],
+ "blocker": "Confirmar Vikingo Planeación como fuente de datos To-Be.",
+ "discovery": [
+  {
+   "label": "Feedback crítico de la nueva herramienta",
+   "due": "2026-09-30",
+   "done": false
+  },
+  {
+   "label": "Presentación kickoff C7 y acceso a carpetas de categoría",
+   "due": "2026-09-30",
+   "done": false
+  },
+  {
+   "label": "Confirmar Vikingo Planeación como fuente To-Be",
+   "due": "2026-10-05",
+   "done": false
+  },
+  {
+   "label": "Base histórica de campañas",
+   "due": "2026-10-06",
+   "done": false
+  },
+  {
+   "label": "Mapa del proceso de planeación de 15 pasos",
+   "due": "2026-10-07",
+   "done": false
+  },
+  {
+   "label": "Alcance de automatización Excel → KPIs (sprint de 7 semanas)",
+   "due": "2026-10-08",
+   "done": false
+  },
+  {
+   "label": "Diseño To-Be de la reingeniería",
+   "due": "2026-10-09",
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "cycle",
+   "name": "Ciclo de planeación por campaña",
+   "unit": "días",
+   "baseline": 20,
+   "target": null,
+   "current": null,
+   "updated": "2026-09-30",
+   "note": "Hoy 15–20 días; meta por definir."
+  },
+  {
+   "id": "excel_kpi",
+   "name": "Base Excel → tablas de KPIs",
+   "unit": "h",
+   "baseline": 2,
+   "target": 0.1,
+   "current": 2,
+   "updated": "2026-09-30",
+   "note": "Hoy “un par de horas” por corrida; meta en minutos."
+  },
+  {
+   "id": "leader_acc",
+   "name": "Precisión de Leader List automatizada",
+   "unit": "%",
+   "baseline": null,
+   "target": 100,
+   "current": 96,
+   "updated": "2026-09-30",
+   "note": "PoC: 95–98%. No es medida final de producción."
+  }
+ ],
+ "savings": {
+  "note": "~300 h de trabajo manual en alcance (estimado, sin fuente verificada en reuniones). Convertir a h/mes al medir la línea base."
+ },
+ "next": "Mapa de 15 pasos y alcance Excel → KPIs — 7–8 oct.",
+ "paused": false
+}

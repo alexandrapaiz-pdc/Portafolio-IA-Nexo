@@ -1,0 +1,9 @@
+{
+ "projectId": "infra",
+ "date": "2026-09-29",
+ "tag": "Decisión",
+ "text": "Se acordó arrancar el stack en Azure por su integración con Microsoft, SharePoint y Entra ID. n8n se mantiene temporalmente mientras se migran los flujos de George.",
+ "kpiId": null,
+ "value": null,
+ "createdAt": "2026-09-29T12:00:00Z"
+}

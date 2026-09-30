@@ -1,0 +1,89 @@
+{
+ "priority": 4,
+ "wave": 1,
+ "bu": "Grupo PDC",
+ "name": "Portal de Mundos",
+ "sponsor": "Sergio",
+ "tagline": "Tablero de gestión por mundo para el comité ejecutivo",
+ "phase": "piloto",
+ "summary": "Un tablero por mundo con métricas semanales y mensuales, cadenas de valor, proyectos clave, metas y proyecciones, para reemplazar las presentaciones del comité. Piloto: PDC Brands.",
+ "pains": [
+  "El comité ejecutivo revisa el desempeño con presentaciones armadas a mano.",
+  "Excel es una fuente de datos frágil (se mantiene por gestión del cambio).",
+  "Los flujos de n8n no se pueden versionar en Git en la instalación actual.",
+  "Cada portal tiene su propio enlace; la privacidad por creador limita la vista de portal de portales."
+ ],
+ "needs": [
+  "stack",
+  "azure",
+  "github",
+  "n8n",
+  "dominio",
+  "controles"
+ ],
+ "blocker": "Migrar los flujos de n8n a una instancia propia de la compañía.",
+ "discovery": [
+  {
+   "label": "Jorge comparte el frontend en GitHub",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Exportar flujos de n8n a JSON",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Acceso de Alexandra a flujos y hosting",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "n8n propio y dominio con IT",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Arquitectura de largo plazo con Edgar",
+   "due": null,
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "worlds",
+   "name": "Mundos publicados en el portal",
+   "unit": "",
+   "baseline": 1,
+   "target": null,
+   "current": 1,
+   "updated": "2026-09-30",
+   "note": "Piloto PDC Brands. Total de mundos por confirmar."
+  },
+  {
+   "id": "reviews",
+   "name": "Revisiones del comité hechas desde el portal",
+   "unit": "",
+   "baseline": 0,
+   "target": null,
+   "current": 0,
+   "updated": "2026-09-30",
+   "note": ""
+  },
+  {
+   "id": "flows_owned",
+   "name": "Flujos del portal en stack propio",
+   "unit": "%",
+   "baseline": 0,
+   "target": 100,
+   "current": 0,
+   "updated": "2026-09-30",
+   "note": ""
+  }
+ ],
+ "savings": {
+  "note": "Horas de preparación de presentaciones por revisión: línea base pendiente."
+ },
+ "next": "Frontend en GitHub y flujos exportados (Jorge).",
+ "paused": false
+}
