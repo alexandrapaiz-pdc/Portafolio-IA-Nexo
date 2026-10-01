@@ -216,6 +216,30 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
 .dg-d.listo{fill:var(--strong);stroke:none}
 .dg-legend{display:flex;gap:18px;font-size:12.5px;color:var(--sub);flex-wrap:wrap}
 
+details.comps summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--accent-ink);list-style:none;display:inline-flex;gap:6px;align-items:center}
+details.comps summary::-webkit-details-marker{display:none}
+details.comps summary::after{content:"›";transition:transform .2s}
+details.comps[open] summary::after{transform:rotate(90deg)}
+/* Programs */
+.programs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:720px){.programs{grid-template-columns:1fr}}
+.prog{background:var(--group);border:0;border-radius:var(--r);padding:24px 24px 22px;text-align:left;display:grid;gap:10px;align-content:start;cursor:pointer;min-width:0}
+.prog:hover{background:var(--line)}
+.prog .pn{font-size:13px;font-weight:600;color:var(--accent)}
+.prog h3{font-size:22px;line-height:1.15;letter-spacing:-.03em}
+.prog p{font-size:14px;color:var(--sub)}
+.prog .pm{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+.prog .pm b{font-size:34px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.prog .pm span{font-size:13px;color:var(--faint)}
+.prog .bar{margin-top:2px}
+.lvl{grid-template-columns:minmax(0,1fr) auto}
+.lvl .name{font-weight:500}.lvl .note{font-size:13px;color:var(--sub);margin-top:2px}
+.sec-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sec-actions a{font-size:14px;color:var(--accent-ink);text-decoration:none;font-weight:500}
+.sec-actions a:hover{text-decoration:underline}
+.tgroup{display:grid;gap:8px}
+.tgroup .group-title button{border:0;background:none;padding:0;font:inherit;color:var(--text);font-weight:600;cursor:pointer}
+
 /* Tasks */
 .task{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 20px;font-size:14px}
 .task .tdot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--faint)}
@@ -282,8 +306,8 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
   <div class="wrap">
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
-    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="portafolio" aria-current="page">Portafolio</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
-    <div class="links" id="navLinks"><a href="#stack-sec">Stack</a><a href="#proyectos">Proyectos</a><a href="#semana">Esta semana</a><a href="#bitacora">Bitácora</a></div>
+    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="portafolio" aria-current="page">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
+    <div class="links" id="navLinks"><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></div>
     <span class="spacer"></span>
     <span class="edit" id="editChip" hidden>Modo edición</span>
     <span class="stamp" id="stamp"></span>
@@ -293,18 +317,23 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
 <main class="wrap" id="viewPortfolio">
   <section class="hero">
     <div class="eyebrow">Nexo · Inteligencia artificial · Q4 2026</div>
-    <h1>Portafolio de IA.<br><span>Primero el stack.</span></h1>
-    <p class="lead">Siete proyectos priorizados y dos habilitadores. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
+    <h1>Portafolio de IA.<br><span>Cuatro frentes.</span></h1>
+    <p class="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
     <p class="who">Alexandra Paiz, Líder de IA y Herramientas · Fuera de oficina 13–16 oct y 20–26 oct</p>
   </section>
 
   <div class="stats" id="stats"></div>
 
+  <section class="block" id="frentes" style="padding-top:64px">
+    <div class="programs" id="programs"></div>
+  </section>
+
   <section class="block" id="stack-sec">
     <div class="sec-head">
-      <span class="eyebrow">Habilitación</span>
+      <span class="eyebrow">Nexo AI Stack</span>
       <h2>Lo que desbloquea todo lo demás.</h2>
       <p>Cada componente del stack habilita proyectos. Mientras no esté listo, el avance se mide aquí y en el descubrimiento de cada proyecto.</p>
+      <div class="sec-actions"><button type="button" class="btn ghost" data-open="infra">Ver detalle del stack</button></div>
     </div>
     <div>
       <figure class="diagram" style="margin-bottom:34px">
@@ -313,32 +342,39 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
         <div class="dg-legend"><span>Estado de cada pieza:</span><span class="status listo"><i></i>Listo</span><span class="status en_curso"><i></i>En curso</span><span class="status pendiente"><i></i>Pendiente</span></div>
       </figure>
       <div id="stackBar"></div>
-      <div class="group" id="stack" style="margin-top:18px"><div class="empty">Cargando componentes…</div></div>
+      <details class="comps" style="margin-top:18px"><summary id="compsSum">Ver componentes del stack</summary>
+      <div class="group" id="stack" style="margin-top:12px"><div class="empty">Cargando componentes…</div></div></details>
     </div>
+  </section>
+
+  <section class="block" id="practicas">
+    <div class="sec-head">
+      <span class="eyebrow">AI Best Practices</span>
+      <h2>Estándares para usar y construir con IA.</h2>
+      <p>Guías por nivel, desde quien usa Claude hasta quien construye agentes. Viven en GitHub y cualquiera puede proponer mejoras.</p>
+      <div class="sec-actions" id="practicasActions"></div>
+    </div>
+    <div class="group" id="levels"><div class="empty">Cargando…</div></div>
+  </section>
+
+  <section class="block" id="brain">
+    <div class="sec-head">
+      <span class="eyebrow">Company Brain</span>
+      <h2>El conocimiento de la empresa, listo para agentes.</h2>
+      <p>Integraciones con Databricks y la información de la empresa en un solo lugar. Los portales, empezando por Portal de Mundos, son su cara visible.</p>
+      <div class="sec-actions"><button type="button" class="btn ghost" data-open="companybrain">Ver detalle</button></div>
+    </div>
+    <div class="group" id="brainParts"><div class="empty">Cargando…</div></div>
+    <div><div class="group-title"><b>Portales</b><span>El frente interactivo del Company Brain</span></div><div class="group" id="portales"></div></div>
   </section>
 
   <section class="block" id="proyectos">
     <div class="sec-head">
-      <span class="eyebrow">Prioridades</span>
-      <h2>En este orden.</h2>
+      <span class="eyebrow">AI Agent Projects</span>
+      <h2>Agentes, en este orden.</h2>
       <p>Prioridad acordada con Benji y Óscar el 30 de septiembre.</p>
     </div>
-    <div class="seg" role="group" aria-label="Filtrar" id="seg">
-      <button type="button" data-f="all" aria-pressed="true">Todos</button>
-      <button type="button" data-f="1" aria-pressed="false">Ola 1</button>
-      <button type="button" data-f="2" aria-pressed="false">Ola 2</button>
-    </div>
-    <div class="groups" id="waves"><div class="empty">Cargando proyectos…</div></div>
-  </section>
-
-  <section class="block" id="semana">
-    <div class="sec-head">
-      <span class="eyebrow">Backlog en Asana</span>
-      <h2>Esta semana.</h2>
-      <p>Tareas vencidas y por vencer en los próximos 7 días, tomadas del backlog personal en Asana.</p>
-    </div>
-    <div class="sync" id="syncBar"></div>
-    <div class="group" id="week"><div class="empty">Cargando tareas…</div></div>
+    <div class="group" id="agents"><div class="empty">Cargando proyectos…</div></div>
   </section>
 
   <section class="block" id="bitacora">
@@ -353,6 +389,24 @@ dialog.sheet::backdrop{background:var(--scrim);backdrop-filter:blur(8px);-webkit
     <span>Grupo PDC · Nexo · Liderazgo de IA</span>
     <span>Fuentes: reuniones en Granola y backlog en Asana. “Pendiente” indica una línea base aún no medida.</span>
   </footer>
+</main>
+
+<main class="wrap" id="viewTasks" hidden>
+  <section class="hero" style="padding-bottom:28px">
+    <div class="eyebrow">Backlog personal en Asana</div>
+    <h1>Tareas.</h1>
+    <p class="lead">El trabajo del día a día detrás de cada frente, sincronizado desde Asana.</p>
+    <div class="sync" id="syncBar"></div>
+  </section>
+  <section class="block" id="semana" style="padding-top:24px">
+    <div class="sec-head"><span class="eyebrow">Próximos 7 días</span><h2>Esta semana.</h2></div>
+    <div class="group" id="week"><div class="empty">Cargando tareas…</div></div>
+  </section>
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">Por proyecto</span><h2>Todo lo abierto.</h2></div>
+    <div class="groups" id="tasksByProject"></div>
+  </section>
+  <footer><span>Grupo PDC · Nexo · Liderazgo de IA</span><span>Fuente: Asana · Backlog Personal</span></footer>
 </main>
 
 <main class="wrap" id="viewTickets" hidden>
@@ -419,7 +473,7 @@ const STATUS={pendiente:"Pendiente",en_curso:"En curso",listo:"Listo"};
 const NEXT_STATUS={pendiente:"en_curso",en_curso:"listo",listo:"pendiente"};
 const TAGS=["Avance","Decisión","Bloqueo","Hito"];
 const S={db:null,canWrite:false,projects:[],components:[],updates:[],asana:{},asanaMeta:null,syncing:false,syncErr:"",showDone:false,loaded:{p:false,c:false,u:false,a:false},filter:"all",open:null,editing:false};
-try{const f=localStorage.getItem("pia.filter");if(f)S.filter=f}catch(e){}
+
 
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -441,12 +495,12 @@ const pct=(a,b)=>b?Math.round(a/b*100):0;
 const tasksOf=p=>S.asana[p.id]?.tasks||null;
 function addDays(iso,n){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
 function taskStats(list){const t=today(),wk=addDays(t,7);const open=list.filter(x=>!x.done);return{done:list.length-open.length,total:list.length,late:open.filter(x=>x.due&&x.due<t).length,week:open.filter(x=>x.due&&x.due>=t&&x.due<=wk).length}}
-function progressOf(p){const t=tasksOf(p);if(t&&t.length){const st=taskStats(t);return{label:"Tareas",done:st.done,total:st.total,late:st.late}}const d=discovery(p);return{label:"Descubrimiento",done:d.done,total:d.total,late:0}}
+function progressOf(p){const d=discovery(p);return{label:p.enabler?"Hitos":"Descubrimiento",done:d.done,total:d.total,late:0}}
 const asanaUrl=gid=>"https://app.asana.com/0/0/"+encodeURIComponent(gid);
 function ago(iso){if(!iso)return"";const m=Math.round((Date.now()-new Date(iso).getTime())/60000);if(m<1)return"hace un momento";if(m<60)return"hace "+m+" min";const h=Math.round(m/60);if(h<24)return"hace "+h+" h";return fdate(iso.slice(0,10))}
 
 /* ---------- render ---------- */
-function renderAll(){renderStamp();renderStats();renderStack();renderWaves();renderWeek();renderFeed();if(S.open&&!S.editing&&!(document.querySelector("#uText")?.value))renderSheet()}
+function renderAll(){renderStamp();renderStats();renderPrograms();renderStack();renderPracticas();renderBrain();renderAgents();renderWeek();renderTasksByProject();renderFeed();if(S.open&&!S.editing&&!(document.querySelector("#uText")?.value))renderSheet()}
 function renderStamp(){const d=S.updates[0]?.date;$("#stamp").textContent=d?"Actualizado "+fdate(d):""}
 function renderStats(){
   const comps=S.components,ready=comps.filter(c=>c.status==="listo").length;
@@ -458,7 +512,7 @@ function renderStats(){
   const hv=units.length?`${nf(units[0][1])}<small>${esc(units[0][0])}</small>`:`—`;
   $("#stats").innerHTML=[
     ["Stack listo",`${ready}<small>de ${comps.length||0}</small>`,"",`${comps.filter(c=>c.status==="en_curso").length} componentes en curso`],
-    [hasAsana?"Tareas cerradas":"Descubrimiento",`${pct(disc[0],disc[1])}<small>%</small>`,"",`${disc[0]} de ${disc[1]}`+(disc[2]?` · ${disc[2]} vencidas`:"")],
+    ["Proyectos de agentes",`${agents().length}`,"",`Prioridad 1: ${agents()[0]?.name||"—"}`],
     ["Líneas base medidas",`${measured}<small>de ${kpis.length}</small>`,"","KPIs con punto de partida"],
     ["Trabajo manual en alcance",hv,"acc",units.length>1?units.slice(1).map(([u,v])=>nf(v)+" "+u).join(" · "):"Horas medidas a la fecha"]
   ].map(([k,v,c,s])=>`<div class="stat"><span class="k">${k}</span><span class="v num ${c}">${v}</span><span class="s">${esc(s)}</span></div>`).join("");
@@ -470,6 +524,7 @@ function renderStack(){
   const cs=[...S.components].sort((a,b)=>(a.order??99)-(b.order??99));
   const r=cs.filter(c=>c.status==="listo").length,g=cs.filter(c=>c.status==="en_curso").length;
   $("#stackDiagram").innerHTML=stackDiagram();
+  $("#compsSum").textContent="Ver los "+S.components.length+" componentes del stack";
   $("#stackBar").innerHTML=`<div class="progress" aria-hidden="true">${cs.map(c=>`<i class="${esc(c.status)}"></i>`).join("")}</div>
     <div class="stack-sum num"><span><b>${r}</b> listos</span><span><b>${g}</b> en curso</span><span><b>${cs.length-r-g}</b> pendientes</span></div>`;
   el.innerHTML=cs.map(c=>{const u=unlocks(c.id);return`<div class="row comp">
@@ -519,16 +574,16 @@ function stackDiagram(){
     <text class="dg-g" x="378" y="162">CONTAINER APPS</text>
     ${edges}${nodes}</svg>`;
 }
-function projRow(p){
+function projRow(p,rank){
   const r=readiness(p),d=progressOf(p),s=savings(p);
   let imp;
   if(p.enabler)imp=`<div class="v">Base</div><div class="k">${esc(p.impactLabel||"Habilita el portafolio")}</div>`;
   else if(s.saved)imp=`<div class="v acc num">${nf(s.saved)} ${esc(s.unit)}</div><div class="k">liberadas</div>`;
   else if(isNum(s.baseline))imp=`<div class="v num">${nf(s.baseline)} ${esc(s.unit)}</div><div class="k">manuales en alcance</div>`;
   else imp=`<div class="v pend">Línea base pendiente</div>`;
-  const flags=[p.noAzure?`<span class="go">Avanza sin Azure</span>`:"",p.blocker?`<span class="blk">Bloqueo: ${esc(p.blocker)}</span>`:""].filter(Boolean).join("");
+  const flags=[p.noAzure?`<span class="go">Avanza sin Azure</span>`:"",Number(p.wave)===2?`<span>Ola 2</span>`:"",p.blocker?`<span class="blk">Bloqueo: ${esc(p.blocker)}</span>`:""].filter(Boolean).join("");
   return`<button type="button" class="row proj" data-open="${esc(p.id)}">
-    <span class="rank num ${p.enabler?"base":""}">${p.enabler?"Base":esc(p.priority)}</span>
+    <span class="rank num">${esc(rank??"")}</span>
     <div style="min-width:0"><div class="name">${esc(p.name)}</div><div class="meta">${esc([p.sponsor,phaseLabel(p)].filter(Boolean).join(" · "))}</div>${flags?`<div class="flags">${flags}</div>`:""}</div>
     <div class="mini"><div class="l"><span>Stack</span><b class="num">${r.ready}/${r.total}</b></div><div class="bar"><i style="width:${pct(r.ready,r.total)}%"></i></div>
       <div class="l" style="margin-top:4px"><span>${d.label}</span><b class="num">${d.done}/${d.total}</b></div><div class="bar"><i style="width:${pct(d.done,d.total)}%"></i></div></div>
@@ -536,16 +591,56 @@ function projRow(p){
     <span class="chev" aria-hidden="true">›</span>
   </button>`;
 }
-function renderWaves(){
-  if(!S.loaded.p)return;const el=$("#waves");
-  document.querySelectorAll("#seg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===S.filter)));
-  if(!S.projects.length){el.innerHTML=`<div class="empty">Todavía no hay proyectos registrados.</div>`;return}
-  const ps=[...S.projects].sort((a,b)=>(a.priority??99)-(b.priority??99));
-  const G=[["base","Base","Habilitadores. Van primero y en paralelo.",p=>p.enabler],
-           ["1","Ola 1","Prioridades 1 a 4. Arrancan en Q4.",p=>!p.enabler&&Number(p.wave)===1],
-           ["2","Ola 2","Arrancan cuando el stack esté arriba.",p=>!p.enabler&&Number(p.wave)===2]];
-  el.innerHTML=G.filter(([id])=>S.filter==="all"||id===S.filter||(id==="base"&&S.filter==="1")).map(([id,t,sub,fn])=>{const list=ps.filter(fn);if(!list.length)return"";
-    return`<div><div class="group-title"><b>${t}</b><span>${sub}</span></div><div class="group">${list.map(projRow).join("")}</div></div>`}).join("")||`<div class="empty">No hay proyectos en esta ola.</div>`;
+const PROGRAMS=[
+ {id:"stack",name:"Nexo AI Stack",lead:"infra",sec:"stack-sec",line:"Azure, agentes, datos y controles: la base de todo."},
+ {id:"practicas",name:"AI Best Practices",lead:"protocolos",sec:"practicas",line:"Guías por nivel para usar y construir con IA, en GitHub."},
+ {id:"brain",name:"Company Brain",lead:"companybrain",sec:"brain",line:"Databricks, datos de la empresa y portales como Portal de Mundos."},
+ {id:"agentes",name:"AI Agent Projects",lead:null,sec:"proyectos",line:"Automatizaciones con dueño, línea base y KPI."}];
+const LSTAT={activo:["listo","Activo"],en_construccion:["en_curso","En construcción"],pendiente:["pendiente","Pendiente"],listo:["listo","Listo"],en_curso:["en_curso","En curso"]};
+const NEXT_L={activo:"pendiente",pendiente:"en_construccion",en_construccion:"activo"};
+const pById=id=>S.projects.find(p=>p.id===id);
+const inProgram=(p,g)=>p.program?p.program===g:(g==="agentes"&&!p.enabler);
+const agents=()=>S.projects.filter(p=>inProgram(p,"agentes")).sort((a,b)=>(a.priority??99)-(b.priority??99));
+function lvlStatus(x,pid,field,i){const [c,l]=LSTAT[x.status]||LSTAT.pendiente;
+  return S.canWrite?`<button type="button" class="status ${c}" data-cyc="${esc(pid)}|${field}|${i}" title="Cambiar estado"><i></i>${l}</button>`:`<span class="status ${c}"><i></i>${l}</span>`}
+function renderPrograms(){
+  if(!S.loaded.p)return;
+  const comps=S.components,ready=comps.filter(c=>c.status==="listo").length;
+  const pr=pById("protocolos"),lv=pr?.levels||[],act=lv.filter(x=>x.status==="activo").length;
+  const br=pById("companybrain"),parts=br?.parts||[],pdone=parts.filter(x=>x.status==="listo").length,pprog=parts.filter(x=>x.status==="en_curso").length;
+  const ag=agents(),building=ag.filter(p=>["construccion","piloto","produccion"].includes(p.phase)).length;
+  const M={stack:[`${ready}`,`de ${comps.length} componentes listos`,pct(ready,comps.length)],
+    practicas:[`${act}`,`de ${lv.length} niveles activos`,pct(act,lv.length)],
+    brain:[`${pdone+pprog}`,`de ${parts.length} partes en marcha`,pct(pdone+pprog*.5,parts.length)],
+    agentes:[`${ag.length}`,`proyectos · ${building} en construcción`,pct(building,ag.length)]};
+  $("#programs").innerHTML=PROGRAMS.map(g=>{const m=M[g.id],lead=g.lead?pById(g.lead):null;
+    return`<button type="button" class="prog" data-goto="${g.sec}"><span class="pn">${g.name}</span><h3>${esc(g.line)}</h3>
+      ${lead?.blocker?`<p>Bloqueo: ${esc(lead.blocker)}</p>`:g.id==="agentes"&&ag[0]?`<p>Prioridad 1: ${esc(ag[0].name)}</p>`:"<p></p>"}
+      <div class="pm"><b class="num">${m[0]}</b><span>${m[1]}</span></div><div class="bar"><i style="width:${m[2]}%"></i></div></button>`}).join("");
+}
+function renderPracticas(){
+  if(!S.loaded.p)return;const pr=pById("protocolos");if(!pr){$("#levels").innerHTML="";return}
+  $("#practicasActions").innerHTML=`<button type="button" class="btn ghost" data-open="protocolos">Ver detalle</button>${pr.repo?`<a href="${esc(pr.repo)}" target="_blank" rel="noopener">Abrir en GitHub ›</a>`:""}${isNum(pr.pendingDecisions)?`<span class="muted">${pr.pendingDecisions} decisiones pendientes</span>`:""}`;
+  $("#levels").innerHTML=(pr.levels||[]).map((x,i)=>`<div class="row lvl"><div style="min-width:0"><div class="name">${esc(x.name)}</div><div class="note">${esc(x.who||"")}</div></div>${lvlStatus(x,"protocolos","levels",i)}</div>`).join("")||`<div class="empty">Sin niveles registrados.</div>`;
+}
+function renderBrain(){
+  if(!S.loaded.p)return;const br=pById("companybrain");
+  $("#brainParts").innerHTML=(br?.parts||[]).map((x,i)=>`<div class="row lvl"><div style="min-width:0"><div class="name">${esc(x.name)}</div><div class="note">${esc(x.desc||"")}</div></div>${lvlStatus(x,"companybrain","parts",i)}</div>`).join("")||`<div class="empty">Sin partes registradas.</div>`;
+  const ports=S.projects.filter(p=>inProgram(p,"brain")&&p.id!=="companybrain");
+  $("#portales").innerHTML=ports.length?ports.map(p=>projRow(p,"")).join(""):`<div class="empty">Sin portales registrados.</div>`;
+}
+function renderAgents(){
+  if(!S.loaded.p)return;const ag=agents();
+  $("#agents").innerHTML=ag.length?ag.map((p,i)=>projRow(p,String(i+1))).join(""):`<div class="empty">Todavía no hay proyectos.</div>`;
+}
+function renderTasksByProject(){
+  if(!S.loaded.a||!S.loaded.p)return;
+  const order=[...S.projects].sort((a,b)=>{const ga=PROGRAMS.findIndex(g=>inProgram(a,g.id)||g.lead===a.id),gb=PROGRAMS.findIndex(g=>inProgram(b,g.id)||g.lead===b.id);return ga-gb||(a.priority??99)-(b.priority??99)});
+  const html=order.map(p=>{const t=tasksOf(p);if(!t||!t.length)return"";const st=taskStats(t),open=t.filter(x=>!x.done).sort((a,b)=>(a.due||"9").localeCompare(b.due||"9")),showDone=S.showDoneFor===p.id;
+    return`<div class="tgroup"><div class="group-title"><button type="button" data-open="${esc(p.id)}">${esc(p.name)}</button><span class="num">${st.done} de ${st.total} cerradas${st.late?` · <span style="color:var(--accent-ink)">${st.late} vencidas</span>`:""}</span></div>
+      <div class="group">${open.map(x=>taskRow(x)).join("")||`<div class="row muted">Sin tareas abiertas.</div>`}
+      ${st.done?(showDone?t.filter(x=>x.done).map(x=>taskRow(x)).join("")+`<button type="button" class="more" data-donefor="${esc(p.id)}">Ocultar cerradas</button>`:`<button type="button" class="more" data-donefor="${esc(p.id)}">Mostrar ${st.done} cerradas</button>`):""}</div></div>`}).join("");
+  $("#tasksByProject").innerHTML=html||`<div class="empty">Sincroniza con Asana para ver las tareas.</div>`;
 }
 function taskRow(t,proj){const late=!t.done&&t.due&&t.due<today();
   return`<div class="row task ${t.done?"done":""}"><span class="tdot" aria-hidden="true"></span>
@@ -602,10 +697,11 @@ function renderSheet(){
   const r=readiness(p),s=savings(p),d=discovery(p),pi=PHASES.findIndex(x=>x[0]===p.phase);
   const at=tasksOf(p),ats=at?taskStats(at):null;
   const ups=S.updates.filter(u=>u.projectId===p.id),E=S.editing;
-  $("#sheetTitle").textContent=p.enabler?"Base":"Prioridad "+p.priority;
+  const isAg=inProgram(p,"agentes"),prog=PROGRAMS.find(g=>g.lead===p.id||(!isAg&&inProgram(p,g.id)));
+  $("#sheetTitle").textContent=isAg?"AI Agent Projects · Prioridad "+(agents().indexOf(p)+1):(prog?.name||"Proyecto");
   $("#sheetBody").innerHTML=`
   <div style="display:grid;gap:12px">
-    <div class="kicker">${p.enabler?"<b>Habilitador</b>":`<b>Prioridad ${esc(p.priority)}</b><span>Ola ${esc(p.wave)}</span>`}<span>${esc(p.bu)}</span>${p.noAzure?"<span>Avanza sin Azure</span>":""}</div>
+    <div class="kicker">${isAg?`<b>Prioridad ${agents().indexOf(p)+1}</b><span>Ola ${esc(p.wave)}</span>`:`<b>${esc(prog?.name||"")}</b>`}<span>${esc(p.bu)}</span>${p.noAzure?"<span>Avanza sin Azure</span>":""}</div>
     <h2>${esc(p.name)}</h2>
     <p class="lede">${esc(p.summary||p.tagline||"")}</p>
     <p class="muted">${esc(p.sponsor||"")}</p>
@@ -623,15 +719,12 @@ function renderSheet(){
       <div class="gh"><div class="l"><span>Componentes listos</span><b class="num">${r.ready} de ${r.total}</b></div><div class="bar"><i style="width:${pct(r.ready,r.total)}%"></i></div></div>
       ${r.list.map(c=>`<div class="row item" style="grid-template-columns:minmax(0,1fr) auto"><span>${esc(c.name)}</span><span class="status ${esc(c.status)}"><i></i>${STATUS[c.status]||""}</span></div>`).join("")||`<div class="row muted">No depende de componentes.</div>`}
     </div></div>
-    ${at&&at.length?`<div><h5>Tareas en Asana</h5><div class="group">
-      <div class="gh"><div class="l"><span>Cerradas${ats.late?` · <span style="color:var(--accent-ink)">${ats.late} vencidas</span>`:""}</span><b class="num">${ats.done} de ${ats.total}</b></div><div class="bar"><i style="width:${pct(ats.done,ats.total)}%"></i></div></div>
-      ${at.filter(x=>!x.done).sort((a,b)=>(a.due||"9").localeCompare(b.due||"9")).map(x=>taskRow(x)).join("")}
-      ${ats.done?(S.showDone?at.filter(x=>x.done).map(x=>taskRow(x)).join("")+`<button type="button" class="more" data-done>Ocultar cerradas</button>`:`<button type="button" class="more" data-done>Mostrar ${ats.done} cerradas</button>`):""}
-    </div></div>`:`<div><h5>${p.enabler?"Hitos":"Descubrimiento"}</h5><div class="group">
+    ${`<div><h5>${p.enabler?"Hitos":"Descubrimiento"}</h5><div class="group">
       <div class="gh"><div class="l"><span>Cerrados</span><b class="num">${d.done} de ${d.total}</b></div><div class="bar"><i style="width:${pct(d.done,d.total)}%"></i></div></div>
       ${(p.discovery||[]).map((x,i)=>`<label class="row item ${x.done?"done":""}"><input type="checkbox" data-disc="${i}" ${x.done?"checked":""} ${S.canWrite?"":"disabled"}><span class="lbl">${esc(x.label)}</span><span class="due num">${x.due?fdate(x.due):""}</span></label>`).join("")}
     </div></div>`}
   </div>
+  ${at&&at.length?`<div class="group pad" style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap"><span class="muted num">Asana: ${ats.total-ats.done} tareas abiertas${ats.late?` · ${ats.late} vencidas`:""} · ${ats.done} cerradas</span><button type="button" class="btn ghost" data-view="tareas">Ver en Tareas</button></div>`:""}
 
   ${p.enabler?"":`<div><h5>Tiempo manual</h5><div class="group">${E?`<div class="pad" style="display:grid;gap:10px"><div class="fr">
       <label class="field">Hoy<input id="sb" type="number" step="any" value="${isNum(s.baseline)?s.baseline:""}"></label>
@@ -673,9 +766,9 @@ const tLabel=st=>(TSTATUS.find(x=>x[0]===st)||TSTATUS[0])[1];
 S.tickets=[];S.triage={};S.tFilter="abiertas";S.me=null;S.names={};S.view="portafolio";S.tOpen=null;S.loaded.t=false;
 const tStatus=t=>S.triage[t.id]?.status||"nuevo";
 const isOpenT=t=>!["proyecto","descartado"].includes(tStatus(t));
-function setView(v){S.view=v;$("#viewPortfolio").hidden=v!=="portafolio";$("#viewTickets").hidden=v!=="solicitudes";$("#navLinks").style.visibility=v==="portafolio"?"visible":"hidden";
+function setView(v){S.view=v;if($("#sheet").open)closeSheet();$("#viewPortfolio").hidden=v!=="portafolio";$("#viewTasks").hidden=v!=="tareas";$("#viewTickets").hidden=v!=="solicitudes";$("#navLinks").style.visibility=v==="portafolio"?"visible":"hidden";
   document.querySelectorAll("[data-view]").forEach(b=>b.dataset.view===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
-  try{history.replaceState(null,"",v==="solicitudes"?"#solicitudes":location.pathname+location.search)}catch(e){}window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
+  try{history.replaceState(null,"",v==="portafolio"?location.pathname+location.search:"#"+v)}catch(e){}window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
 async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.tickets.map(t=>t.createdBy).filter(Boolean))];if(!ids.length)return;
   try{const ps=await S.user.profiles(ids);let ch=false;ids.forEach(id=>{const n=ps[id]?.name||"";if(S.names[id]!==n){S.names[id]=n;ch=true}});if(ch)renderTickets()}catch(e){}}
 const who=id=>S.names[id]||"Colaborador";
@@ -770,11 +863,14 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 
 document.addEventListener("click",async e=>{
   const o=e.target.closest("[data-open]");if(o){openSheet(o.dataset.open);return}
-  const sg=e.target.closest("#seg button");if(sg){S.filter=sg.dataset.f;try{localStorage.setItem("pia.filter",S.filter)}catch(_){}renderWaves();return}
   const v=e.target.closest("[data-view]");if(v){setView(v.dataset.view);return}
   if(e.target.closest("[data-newticket]")){openT("new");return}
   if(e.target.closest("[data-tclose]")){closeT();return}
   const tk=e.target.closest("[data-ticket]");if(tk){openT("view",tk.dataset.ticket);return}
+  const go=e.target.closest("[data-goto]");if(go){document.getElementById(go.dataset.goto)?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});return}
+  const df=e.target.closest("[data-donefor]");if(df){S.showDoneFor=S.showDoneFor===df.dataset.donefor?null:df.dataset.donefor;renderTasksByProject();return}
+  const cy=e.target.closest("[data-cyc]");if(cy&&S.canWrite){const [pid,field,i]=cy.dataset.cyc.split("|");const pp=pById(pid);if(!pp)return;const arr=clone(pp[field]||[]);const x=arr[+i];
+    const nx=field==="levels"?(NEXT_L[x.status]||"activo"):(NEXT_STATUS[x.status]||"en_curso");x.status=nx;await write(()=>pdoc(pid).update({[field]:arr}),x.name+": "+(LSTAT[nx]||[0,nx])[1]);return}
   const tf=e.target.closest("#tseg button");if(tf){S.tFilter=tf.dataset.tf;renderTickets();return}
   const td=e.target.closest("[data-tdel]");if(td&&S.canWrite){const id=td.dataset.tdel;if(S.confirmDel!==id){S.confirmDel=id;renderTSheet();return}
     S.confirmDel=null;closeT();await write(async()=>{await S.db.doc("tickets/"+id).delete();await S.db.doc("triage/"+id).delete()},"Solicitud eliminada");return}
@@ -826,7 +922,7 @@ document.addEventListener("submit",async e=>{
 
 /* ---------- boot ---------- */
 renderAll();
-if(location.hash==="#solicitudes")setView("solicitudes");
+if(location.hash==="#solicitudes")setView("solicitudes");else if(location.hash==="#tareas")setView("tareas");
 (async()=>{
   const cl=window.claude;if(!cl||!cl.use){["p","c","u","a"].forEach(k=>S.loaded[k]=true);renderAll();return}
   const [db,user,mcp]=await Promise.all([cl.use("db"),cl.use("user"),cl.use("mcp")]);
@@ -834,7 +930,7 @@ if(location.hash==="#solicitudes")setView("solicitudes");
   if(user){try{S.me=await user.id()}catch(e){S.me=null}}
   if(user){try{S.canWrite=await user.canEdit()}catch(e){S.canWrite=false}}
   $("#editChip").hidden=!S.canWrite;
-  if(!db){["p","c","u","a","t"].forEach(k=>S.loaded[k]=true);renderTickets();$("#waves").innerHTML=`<div class="empty">Inicia sesión en claude.ai para ver los proyectos.</div>`;$("#stack").innerHTML="";$("#feed").innerHTML="";return}
+  if(!db){["p","c","u","a","t"].forEach(k=>S.loaded[k]=true);renderTickets();$("#agents").innerHTML=`<div class="empty">Inicia sesión en claude.ai para ver los proyectos.</div>`;$("#stack").innerHTML="";$("#feed").innerHTML="";return}
   const err=()=>toast("Se perdió la conexión con los datos. Recarga la página.");
   db.collection("projects").onSnapshot(s=>{S.projects=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.p=true;renderAll();S.autoSync&&S.autoSync();
     if(!S.open&&location.hash.length>1){const id=location.hash.slice(1);if(S.projects.some(p=>p.id===id))openSheet(id)}},err);
