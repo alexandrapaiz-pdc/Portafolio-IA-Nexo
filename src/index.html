@@ -49,6 +49,7 @@ button{cursor:pointer}
 .eyebrow{font-size:14px;font-weight:600;color:var(--accent);letter-spacing:-.01em}
 .hero h1{font-size:clamp(44px,7.4vw,80px);line-height:1.02;letter-spacing:-.045em;font-weight:600}
 .hero h1 span{color:var(--faint)}
+.hero h1 .h1sub{display:block;font-size:.5em;line-height:1.1;letter-spacing:-.035em;margin-top:.18em;max-width:16em}
 .hero .lead{font-size:clamp(18px,2.3vw,23px);line-height:1.38;color:var(--sub);max-width:34em;font-weight:400;letter-spacing:-.02em}
 .hero .who{font-size:13px;color:var(--faint)}
 
@@ -220,6 +221,21 @@ details.comps summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--
 details.comps summary::-webkit-details-marker{display:none}
 details.comps summary::after{content:"›";transition:transform .2s}
 details.comps[open] summary::after{transform:rotate(90deg)}
+/* Modes */
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:720px){.modes{grid-template-columns:1fr}}
+.mode{background:var(--group);border-radius:var(--r);padding:24px;display:grid;gap:10px;align-content:start;min-width:0}
+.mode .mk{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:600}
+.mode .mk .now{color:var(--accent)}.mode .mk .next{color:var(--faint)}
+.mode h3{font-size:22px;letter-spacing:-.03em;line-height:1.15}
+.mode p{font-size:14px;color:var(--sub)}
+.mode ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px}
+.mode li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px}
+.mode li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--faint);margin-top:8px}
+.gates{counter-reset:g}
+.gates .row{grid-template-columns:28px minmax(0,1fr)}
+.gates .row b{font-size:13px;color:var(--accent);font-weight:600}
+.gates .row .note{font-size:13px;color:var(--sub);margin-top:2px}
 /* Programs */
 .programs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (max-width:720px){.programs{grid-template-columns:1fr}}
@@ -316,8 +332,8 @@ details.comps[open] summary::after{transform:rotate(90deg)}
 
 <main class="wrap" id="viewPortfolio">
   <section class="hero">
-    <div class="eyebrow">Nexo · Inteligencia artificial · Q4 2026</div>
-    <h1>Portafolio de IA.<br><span>Cuatro frentes.</span></h1>
+    <div class="eyebrow">Portafolio de IA · Q4 2026</div>
+    <h1>Nexo IA.<span class="h1sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
     <p class="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
     <p class="who">Alexandra Paiz, Líder de IA y Herramientas · Fuera de oficina 13–16 oct y 20–26 oct</p>
   </section>
@@ -413,7 +429,7 @@ details.comps[open] summary::after{transform:rotate(90deg)}
   <section class="hero">
     <div class="eyebrow">Solicitudes de IA · Nexo</div>
     <h1>¿Qué deberíamos<br><span>automatizar?</span></h1>
-    <p class="lead">Cuéntanos qué proceso te quita tiempo. Cada solicitud se evalúa por horas manuales, impacto y factibilidad, y entra al backlog de proyectos de IA.</p>
+    <p class="lead">Cuéntanos qué proceso te quita tiempo. Cada solicitud se evalúa por horas manuales, impacto y factibilidad, y entra al backlog de proyectos de IA. El objetivo de fondo: que cada área pueda construir sus propios agentes, con guardrails.</p>
     <div><button type="button" class="btn acc" data-newticket>Nueva solicitud</button></div>
   </section>
 
@@ -424,7 +440,30 @@ details.comps[open] summary::after{transform:rotate(90deg)}
     <div><b>4</b><span>Construimos</span><p>Las aprobadas se convierten en proyecto del portafolio.</p></div>
   </div>
 
-  <section class="block" style="padding-top:64px">
+  <section class="block" style="padding-top:72px">
+    <div class="sec-head">
+      <span class="eyebrow">Hacia dónde vamos</span>
+      <h2>Descentralizar la IA, con guardrails.</h2>
+      <p>Hoy Nexo construye los agentes a partir de estas solicitudes. Cuando el marco esté establecido y probado, se abre una segunda modalidad: que cada área desarrolle sus propios agentes sobre el mismo stack, con las mismas reglas.</p>
+    </div>
+    <div class="modes">
+      <div class="mode"><div class="mk"><span class="now">Hoy</span><span class="tstat nuevo"><i></i>Activo</span></div>
+        <h3>Solicitud a Nexo</h3><p>Describes el problema; Nexo evalúa, prioriza y construye.</p>
+        <ul><li>Nexo diseña, construye y opera el agente</li><li>Prioridad según horas manuales, impacto y factibilidad</li><li>Cada proyecto con línea base y KPI antes de construir</li></ul></div>
+      <div class="mode"><div class="mk"><span class="next">Siguiente</span><span class="tstat evaluacion"><i></i>Próximamente</span></div>
+        <h3>Autoservicio con guardrails</h3><p>Tu área construye su propio agente sobre el stack de Nexo; Nexo da el marco y revisa.</p>
+        <ul><li>Sandbox para experimentar sin tocar datos reales</li><li>Plantillas, guías de Nivel 3 y skills de AI Best Practices</li><li>Revisión y aprobación de Nexo antes de pasar a producción</li><li>Mismos controles: solo lectura, aprobación humana, kill switch y auditoría</li></ul></div>
+    </div>
+    <div><div class="group-title"><b>Se habilita cuando</b><span>El marco se prueba primero con los proyectos de Nexo</span></div>
+      <div class="group gates">
+        <div class="row"><b>1</b><div><div>El stack de Nexo está en producción con sus controles</div><div class="note">Entra ID, Key Vault, kill switch y bitácoras de auditoría</div></div></div>
+        <div class="row"><b>2</b><div><div>Los primeros agentes demuestran resultados medidos</div><div class="note">Kickoff de Avon y Contraloría con KPIs contra su línea base</div></div></div>
+        <div class="row"><b>3</b><div><div>Las guías de Nivel 3 pasan la revisión de ciberseguridad</div><div class="note">Arquitectura, sandbox, contenedores, orquestación y seguridad</div></div></div>
+        <div class="row"><b>4</b><div><div>La ruta de sandbox a producción está probada</div><div class="note">Lista de verificación y aprobación de Nexo para cada agente</div></div></div>
+      </div></div>
+  </section>
+
+  <section class="block" style="padding-top:72px">
     <div class="sec-head">
       <span class="eyebrow">Backlog</span>
       <h2>Solicitudes recibidas.</h2>
@@ -759,7 +798,7 @@ $("#sheet").addEventListener("close",()=>{S.open=null;S.editing=false});
 
 /* ---------- Solicitudes ---------- */
 const AREAS=["Nexo","MegaMás","Avon","PDC Brands","Vikingo","Otra"];
-const TTYPES=["Automatización o agente","Portal o tablero","Análisis de datos","Licencia o acceso a Claude","Otro"];
+const TTYPES=["Automatización o agente","Portal o tablero","Análisis de datos","Licencia o acceso a Claude","Quiero construirlo yo (autoservicio)","Otro"];
 const URG=["Baja","Media","Alta"];
 const TSTATUS=[["nuevo","Nueva"],["evaluacion","En evaluación"],["aprobado","Aprobada"],["proyecto","En portafolio"],["descartado","Descartada"]];
 const tLabel=st=>(TSTATUS.find(x=>x[0]===st)||TSTATUS[0])[1];
