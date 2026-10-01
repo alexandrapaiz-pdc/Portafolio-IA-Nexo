@@ -353,6 +353,12 @@ details.tdet .tfoot button:hover{color:var(--text)}
 .ap-feat p{font-size:13px;color:var(--sub)}
 @media (max-width:760px){.ap-feat{grid-template-columns:1fr 1fr}.ap-feat div:nth-child(3){padding-left:0;border-left:0}}
 
+/* Agent portal hero animation */
+.ap-hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:center}
+@media (max-width:900px){.ap-hero{grid-template-columns:1fr}}
+.ap-orbit{position:relative;width:100%;aspect-ratio:1/1;max-width:520px;justify-self:center}
+.ap-orbit canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
 /* Tasks */
 .task{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 20px;font-size:14px}
 .task .tdot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--faint)}
@@ -578,10 +584,13 @@ details.tdet .tfoot button:hover{color:var(--text)}
 </main>
 
 <main class="wrap" id="viewAgents" hidden>
-  <section class="hero">
-    <div class="eyebrow">Próximamente</div>
-    <h1>Portal de agentes.<span class="h1sub">Todos los agentes de Grupo PDC, en un solo lugar.</span></h1>
-    <p class="lead">Un catálogo para encontrar, usar y pedir acceso a los agentes de la empresa, con su dueño, su KPI y su estado. Vivirá en el dominio de la empresa, con tu cuenta de Grupo PDC.</p>
+  <section class="hero ap-hero">
+    <div style="display:grid;gap:18px">
+      <div class="eyebrow">Próximamente</div>
+      <h1>Portal de agentes.<span class="h1sub">Todos los agentes de Grupo PDC, en un solo lugar.</span></h1>
+      <p class="lead">Un catálogo para encontrar, usar y pedir acceso a los agentes de la empresa, con su dueño, su KPI y su estado. Vivirá en el dominio de la empresa, con tu cuenta de Grupo PDC.</p>
+    </div>
+    <div class="ap-orbit" role="img" aria-label="Animación: los agentes en construcción orbitan alrededor del portal y le envían solicitudes."><canvas id="apCanvas"></canvas></div>
   </section>
   <section class="block" style="padding-top:64px">
     <div class="sec-head"><span class="eyebrow">Así se verá</span><h2>Los primeros agentes.</h2><p>Vista previa con los proyectos en curso. Ninguno está publicado todavía.</p></div>
@@ -1043,6 +1052,50 @@ $("#closeSheet").addEventListener("click",closeSheet);
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
 $("#sheet").addEventListener("close",()=>{S.open=null;S.editing=false});
 
+/* ---------- Agent portal animation ---------- */
+const Orbit=(()=>{
+  const cv=document.getElementById("apCanvas"),ctx=cv.getContext("2d");
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)");
+  const NODES=[{t:"Kickoff Avon",r:.36,a:0,live:1},{t:"Conciliación",r:.36,a:2.09,live:1},{t:"STEP",r:.36,a:4.19,live:1},
+    {t:"Próximo",r:.44,a:1.05,live:0},{t:"Próximo",r:.44,a:3.14,live:0},{t:"Próximo",r:.44,a:5.24,live:0}];
+  let W=0,H=0,dpr=1,raf=0,t0=performance.now(),col={},pulses=[],lastCol=0,last=0;
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function colors(){col={strong:css("--strong")||"#00216F",accent:css("--accent")||"#FF5100",faint:css("--faint")||"#86868B",line:css("--line-2")||"rgba(0,0,0,.14)",text:css("--text")||"#1D1D1F",bg:css("--bg")||"#fff",raise:css("--raise")||"#fff",group:css("--group")||"#F5F5F7",font:css("--font")}}
+  function size(){const r=cv.getBoundingClientRect();if(!r.width)return false;dpr=Math.min(2,devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);return true}
+  function pos(n,time){const sp=n.live?0.00006:-0.00004,a=n.a+time*sp,R=Math.min(W,H)*n.r;return[W/2+Math.cos(a)*R,H/2+Math.sin(a)*R*0.82]}
+  function draw(time){
+    const cx=W/2,cy=H/2,S=Math.min(W,H);ctx.clearRect(0,0,W,H);
+    [.36,.44].forEach((r,i)=>{ctx.beginPath();ctx.ellipse(cx,cy,S*r,S*r*.82,0,0,Math.PI*2);ctx.strokeStyle=col.line;ctx.lineWidth=1;ctx.setLineDash(i?[3,5]:[]);ctx.stroke()});ctx.setLineDash([]);
+    const P=NODES.map(n=>pos(n,time));
+    NODES.forEach((n,i)=>{if(!n.live)return;const[x,y]=P[i];ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(cx,cy);ctx.strokeStyle=col.line;ctx.lineWidth=1;ctx.stroke()});
+    pulses.forEach(p=>{const[x,y]=P[p.i],k=p.k,px=x+(cx-x)*k,py=y+(cy-y)*k;ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);ctx.fillStyle=col.accent;ctx.globalAlpha=Math.sin(k*Math.PI);ctx.fill();ctx.globalAlpha=1});
+    const breathe=reduce.matches?0:Math.sin(time/900)*2.5,hr=S*.11+breathe;
+    ctx.beginPath();ctx.arc(cx,cy,hr+10,0,Math.PI*2);ctx.fillStyle=col.strong;ctx.globalAlpha=.08;ctx.fill();ctx.globalAlpha=1;
+    ctx.beginPath();ctx.arc(cx,cy,hr,0,Math.PI*2);ctx.fillStyle=col.strong;ctx.fill();
+    ctx.fillStyle=col.bg;ctx.font=`600 ${Math.max(12,S*.034)}px ${col.font}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("Portal",cx,cy);
+    NODES.forEach((n,i)=>{const[x,y]=P[i],r=n.live?S*.034:S*.024;
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=col.raise;ctx.fill();ctx.lineWidth=n.live?1.75:1;ctx.strokeStyle=n.live?col.strong:col.line;if(!n.live)ctx.setLineDash([2,3]);ctx.stroke();ctx.setLineDash([]);
+      if(n.live){ctx.beginPath();ctx.arc(x,y,r*.32,0,Math.PI*2);ctx.fillStyle=col.accent;ctx.fill()}
+      ctx.font=`${n.live?600:500} ${Math.max(11,S*.026)}px ${col.font}`;ctx.fillStyle=n.live?col.text:col.faint;ctx.textAlign="center";ctx.textBaseline="top";ctx.fillText(n.t,x,y+r+6)});
+  }
+  function frame(now){
+    raf=0;if(S.view!=="agentes"||document.hidden)return;
+    if(!W&&!size())return;
+    if(now-lastCol>1000){colors();lastCol=now}
+    const time=now-t0,dt=Math.min(50,now-(last||now));last=now;
+    if(!reduce.matches){if(Math.random()<dt/700){const live=NODES.map((n,i)=>n.live?i:-1).filter(i=>i>=0);pulses.push({i:live[Math.floor(Math.random()*live.length)],k:0})}
+      pulses.forEach(p=>p.k+=dt/1600);pulses=pulses.filter(p=>p.k<1)}
+    draw(reduce.matches?0:time);
+    if(!reduce.matches)raf=requestAnimationFrame(frame);
+  }
+  function start(){if(raf)return;colors();size();last=0;raf=requestAnimationFrame(frame)}
+  addEventListener("resize",()=>{W=0;if(S.view==="agentes")start()});
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&S.view==="agentes")start()});
+  reduce.addEventListener?.("change",()=>{if(S.view==="agentes")start()});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{lastCol=0;if(S.view==="agentes")start()});
+  return{start};
+})();
+
 /* ---------- Solicitudes ---------- */
 const AREAS=["Nexo","MegaMás","Avon","PDC Brands","Vikingo","Otra"];
 const TTYPES=["Automatización o agente","Portal o tablero","Análisis de datos","Licencia o acceso a Claude","Quiero construirlo yo (autoservicio)","Otro"];
@@ -1057,7 +1110,7 @@ const viewHash=v=>v==="inicio"?location.pathname+location.search:"#"+v;
 function setView(v,keepScroll){if(!VIEWS[v])v="inicio";S.view=v;if($("#sheet").open)closeSheet();
   Object.entries(VIEWS).forEach(([k,sel])=>$(sel).hidden=k!==v);
   document.querySelectorAll("[data-view]").forEach(b=>b.dataset.view===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
-  try{history.replaceState(null,"",viewHash(v))}catch(e){}if(!keepScroll)window.scrollTo(0,0);try{const tb=document.querySelector('.tabs [data-view="'+v+'"]');const tr=tb?.parentElement;if(tb&&tr&&tr.scrollWidth>tr.clientWidth)tr.scrollLeft=tb.offsetLeft-tr.offsetLeft-12}catch(e){}if(v==="solicitudes")renderTickets()}
+  try{history.replaceState(null,"",viewHash(v))}catch(e){}if(!keepScroll)window.scrollTo(0,0);try{const tb=document.querySelector('.tabs [data-view="'+v+'"]');const tr=tb?.parentElement;if(tb&&tr&&tr.scrollWidth>tr.clientWidth)tr.scrollLeft=tb.offsetLeft-tr.offsetLeft-12}catch(e){}if(v==="solicitudes")renderTickets();if(v==="agentes")requestAnimationFrame(()=>Orbit.start())}
 async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.tickets.map(t=>t.createdBy).filter(Boolean))];if(!ids.length)return;
   try{const ps=await S.user.profiles(ids);let ch=false;ids.forEach(id=>{const n=ps[id]?.name||"";if(S.names[id]!==n){S.names[id]=n;ch=true}});if(ch)renderTickets()}catch(e){}}
 const who=id=>S.names[id]||"Colaborador";
