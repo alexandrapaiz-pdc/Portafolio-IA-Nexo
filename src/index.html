@@ -40,6 +40,11 @@ button{cursor:pointer}
 .nav .links{display:flex;gap:22px;margin-left:18px;font-size:12.5px;color:var(--sub)}
 .nav .links a{color:inherit;text-decoration:none}.nav .links a:hover{color:var(--text)}
 .nav .spacer{flex:1}
+.nav .tabs button,.nav .stamp,.nav .edit{white-space:nowrap}
+.jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.jump a{font-size:13px;font-weight:500;color:var(--text);text-decoration:none;background:var(--group);padding:7px 14px;border-radius:999px;white-space:nowrap}
+.jump a:hover{background:var(--line)}
+@media (max-width:640px){.nav .stamp,.nav .edit{display:none!important}.tabs{margin-left:6px}.tabs button{padding:5px 9px}}
 .nav .stamp{font-size:12px;color:var(--faint)}
 .nav .edit{font-size:12px;color:var(--accent-ink);font-weight:500}
 @media (max-width:680px){.nav .links{display:none}}
@@ -266,9 +271,9 @@ details.comps[open] summary::after{transform:rotate(90deg)}
 @media (max-width:720px){.programs{grid-template-columns:1fr}}
 .prog{background:var(--group);border:0;border-radius:var(--r);padding:24px 24px 22px;text-align:left;display:grid;gap:10px;align-content:start;cursor:pointer;min-width:0}
 .prog:hover{background:var(--line)}
-.prog .pn{font-size:13px;font-weight:600;color:var(--accent)}
-.prog h3{font-size:22px;line-height:1.15;letter-spacing:-.03em}
-.prog p{font-size:14px;color:var(--sub)}
+.prog .pn{font-size:clamp(26px,2.8vw,32px);font-weight:600;color:var(--text);letter-spacing:-.04em;line-height:1.05}
+.prog h3{font-size:16px;line-height:1.35;letter-spacing:-.015em;font-weight:500;color:var(--sub)}
+.prog p{font-size:13px;color:var(--faint)}
 .prog .pm{display:flex;align-items:baseline;gap:8px;margin-top:6px}
 .prog .pm b{font-size:34px;font-weight:600;letter-spacing:-.04em;line-height:1}
 .prog .pm span{font-size:13px;color:var(--faint)}
@@ -363,9 +368,8 @@ details.tdet .tfoot button:hover{color:var(--text)}
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
     <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="inicio" aria-current="page">Inicio</button><button type="button" data-view="portafolio">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
-    <div class="links" id="navLinks"><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></div>
     <span class="spacer"></span>
-    <span class="edit" id="editChip" hidden>Modo edición</span>
+    <span class="edit" id="editChip" hidden title="Puedes editar esta página">Edición</span>
     <span class="stamp" id="stamp"></span>
   </div>
 </nav>
@@ -429,6 +433,7 @@ details.tdet .tfoot button:hover{color:var(--text)}
     <div class="eyebrow">Portafolio · Q4 2026</div>
     <h1>Portafolio.</h1>
     <p class="lead">Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes.</p>
+    <nav class="jump" id="navLinks" aria-label="Secciones del portafolio"><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></nav>
   </section>
 
   <div class="stats" id="stats"></div>
@@ -635,7 +640,7 @@ function ago(iso){if(!iso)return"";const m=Math.round((Date.now()-new Date(iso).
 
 /* ---------- render ---------- */
 function renderAll(){renderStamp();renderStats();renderPrograms();renderStack();renderPracticas();renderBrain();renderAgents();renderWeek();renderTasksByProject();renderFeed();if(S.open&&!S.editing&&!(document.querySelector("#uText")?.value))renderSheet()}
-function renderStamp(){const d=S.updates[0]?.date;$("#stamp").textContent=d?"Actualizado "+fdate(d):""}
+function renderStamp(){const d=S.updates[0]?.date;$("#stamp").textContent=d?"Act. "+fdate(d):""}
 function renderStats(){
   const comps=S.components,ready=comps.filter(c=>c.status==="listo").length;
   const kpis=S.projects.flatMap(p=>p.kpis||[]);const measured=kpis.filter(k=>isNum(k.baseline)).length;
@@ -909,7 +914,7 @@ const isOpenT=t=>!["proyecto","descartado"].includes(tStatus(t));
 const VIEWS={inicio:"#viewHome",portafolio:"#viewPortfolio",tareas:"#viewTasks",solicitudes:"#viewTickets"};
 const viewHash=v=>v==="inicio"?location.pathname+location.search:"#"+v;
 function setView(v,keepScroll){if(!VIEWS[v])v="inicio";S.view=v;if($("#sheet").open)closeSheet();
-  Object.entries(VIEWS).forEach(([k,sel])=>$(sel).hidden=k!==v);$("#navLinks").style.visibility=v==="portafolio"?"visible":"hidden";
+  Object.entries(VIEWS).forEach(([k,sel])=>$(sel).hidden=k!==v);
   document.querySelectorAll("[data-view]").forEach(b=>b.dataset.view===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
   try{history.replaceState(null,"",viewHash(v))}catch(e){}if(!keepScroll)window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
 async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.tickets.map(t=>t.createdBy).filter(Boolean))];if(!ids.length)return;
@@ -1065,7 +1070,7 @@ document.addEventListener("submit",async e=>{
 
 /* ---------- boot ---------- */
 renderAll();
-{const h=location.hash.slice(1);if(VIEWS[h])setView(h);else S.view="inicio";$("#navLinks").style.visibility="hidden"}
+{const h=location.hash.slice(1);if(VIEWS[h])setView(h);else S.view="inicio"}
 (async()=>{
   const cl=window.claude;if(!cl||!cl.use){["p","c","u","a"].forEach(k=>S.loaded[k]=true);renderAll();return}
   const [db,user,mcp]=await Promise.all([cl.use("db"),cl.use("user"),cl.use("mcp")]);
