@@ -1,0 +1,8 @@
+{
+ "order": 11,
+ "name": "Microsoft Foundry (modelos)",
+ "owner": "IT · Alexandra",
+ "status": "pendiente",
+ "note": "Modelos servidos dentro de Azure; LiteLLM rutea hacia ellos.",
+ "updated": "2026-10-01"
+}

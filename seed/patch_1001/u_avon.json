@@ -1,0 +1,56 @@
+{
+ "phase": "construccion",
+ "pains": [
+  "APT se apaga a mediados de octubre de 2026 (fin del TSA con Natura); el script actual muere con él.",
+  "El kickoff de cada campaña toma 15 h de trabajo manual.",
+  "Los datos de ventas se descargan por campaña y país y se consolidan a mano en Excel.",
+  "APT perdió funciones de paginación y depende de macros externas.",
+  "Children no tiene clasificación propia; se separa a mano.",
+  "La planeación de una campaña toma 15–20 días."
+ ],
+ "kpis": [
+  {
+   "baseline": 20,
+   "current": null,
+   "id": "cycle",
+   "name": "Ciclo de planeación por campaña",
+   "note": "Hoy 15–20 días; meta por definir.",
+   "target": null,
+   "unit": "días",
+   "updated": "2026-09-30"
+  },
+  {
+   "baseline": 2,
+   "current": 2,
+   "id": "excel_kpi",
+   "name": "Base Excel → tablas de KPIs",
+   "note": "Hoy “un par de horas” por corrida; meta en minutos.",
+   "target": 0.1,
+   "unit": "h",
+   "updated": "2026-09-30"
+  },
+  {
+   "baseline": null,
+   "current": 96,
+   "id": "leader_acc",
+   "name": "Precisión de Leader List automatizada",
+   "note": "PoC: 95–98%. No es medida final de producción.",
+   "target": 100,
+   "unit": "%",
+   "updated": "2026-09-30"
+  },
+  {
+   "id": "golden",
+   "name": "Acierto del motor vs. corrida de referencia",
+   "unit": "%",
+   "baseline": 74.7,
+   "target": null,
+   "current": 74.7,
+   "updated": "2026-09-20",
+   "note": "Mínimo exigido por la suite dorada: 1,463 pares campo por campo, 16 pruebas en verde (20 sep)."
+  }
+ ],
+ "blocker": "Fecha dura: APT se apaga a mediados de octubre. Falta un machote real (.xlsb) de C17'26 para construir el lector.",
+ "next": "Fundación del camino interino antes del apagado: lector del machote, salida para facturación y macro MOSTRO.",
+ "summary": "Automatizar el kickoff de campaña: de la base de ventas a las tablas de KPIs sin extracción manual. Elimina 15 h de trabajo manual por campaña. Incluye el reemplazo de APT (Macro Revista y Leader List). Sustituto agéntico en construcción (Python, LangGraph, MCP, Postgres): motor portado y validado contra la corrida de referencia de Denis Martínez."
+}

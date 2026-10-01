@@ -1,0 +1,67 @@
+{
+ "priority": 0.7,
+ "wave": 0,
+ "bu": "Nexo",
+ "enabler": true,
+ "noAzure": false,
+ "paused": false,
+ "name": "Company Brain",
+ "sponsor": "Alexandra Paiz",
+ "tagline": "Capa de conocimiento para agentes y personas",
+ "impactLabel": "Datos y vocabulario para 4 proyectos",
+ "phase": "construccion",
+ "summary": "La capa de conocimiento de Grupo PDC: 1) vocabulario y ontología (glosario y mapa organizacional en GitHub), 2) documentos en SharePoint consultados en vivo, 3) datos operativos (JD Edwards, STEP, ventas de Avon, Asana, Jira) y 4) productos de datos (KPIs y líneas base) en Databricks.",
+ "pains": [
+  "Los agentes no entienden el vocabulario de la empresa ni quién es quién.",
+  "Los datos operativos viven dispersos y se descargan a mano en Excel.",
+  "Cada KPI se calcula en varios lugares y no da el mismo número."
+ ],
+ "needs": [
+  "azure",
+  "datos",
+  "controles",
+  "github"
+ ],
+ "blocker": "Cuenta admin de Azure para crear el workspace de Databricks.",
+ "discovery": [
+  {
+   "label": "Glosario y mapa organizacional en GitHub",
+   "due": null,
+   "done": true
+  },
+  {
+   "label": "Plan de datos en Databricks (borrador)",
+   "due": "2026-09-30",
+   "done": true
+  },
+  {
+   "label": "Revisión del plan con IT y ciberseguridad",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Cargar el esquema semantic desde el repositorio",
+   "due": null,
+   "done": false
+  },
+  {
+   "label": "Primeros productos gold: Kickoff Avon, Portal de Mundos, Contraloría y STEP",
+   "due": null,
+   "done": false
+  }
+ ],
+ "kpis": [
+  {
+   "id": "sources",
+   "name": "Fuentes del inventario cargadas en Databricks",
+   "unit": "",
+   "baseline": 0,
+   "target": null,
+   "current": 0,
+   "updated": "2026-10-01",
+   "note": "Ver inventario_fuentes.yaml en el repositorio."
+  }
+ ],
+ "savings": {},
+ "next": "Revisar el plan de datos con IT."
+}

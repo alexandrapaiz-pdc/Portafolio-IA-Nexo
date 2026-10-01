@@ -1,0 +1,33 @@
+{
+ "phase": "construccion",
+ "discovery": [
+  {
+   "done": false,
+   "due": null,
+   "label": "Definir protocolos de ciberseguridad con Benji"
+  },
+  {
+   "done": true,
+   "due": null,
+   "label": "Estándares Tier 1: seguridad, settings recomendados, conectores y plugins"
+  },
+  {
+   "done": true,
+   "due": null,
+   "label": "Estándares Tier 2: portal de Diego Villatoro, GitHub privado, inner source"
+  },
+  {
+   "done": true,
+   "due": null,
+   "label": "Publicar protocolos en GitHub personal y migrar al empresarial"
+  },
+  {
+   "done": false,
+   "due": null,
+   "label": "Modelo escalable de despliegue de agentes: sandbox, portal y guía"
+  }
+ ],
+ "blocker": "Revisión de ciberseguridad con Benji: reglas de datos sensibles y retención de los complementos de Office.",
+ "summary": "Repositorio BestPracticesAI con estándares por nivel: 1 · Usuario de Claude (activo), 2 · Constructor de apps (activo), 2.5 · Backends (en construcción), 3 · Agentes (en construcción). Incluye biblioteca de skills de Nexo y reglas base: agentes solo lectura, repos nunca públicos, sin secretos en código.",
+ "next": "Cerrar las decisiones pendientes de Nivel 1 y 2 y la revisión de ciberseguridad."
+}

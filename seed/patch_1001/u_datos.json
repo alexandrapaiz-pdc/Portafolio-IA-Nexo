@@ -1,0 +1,5 @@
+{
+ "name": "Capa de datos: Databricks (Unity Catalog, Lakeflow) · Postgres + pgvector",
+ "note": "Plan de datos de Company Brain en borrador (30 sep). JD Edwards entra por Lakeflow vía VPN, nunca directo.",
+ "updated": "2026-10-01"
+}

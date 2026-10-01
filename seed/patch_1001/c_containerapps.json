@@ -1,0 +1,8 @@
+{
+ "order": 12,
+ "name": "Azure Container Apps: LiteLLM, Langfuse, Presidio y servidores MCP",
+ "owner": "Alexandra",
+ "status": "pendiente",
+ "note": "Todo corre en contenedores; nada suelto en laptops ni servidores.",
+ "updated": "2026-10-01"
+}
