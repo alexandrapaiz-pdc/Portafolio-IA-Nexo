@@ -1,0 +1,83 @@
+{
+ "vsm": {
+  "asis": [
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Descargar ventas por campaña y país (Maps)",
+    "pt": null,
+    "wait": null,
+    "who": "Planeación Avon"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Limpiar y consolidar la base en Excel",
+    "pt": null,
+    "wait": null,
+    "who": "Planeación Avon"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Agregar pedidos cerrados del año anterior",
+    "pt": null,
+    "wait": null,
+    "who": "Planeación Avon"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Separar subcategorías (Children a mano)",
+    "pt": null,
+    "wait": null,
+    "who": "Planeación Avon"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Poblar tablas de KPIs",
+    "pt": 2,
+    "wait": null,
+    "who": "Planeación Avon"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Top 10 y bottom 10 de ofertas y presentar",
+    "pt": null,
+    "wait": null,
+    "who": "Planeación Avon"
+   }
+  ],
+  "asisNote": "Kickoff de campaña: 15 h de trabajo manual por campaña en total (acordado con Lisa). Poblar KPIs toma “un par de horas”; el resto de tiempos está por medir.",
+  "tobe": [
+   {
+    "ca": null,
+    "mode": "agente",
+    "name": "Base de ventas desde Vikingo Planeación",
+    "pt": null,
+    "wait": null,
+    "who": "Automático"
+   },
+   {
+    "ca": null,
+    "mode": "agente",
+    "name": "Generar tablas de KPIs y top / bottom 10",
+    "pt": null,
+    "wait": null,
+    "who": "Agente de kickoff"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Revisar, ajustar Children y presentar",
+    "pt": null,
+    "wait": null,
+    "who": "Planeación Avon"
+   }
+  ],
+  "tobeNote": "Propuesta: de la base de ventas a KPIs sin extracción manual. Depende de confirmar Vikingo Planeación como fuente To-Be.",
+  "updated": "2026-10-01"
+ }
+}

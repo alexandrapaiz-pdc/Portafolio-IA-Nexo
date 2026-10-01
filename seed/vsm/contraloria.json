@@ -1,0 +1,91 @@
+{
+ "vsm": {
+  "asis": [
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Tráfico recibe documentos de importación",
+    "pt": null,
+    "wait": null,
+    "who": "Tráfico"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Colocar documentos en la carpeta compartida",
+    "pt": null,
+    "wait": null,
+    "who": "Tráfico"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Revisar factura contra orden de compra",
+    "pt": null,
+    "wait": null,
+    "who": "Contraloría"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Liquidar costos al recibir inventario",
+    "pt": null,
+    "wait": null,
+    "who": "Contraloría"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Registrar cuenta por pagar en el ERP",
+    "pt": null,
+    "wait": null,
+    "who": "Contraloría"
+   }
+  ],
+  "asisNote": "Hoy los documentos se extravían (40 sin ubicar al 29 sep) y llegan en lotes de 200–400; facturas de hasta un año quedan en prepasivo. Tiempos por medir en la línea base del 7 oct.",
+  "tobe": [
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Tráfico sube documentos a un canal único",
+    "pt": null,
+    "wait": null,
+    "who": "Tráfico"
+   },
+   {
+    "ca": null,
+    "mode": "agente",
+    "name": "Validar y conciliar factura contra OC",
+    "pt": null,
+    "wait": null,
+    "who": "Agente de conciliación"
+   },
+   {
+    "ca": null,
+    "mode": "agente",
+    "name": "Preparar liquidación y retenciones",
+    "pt": null,
+    "wait": null,
+    "who": "Agente de conciliación"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Revisar y aprobar",
+    "pt": null,
+    "wait": null,
+    "who": "Contraloría"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Registrar en el ERP",
+    "pt": null,
+    "wait": null,
+    "who": "Contraloría"
+   }
+  ],
+  "tobeNote": "Propuesta: el agente lee JD Edwards en solo lectura; el registro en el ERP lo hace una persona tras aprobar.",
+  "updated": "2026-10-01"
+ }
+}

@@ -1,0 +1,91 @@
+{
+ "vsm": {
+  "asis": [
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Llenar Excel del código (copiando uno anterior)",
+    "pt": null,
+    "wait": null,
+    "who": "Gerente de marca"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Validar ciertos datos",
+    "pt": null,
+    "wait": null,
+    "who": "Soporte de marcas"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Redigitar en el sistema",
+    "pt": null,
+    "wait": null,
+    "who": "Catálogos"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Detectar errores al facturar",
+    "pt": null,
+    "wait": null,
+    "who": "Manufactura · Ventas"
+   }
+  ],
+  "asisNote": "Atributos mal configurados en JD Edwards bloquean la facturación (caso Ayudín 3X, ~US$33k preliminar). Tiempos por medir.",
+  "tobe": [
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Iniciar solicitud en STEP",
+    "pt": null,
+    "wait": null,
+    "who": "Marca"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Validar campos de marca",
+    "pt": null,
+    "wait": null,
+    "who": "Soporte de marcas"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Agregar variables logísticas",
+    "pt": null,
+    "wait": null,
+    "who": "Inventarios"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Agregar pesos y dimensiones",
+    "pt": null,
+    "wait": null,
+    "who": "Ingeniería"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Configurar producción",
+    "pt": null,
+    "wait": null,
+    "who": "Manufactura"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Check final sin redigitar",
+    "pt": null,
+    "wait": null,
+    "who": "Catálogos"
+   }
+  ],
+  "tobeNote": "Flujo de validación por etapas propuesto con Rodny. Dónde entra el agente en cada etapa está por definir.",
+  "updated": "2026-10-01"
+ }
+}

@@ -301,6 +301,41 @@ details.tdet .tfoot button:hover{color:var(--text)}
 .tgroups{display:grid;gap:10px}
 .tgroup .group-title button{border:0;background:none;padding:0;font:inherit;color:var(--text);font-weight:600;cursor:pointer}
 
+/* Value stream map */
+.vsm{display:grid;gap:14px}
+.vsm-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.vsm .scroll{overflow-x:auto;background:var(--group);border-radius:var(--r);padding:16px 14px}
+.vsm svg{display:block;height:auto;color:var(--text)}
+.vsm-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.vsm-stats div{display:grid;gap:2px;min-width:0}
+.vsm-stats .k{font-size:12px;color:var(--faint)}
+.vsm-stats .v{font-size:20px;font-weight:600;letter-spacing:-.03em}
+.vsm-stats .v.acc{color:var(--accent)}
+.vsm-stats .v.pend{font-size:13px;color:var(--faint);font-weight:500}
+@media (max-width:640px){.vsm-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.vsm-note{font-size:12.5px;color:var(--sub)}
+.vb{fill:var(--raise);stroke:var(--line-2);stroke-width:1}
+.vb.agente{stroke:var(--strong);stroke-width:1.75}
+.vb.mixto{stroke:var(--accent);stroke-width:1.75}
+.vt{font:600 12px var(--font);fill:var(--text)}
+.vs{font:400 11px var(--font);fill:var(--sub)}
+.vm{font:600 10px var(--font);fill:var(--faint);letter-spacing:.03em}
+.vm.agente{fill:var(--strong)}.vm.mixto{fill:var(--accent-ink)}
+.vtri{fill:none;stroke:var(--faint);stroke-width:1.25}
+.vline{stroke:var(--faint);stroke-width:1.25;fill:none}
+.vnum{font:500 11px var(--font);fill:var(--sub)}
+.vnum.pt{fill:var(--text);font-weight:600}
+.vsm-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);align-items:center}
+.vsm-legend i{display:inline-block;width:14px;height:10px;border-radius:3px;border:1.5px solid var(--line-2);margin-right:6px;vertical-align:-1px}
+.vsm-legend i.agente{border-color:var(--strong)}.vsm-legend i.mixto{border-color:var(--accent)}
+.vsm-ed{overflow-x:auto}
+.vsm-ed table{border-collapse:collapse;width:100%;min-width:780px;font-size:13px;table-layout:fixed}
+.vsm-ed col.c1{width:34%}.vsm-ed col.c2{width:18%}.vsm-ed col.cn{width:84px}.vsm-ed col.cm{width:150px}.vsm-ed col.cx{width:64px}
+.vsm-ed th{font-weight:500;color:var(--sub);text-align:left;padding:6px 6px;font-size:12px}
+.vsm-ed td{padding:4px 6px}
+.vsm-ed input,.vsm-ed select{background:var(--raise);border:1px solid var(--line-2);border-radius:8px;padding:6px 8px;font-size:13px;width:100%}
+.vsm-ed td .x{margin:0}
+
 /* Tasks */
 .task{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 20px;font-size:14px}
 .task .tdot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--faint)}
@@ -639,7 +674,7 @@ const asanaUrl=gid=>"https://app.asana.com/0/0/"+encodeURIComponent(gid);
 function ago(iso){if(!iso)return"";const m=Math.round((Date.now()-new Date(iso).getTime())/60000);if(m<1)return"hace un momento";if(m<60)return"hace "+m+" min";const h=Math.round(m/60);if(h<24)return"hace "+h+" h";return fdate(iso.slice(0,10))}
 
 /* ---------- render ---------- */
-function renderAll(){renderStamp();renderStats();renderPrograms();renderStack();renderPracticas();renderBrain();renderAgents();renderWeek();renderTasksByProject();renderFeed();if(S.open&&!S.editing&&!(document.querySelector("#uText")?.value))renderSheet()}
+function renderAll(){renderStamp();renderStats();renderPrograms();renderStack();renderPracticas();renderBrain();renderAgents();renderWeek();renderTasksByProject();renderFeed();if(S.open&&!S.editing&&!S.vsmEdit&&!(document.querySelector("#uText")?.value))renderSheet()}
 function renderStamp(){const d=S.updates[0]?.date;$("#stamp").textContent=d?"Act. "+fdate(d):""}
 function renderStats(){
   const comps=S.components,ready=comps.filter(c=>c.status==="listo").length;
@@ -720,7 +755,7 @@ function projRow(p,rank){
   else if(s.saved)imp=`<div class="v acc num">${nf(s.saved)} ${esc(s.unit)}</div><div class="k">liberadas</div>`;
   else if(isNum(s.baseline))imp=`<div class="v num">${nf(s.baseline)} ${esc(s.unit)}</div><div class="k">manuales en alcance</div>`;
   else imp=`<div class="v pend">Línea base pendiente</div>`;
-  const flags=[p.noAzure?`<span class="go">Avanza sin Azure</span>`:"",Number(p.wave)===2?`<span>Ola 2</span>`:"",p.blocker?`<span class="blk">Bloqueo: ${esc(p.blocker)}</span>`:""].filter(Boolean).join("");
+  const flags=[p.noAzure?`<span class="go">Avanza sin Azure</span>`:"",(p.vsm?.asis||[]).length?`<span>Mapa de valor: ${p.vsm.asis.length} pasos</span>`:"",Number(p.wave)===2?`<span>Ola 2</span>`:"",p.blocker?`<span class="blk">Bloqueo: ${esc(p.blocker)}</span>`:""].filter(Boolean).join("");
   return`<button type="button" class="row proj" data-open="${esc(p.id)}">
     <span class="rank num">${esc(rank??"")}</span>
     <div style="min-width:0"><div class="name">${esc(p.name)}</div><div class="meta">${esc([p.sponsor,phaseLabel(p)].filter(Boolean).join(" · "))}</div>${flags?`<div class="flags">${flags}</div>`:""}</div>
@@ -824,6 +859,63 @@ function spark(p,k){
   const l=pts.length-1;
   return`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${tg}<path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.75" vector-effect="non-scaling-stroke"/><circle cx="${X(l)}" cy="${Y(pts[l])}" r="2.5" fill="var(--accent)"/></svg>`;
 }
+/* ---------- Value stream maps ---------- */
+const VMODES={manual:"Manual",mixto:"Humano + agente",agente:"Agente"};
+function vsmStats(st){const n=st.length,timed=st.filter(x=>isNum(x.pt)&&isNum(x.wait)).length,full=n&&timed===n;
+  const pt=st.reduce((a,x)=>a+(isNum(x.pt)?x.pt:0),0),lt=st.reduce((a,x)=>a+(isNum(x.pt)?x.pt:0)+(isNum(x.wait)?x.wait:0),0);
+  const caAll=n&&st.every(x=>isNum(x.ca)),rca=caAll?st.reduce((a,x)=>a*x.ca/100,1)*100:null;
+  return{n,timed,full,pt,lt,eff:full&&lt?pt/lt*100:null,rca,ag:st.filter(x=>x.mode==="agente"||x.mode==="mixto").length}}
+const fh=v=>isNum(v)?nf(v)+" h":"—";
+function wrapLines(t,max){const w=String(t||"").split(/\s+/),L=[];let c="";w.forEach(x=>{if((c+" "+x).trim().length>max&&c){L.push(c);c=x}else c=(c+" "+x).trim()});if(c)L.push(c);if(L.length>3){L.length=3;L[2]=L[2].replace(/.{0,2}$/,"…")}return L}
+function vsmSvg(st){
+  const TW=46,BW=160,BH=104,Y=14,LY1=Y+BH+30,LY2=LY1+22,W=10+st.length*(TW+BW)+10,H=LY2+24;
+  let x=10,out="",lad="";
+  st.forEach((s,i)=>{
+    const tx=x+TW/2,ty=Y+BH/2;
+    out+=`<path class="vline" d="M${x} ${ty} L${x+TW} ${ty}" marker-end="url(#vArrow)"/><path class="vtri" d="M${tx} ${ty-15} L${tx+11} ${ty+5} L${tx-11} ${ty+5} Z" fill="var(--group)"/><text class="vnum" x="${tx}" y="${ty+20}" text-anchor="middle">${isNum(s.wait)?nf(s.wait)+" h":"—"}</text>`;
+    lad+=`<path class="vline" d="M${x} ${LY1} L${x+TW} ${LY1} L${x+TW} ${LY2}"/><text class="vnum" x="${tx}" y="${LY1-6}" text-anchor="middle">${isNum(s.wait)?nf(s.wait):"—"}</text>`;
+    const bx=x+TW,m=s.mode||"manual",lines=wrapLines(s.name,19);
+    out+=`<g><rect class="vb ${m}" x="${bx}" y="${Y}" width="${BW}" height="${BH}" rx="10"/><text class="vm ${m}" x="${bx+12}" y="${Y+17}">${(VMODES[m]||m).toUpperCase()}</text>`+
+      lines.map((l,j)=>`<text class="vt" x="${bx+12}" y="${Y+35+j*15}">${esc(l)}</text>`).join("")+
+      `<text class="vs" x="${bx+12}" y="${Y+BH-10}">${esc(s.who||"")}${isNum(s.ca)?" · "+nf(s.ca)+"% C&amp;A":""}</text></g>`;
+    lad+=`<path class="vline" d="M${bx} ${LY2} L${bx+BW} ${LY2}${i<st.length-1?` L${bx+BW} ${LY1}`:""}"/><text class="vnum pt" x="${bx+BW/2}" y="${LY2+16}" text-anchor="middle">${isNum(s.pt)?nf(s.pt)+" h":"—"}</text>`;
+    x=bx+BW;
+  });
+  return`<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Mapa de flujo de valor con ${st.length} pasos: cajas de proceso, triángulos de espera y escalera de tiempos.">
+    <defs><marker id="vArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9 z" fill="currentColor" opacity=".5"/></marker></defs>${out}${lad}</svg>`;
+}
+function vsmSection(p){
+  const v=p.vsm||{},tab=S.vsmTab||"asis",st=(S.vsmEdit&&S.vsmDraft)?S.vsmDraft:(v[tab]||[]),k=vsmStats(st);
+  const head=`<div class="vsm-top"><div class="seg" role="group" aria-label="Vista del mapa"><button type="button" data-vtab="asis" aria-pressed="${tab==="asis"}">Hoy</button><button type="button" data-vtab="tobe" aria-pressed="${tab==="tobe"}">Con agente</button></div>
+    ${S.canWrite?(S.vsmEdit?`<div class="actions"><button type="button" class="btn ghost" data-vact="cancel">Cancelar</button><button type="button" class="btn" data-vact="save">Guardar mapa</button></div>`:`<button type="button" class="btn ghost" data-vact="edit">Editar mapa</button>`):""}</div>`;
+  if(S.vsmEdit){
+    const opts=m=>Object.entries(VMODES).map(([a,b])=>`<option value="${a}" ${a===m?"selected":""}>${b}</option>`).join("");
+    return`<div class="vsm">${head}<div class="vsm-ed group pad"><table><colgroup><col class="c1"><col class="c2"><col class="cn"><col class="cn"><col class="cn"><col class="cm"><col class="cx"></colgroup><thead><tr><th>Paso</th><th>Quién</th><th>Proceso (h)</th><th>Espera antes (h)</th><th>% C&amp;A</th><th>Modo</th><th></th></tr></thead><tbody>
+      ${st.map((s,i)=>`<tr><td><input id="vn-${i}" value="${esc(s.name)}" placeholder="Nombre del paso"></td><td><input id="vw-${i}" value="${esc(s.who)}" placeholder="Área o rol"></td>
+        <td class="n"><input id="vp-${i}" type="number" min="0" step="any" value="${isNum(s.pt)?s.pt:""}"></td><td class="n"><input id="vq-${i}" type="number" min="0" step="any" value="${isNum(s.wait)?s.wait:""}"></td>
+        <td class="n"><input id="vc-${i}" type="number" min="0" max="100" step="any" value="${isNum(s.ca)?s.ca:""}"></td><td><select id="vm-${i}">${opts(s.mode||"manual")}</select></td>
+        <td><button type="button" class="x" data-vdel="${i}">Quitar</button></td></tr>`).join("")}
+      </tbody></table><div class="actions" style="justify-content:flex-start;margin-top:10px"><button type="button" class="btn ghost" data-vact="add">Agregar paso</button></div>
+      <label class="field" style="margin-top:12px">Nota del mapa<input id="vnote" value="${esc(v[tab+"Note"]||"")}"></label></div></div>`;
+  }
+  if(!st.length)return`<div class="vsm">${head}<div class="group empty">${tab==="asis"?"Aún no se ha mapeado el proceso actual.":"Aún no se ha diseñado el flujo con agente."}</div></div>`;
+  const other=v[tab==="asis"?"tobe":"asis"]||[],ko=vsmStats(other);
+  const delta=tab==="tobe"&&k.full&&ko.full&&ko.lt?` · ${nf((1-k.lt/ko.lt)*100)}% menos lead time`:"";
+  return`<div class="vsm">${head}
+    <div class="vsm-stats num">
+      <div><span class="k">Lead time</span><span class="v ${k.full?"":"pend"}">${k.full?fh(k.lt):k.timed+"/"+k.n+" medidos"}</span></div>
+      <div><span class="k">Tiempo de proceso</span><span class="v ${k.full?"":"pend"}">${k.full?fh(k.pt):"Pendiente"}</span></div>
+      <div><span class="k">Eficiencia</span><span class="v ${k.eff!=null?"acc":"pend"}">${k.eff!=null?nf(k.eff)+"%":"Pendiente"}</span></div>
+      <div><span class="k">% C&amp;A acumulado</span><span class="v ${k.rca!=null?"":"pend"}">${k.rca!=null?nf(k.rca)+"%":"Pendiente"}</span></div>
+      <div><span class="k">Pasos con agente</span><span class="v">${k.ag} de ${k.n}</span></div>
+    </div>
+    <div class="scroll">${vsmSvg(st)}</div>
+    <div class="vsm-legend"><span><i></i>Manual</span><span><i class="mixto"></i>Humano + agente</span><span><i class="agente"></i>Agente</span><span>△ espera antes del paso · escalera: espera arriba, proceso abajo</span></div>
+    ${v[tab+"Note"]||delta?`<p class="vsm-note">${esc(v[tab+"Note"]||"")}${delta}</p>`:""}
+  </div>`;
+}
+function readVsmDraft(){const d=S.vsmDraft||[];return d.map((s,i)=>{const g=id=>$("#"+id+"-"+i),n=id=>{const x=g(id)?.value;return x===""||x==null?null:Number(x)};
+  return{...s,name:g("vn")?.value.trim()??s.name,who:g("vw")?.value.trim()??s.who,pt:n("vp"),wait:n("vq"),ca:n("vc"),mode:g("vm")?.value||s.mode||"manual"}})}
 function kpiTile(p,k,i){
   if(S.editing)return`<div class="kpi"><div class="n">${esc(k.name)}</div><div class="fr">
     <label class="field">Línea base<input id="kb-${i}" type="number" step="any" value="${isNum(k.baseline)?k.baseline:""}"></label>
@@ -881,6 +973,8 @@ function renderSheet(){
 
   ${(p.kpis||[]).length?`<div><h5>KPIs de impacto</h5><div class="kpis">${p.kpis.map((k,i)=>kpiTile(p,k,i)).join("")}</div></div>`:""}
 
+  ${inProgram(p,"agentes")||p.vsm?`<div><h5>Mapa de flujo de valor</h5>${vsmSection(p)}</div>`:""}
+
   ${p.next?`<div><h5>Próximo hito</h5><div class="group pad">${esc(p.next)}</div></div>`:""}
 
   <div><h5>Actualizaciones</h5>
@@ -896,7 +990,7 @@ function renderSheet(){
 }
 
 /* ---------- sheet ---------- */
-function openSheet(id){S.open=id;S.editing=false;renderSheet();const d=$("#sheet");if(!d.open)d.showModal();try{history.replaceState(null,"","#"+id)}catch(e){}}
+function openSheet(id){S.open=id;S.editing=false;S.vsmEdit=false;S.vsmDraft=null;S.vsmTab="asis";renderSheet();const d=$("#sheet");if(!d.open)d.showModal();try{history.replaceState(null,"","#"+id)}catch(e){}}
 function closeSheet(){S.open=null;S.editing=false;const d=$("#sheet");if(d.open)d.close();try{history.replaceState(null,"",viewHash(S.view||"inicio"))}catch(e){}}
 $("#closeSheet").addEventListener("click",closeSheet);
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
@@ -1015,6 +1109,14 @@ document.addEventListener("click",async e=>{
   if(e.target.closest("[data-newticket]")){openT("new");return}
   if(e.target.closest("[data-tclose]")){closeT();return}
   const tk=e.target.closest("[data-ticket]");if(tk){openT("view",tk.dataset.ticket);return}
+  const vt=e.target.closest("[data-vtab]");if(vt){if(S.vsmEdit)return;S.vsmTab=vt.dataset.vtab;renderSheet();return}
+  const va=e.target.closest("[data-vact]");if(va&&S.canWrite){const pp=pById(S.open);if(!pp)return;const tab=S.vsmTab||"asis",a=va.dataset.vact;
+    if(a==="edit"){S.vsmEdit=true;S.vsmDraft=clone(pp.vsm?.[tab]||[]);renderSheet();return}
+    if(a==="cancel"){S.vsmEdit=false;S.vsmDraft=null;renderSheet();return}
+    if(a==="add"){S.vsmDraft=readVsmDraft();S.vsmDraft.push({name:"",who:"",pt:null,wait:null,ca:null,mode:"manual"});renderSheet();return}
+    if(a==="save"){const steps=readVsmDraft().filter(x=>x.name);const note=$("#vnote")?.value.trim()||"";const vsm=clone(pp.vsm||{});vsm[tab]=steps;vsm[tab+"Note"]=note;vsm.updated=today();
+      S.vsmEdit=false;S.vsmDraft=null;await write(()=>pdoc(pp.id).update({vsm}),"Mapa guardado");renderSheet();return}}
+  const vd=e.target.closest("[data-vdel]");if(vd&&S.vsmEdit){S.vsmDraft=readVsmDraft();S.vsmDraft.splice(+vd.dataset.vdel,1);renderSheet();return}
   const go=e.target.closest("[data-goto]");if(go){const el=document.getElementById(go.dataset.goto);const host=el?.closest("main");if(host&&host.hidden){setView(Object.keys(VIEWS).find(k=>VIEWS[k]==="#"+host.id),true)}el?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});return}
   const df=e.target.closest("[data-donefor]");if(df){S.showDoneFor=S.showDoneFor===df.dataset.donefor?null:df.dataset.donefor;renderTasksByProject();return}
   const cy=e.target.closest("[data-cyc]");if(cy&&S.canWrite){const [pid,field,i]=cy.dataset.cyc.split("|");const pp=pById(pid);if(!pp)return;const arr=clone(pp[field]||[]);const x=arr[+i];
