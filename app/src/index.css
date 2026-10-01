@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/* Nexo IA design tokens — Apple-style neutrals + PDC navy and orange.
+   Light values on :root; dark values for the OS setting and for an explicit data-theme. */
+:root {
+  --bg: #ffffff; --group: #f5f5f7; --raise: #ffffff;
+  --line: rgba(0, 0, 0, .08); --line-2: rgba(0, 0, 0, .14);
+  --text: #1d1d1f; --sub: #6e6e73; --faint: #86868b;
+  --navy: #00216f; --strong: #00216f;
+  --accent: #ff5100; --accent-ink: #d94400; --accent-soft: rgba(255, 81, 0, .08);
+  --glass: rgba(255, 255, 255, .78); --scrim: rgba(0, 0, 0, .28);
+  --font: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  --r: 18px; --r-sm: 12px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000; --group: #1c1c1e; --raise: #2c2c2e;
+    --line: rgba(255, 255, 255, .10); --line-2: rgba(255, 255, 255, .18);
+    --text: #f5f5f7; --sub: #a1a1a6; --faint: #8e8e93; --strong: #f5f5f7;
+    --accent: #ff6a26; --accent-ink: #ff7a3d; --accent-soft: rgba(255, 106, 38, .14);
+    --glass: rgba(22, 22, 24, .72); --scrim: rgba(0, 0, 0, .55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000; --group: #1c1c1e; --raise: #2c2c2e;
+  --line: rgba(255, 255, 255, .10); --line-2: rgba(255, 255, 255, .18);
+  --text: #f5f5f7; --sub: #a1a1a6; --faint: #8e8e93; --strong: #f5f5f7;
+  --accent: #ff6a26; --accent-ink: #ff7a3d; --accent-soft: rgba(255, 106, 38, .14);
+  --glass: rgba(22, 22, 24, .72); --scrim: rgba(0, 0, 0, .55);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-group: var(--group);
+  --color-raise: var(--raise);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-text: var(--text);
+  --color-sub: var(--sub);
+  --color-faint: var(--faint);
+  --color-navy: var(--navy);
+  --color-strong: var(--strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-glass: var(--glass);
+  --font-sans: var(--font);
+  --radius-r: var(--r);
+  --radius-r-sm: var(--r-sm);
+}
+
+@layer base {
+  * { box-sizing: border-box; border-color: var(--line); }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.47; letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4, h5 { margin: 0; font-weight: 600; letter-spacing: -.03em; text-wrap: balance; }
+  p { margin: 0; }
+  button { cursor: pointer; font: inherit; color: inherit; letter-spacing: inherit; }
+  input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .num { font-variant-numeric: tabular-nums; }
+  [hidden] { display: none !important; }
+}
+
+@layer components {
+  .wrap { max-width: 1000px; margin: 0 auto; padding-inline: 22px; }
+  .eyebrow { font-size: 14px; font-weight: 600; color: var(--accent); }
+  .h-display { font-size: clamp(44px, 7.4vw, 80px); line-height: 1.02; letter-spacing: -.045em; font-weight: 600; }
+  .h-display .sub { display: block; font-size: .5em; line-height: 1.1; letter-spacing: -.035em; margin-top: .18em; max-width: 16em; color: var(--faint); }
+  .lead { font-size: clamp(18px, 2.3vw, 23px); line-height: 1.38; color: var(--sub); max-width: 34em; letter-spacing: -.02em; }
+  .h-sec { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.08; }
+  .group-box { background: var(--group); border-radius: var(--r); overflow: hidden; }
+  .row { display: grid; align-items: center; gap: 16px; padding: 16px 20px; position: relative; }
+  .row + .row::before { content: ""; position: absolute; top: 0; left: 20px; right: 0; height: 1px; background: var(--line); }
+  .status { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--sub); white-space: nowrap; border: 0; background: none; padding: 4px 0; }
+  .status i { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); }
+  .status.en_curso { color: var(--accent-ink); } .status.en_curso i { background: var(--accent); box-shadow: none; }
+  .status.listo { color: var(--strong); } .status.listo i { background: var(--strong); box-shadow: none; }
+  button.status { padding: 4px 10px; margin: -4px -10px; border-radius: 999px; }
+  button.status:hover { background: var(--line); }
+  .bar { height: 4px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--strong); border-radius: 2px; }
+  .seg { display: inline-flex; flex-wrap: wrap; background: var(--group); border-radius: 10px; padding: 2px; gap: 2px; justify-self: start; }
+  .seg button { border: 0; background: transparent; padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--sub); }
+  .seg button[aria-pressed="true"] { background: var(--raise); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 .5px var(--line); }
+  .field { display: grid; gap: 5px; font-size: 12px; color: var(--sub); min-width: 0; }
+
+  /* Stack diagram (inline SVG) */
+  .dg-box { fill: var(--raise); stroke: var(--line-2); }
+  .dg-group { fill: none; stroke: var(--line-2); }
+  .dg-azure { fill: none; stroke: var(--faint); stroke-dasharray: 5 5; }
+  .dg-t { font: 600 13px var(--font); fill: var(--text); }
+  .dg-s { font: 400 11px var(--font); fill: var(--sub); }
+  .dg-l { font: 500 11px var(--font); fill: var(--sub); }
+  .dg-g { font: 600 11px var(--font); fill: var(--faint); letter-spacing: .02em; }
+  .dg-a { stroke: var(--faint); stroke-width: 1.25; fill: none; }
+  .dg-d { fill: none; stroke: var(--faint); stroke-width: 1.5; }
+  .dg-d.en_curso { fill: var(--accent); stroke: none; }
+  .dg-d.listo { fill: var(--strong); stroke: none; }
+
+  /* Value stream map (inline SVG) */
+  .vb { fill: var(--raise); stroke: var(--line-2); stroke-width: 1; }
+  .vb.agente { stroke: var(--strong); stroke-width: 1.75; }
+  .vb.mixto { stroke: var(--accent); stroke-width: 1.75; }
+  .vt { font: 600 12px var(--font); fill: var(--text); }
+  .vs { font: 400 11px var(--font); fill: var(--sub); }
+  .vm { font: 600 10px var(--font); fill: var(--faint); letter-spacing: .03em; }
+  .vm.agente { fill: var(--strong); } .vm.mixto { fill: var(--accent-ink); }
+  .vtri { fill: var(--group); stroke: var(--faint); stroke-width: 1.25; }
+  .vline { stroke: var(--faint); stroke-width: 1.25; fill: none; }
+  .vnum { font: 500 11px var(--font); fill: var(--sub); }
+  .vnum.pt { fill: var(--text); font-weight: 600; }
+  .legend-swatch { display: inline-block; width: 14px; height: 10px; border-radius: 3px; border: 1.5px solid var(--line-2); margin-right: 6px; vertical-align: -1px; }
+  .legend-swatch.agente { border-color: var(--strong); } .legend-swatch.mixto { border-color: var(--accent); }
+}
+
+@keyframes rise { from { transform: translateY(20px) scale(.99); opacity: .5 } to { transform: none; opacity: 1 } }
+@keyframes introIn { from { opacity: 0; transform: translateY(14px); filter: blur(6px) } to { opacity: 1; transform: none; filter: none } }
+@keyframes introBar { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@keyframes pulseDot { 50% { opacity: .35 } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; } }
