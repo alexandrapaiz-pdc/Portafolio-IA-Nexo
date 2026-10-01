@@ -274,6 +274,21 @@ details.comps[open] summary::after{transform:rotate(90deg)}
 .sec-actions a{font-size:14px;color:var(--accent-ink);text-decoration:none;font-weight:500}
 .sec-actions a:hover{text-decoration:underline}
 .tgroup{display:grid;gap:8px}
+details.tdet{background:var(--group);border-radius:var(--r);overflow:hidden}
+details.tdet>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto 16px;gap:14px;align-items:center;padding:16px 20px}
+details.tdet>summary::-webkit-details-marker{display:none}
+details.tdet>summary:hover{background:rgba(0,0,0,.025)}
+details.tdet>summary .tn2{font-size:16px;font-weight:600;letter-spacing:-.02em}
+details.tdet>summary .tc{font-size:13px;color:var(--sub);white-space:nowrap}
+details.tdet>summary .tc .late{color:var(--accent-ink)}
+details.tdet>summary::after{content:"›";color:var(--faint);font-size:18px;transition:transform .2s;grid-column:3;grid-row:1}
+details.tdet[open]>summary::after{transform:rotate(90deg)}
+details.tdet>.tbody{border-top:1px solid var(--line)}
+details.tdet .tfoot{display:flex;gap:16px;padding:10px 20px 14px;flex-wrap:wrap}
+details.tdet .tfoot button{border:0;background:none;padding:0;font-size:13px;color:var(--sub)}
+details.tdet .tfoot button:hover{color:var(--text)}
+@media (prefers-reduced-motion:reduce){details.tdet>summary::after{transition:none}}
+.tgroups{display:grid;gap:10px}
 .tgroup .group-title button{border:0;background:none;padding:0;font:inherit;color:var(--text);font-weight:600;cursor:pointer}
 
 /* Tasks */
@@ -355,7 +370,7 @@ details.comps[open] summary::after{transform:rotate(90deg)}
     <div class="eyebrow">Portafolio de IA · Q4 2026</div>
     <h1>Nexo IA.<span class="h1sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
     <p class="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
-    <p class="who">Alexandra Paiz, Líder de IA y Herramientas · Fuera de oficina 13–16 oct y 20–26 oct</p>
+    <p class="who">Alexandra Paiz, Líder de IA y Herramientas</p>
   </section>
 
   <div class="stats" id="stats"></div>
@@ -474,11 +489,12 @@ details.comps[open] summary::after{transform:rotate(90deg)}
   </section>
   <section class="block" id="semana" style="padding-top:24px">
     <div class="sec-head"><span class="eyebrow">Próximos 7 días</span><h2>Esta semana.</h2></div>
-    <div class="group" id="week"><div class="empty">Cargando tareas…</div></div>
+    <details class="tdet" id="weekDet" data-tkey="__week"><summary><span class="tn2">Vencidas y por vencer</span><span class="tc num" id="weekSum">Cargando…</span></summary>
+      <div class="tbody" id="week"><div class="empty">Cargando tareas…</div></div></details>
   </section>
   <section class="block">
     <div class="sec-head"><span class="eyebrow">Por proyecto</span><h2>Todo lo abierto.</h2></div>
-    <div class="groups" id="tasksByProject"></div>
+    <div class="tgroups" id="tasksByProject"></div>
   </section>
   <footer><span>Grupo PDC · Nexo · Liderazgo de IA</span><span>Fuente: Asana · Backlog Personal</span></footer>
 </main>
@@ -502,7 +518,7 @@ details.comps[open] summary::after{transform:rotate(90deg)}
     <div class="sec-head">
       <span class="eyebrow">Hacia dónde vamos</span>
       <h2>Descentralizar la IA, con guardrails.</h2>
-      <p>Hoy Nexo construye los agentes a partir de estas solicitudes. Cuando el marco esté establecido y probado, se abre una segunda modalidad: que cada área desarrolle sus propios agentes sobre el mismo stack, con las mismas reglas. Es lo que ExO 3.0 llama autonomía segura, y lo que InnerSource hace posible: lo que se construye queda abierto para toda la empresa.</p>
+      <p>Hoy Nexo construye los agentes a partir de estas solicitudes. Cuando el marco esté establecido y probado, se abre una segunda modalidad: que cada área desarrolle sus propios agentes sobre el mismo stack, con las mismas reglas y con la ayuda de agentes y skills de Nexo. Es lo que ExO 3.0 llama autonomía segura, y lo que InnerSource hace posible: lo que se construye queda abierto para toda la empresa.</p>
     </div>
     <div class="modes">
       <div class="mode"><div class="mk"><span class="now">Hoy</span><span class="tstat nuevo"><i></i>Activo</span></div>
@@ -510,7 +526,7 @@ details.comps[open] summary::after{transform:rotate(90deg)}
         <ul><li>Nexo diseña, construye y opera el agente</li><li>Prioridad según horas manuales, impacto y factibilidad</li><li>Cada proyecto con línea base y KPI antes de construir</li></ul></div>
       <div class="mode"><div class="mk"><span class="next">Siguiente</span><span class="tstat evaluacion"><i></i>Próximamente</span></div>
         <h3>Autoservicio con guardrails</h3><p>Tu área construye su propio agente sobre el stack de Nexo; Nexo da el marco y revisa.</p>
-        <ul><li>Sandbox para experimentar sin tocar datos reales</li><li>Plantillas, guías de Nivel 3 y skills de AI Best Practices</li><li>Revisión y aprobación de Nexo antes de pasar a producción</li><li>Mismos controles: solo lectura, aprobación humana, kill switch y auditoría</li></ul></div>
+        <ul><li>Sandbox para experimentar sin tocar datos reales</li><li>Agentes y skills de Nexo que ayudan a construir: plantillas, guías de Nivel 3 y skills de AI Best Practices</li><li>Revisión y aprobación de Nexo antes de pasar a producción</li><li>Mismos controles: solo lectura, aprobación humana, kill switch y auditoría</li></ul></div>
     </div>
     <div><div class="group-title"><b>Se habilita cuando</b><span>El marco se prueba primero con los proyectos de Nexo</span></div>
       <div class="group gates">
@@ -696,6 +712,8 @@ const PROGRAMS=[
 const LSTAT={activo:["listo","Activo"],en_construccion:["en_curso","En construcción"],pendiente:["pendiente","Pendiente"],listo:["listo","Listo"],en_curso:["en_curso","En curso"]};
 const NEXT_L={activo:"pendiente",pendiente:"en_construccion",en_construccion:"activo"};
 const pById=id=>S.projects.find(p=>p.id===id);
+S.openT=new Set();
+document.addEventListener("toggle",e=>{const d=e.target;if(!(d instanceof HTMLDetailsElement)||!d.dataset.tkey)return;d.open?S.openT.add(d.dataset.tkey):S.openT.delete(d.dataset.tkey)},true);
 const inProgram=(p,g)=>p.program?p.program===g:(g==="agentes"&&!p.enabler);
 const agents=()=>S.projects.filter(p=>inProgram(p,"agentes")).sort((a,b)=>(a.priority??99)-(b.priority??99));
 function lvlStatus(x,pid,field,i){const [c,l]=LSTAT[x.status]||LSTAT.pendiente;
@@ -734,9 +752,10 @@ function renderTasksByProject(){
   if(!S.loaded.a||!S.loaded.p)return;
   const order=[...S.projects].sort((a,b)=>{const ga=PROGRAMS.findIndex(g=>inProgram(a,g.id)||g.lead===a.id),gb=PROGRAMS.findIndex(g=>inProgram(b,g.id)||g.lead===b.id);return ga-gb||(a.priority??99)-(b.priority??99)});
   const html=order.map(p=>{const t=tasksOf(p);if(!t||!t.length)return"";const st=taskStats(t),open=t.filter(x=>!x.done).sort((a,b)=>(a.due||"9").localeCompare(b.due||"9")),showDone=S.showDoneFor===p.id;
-    return`<div class="tgroup"><div class="group-title"><button type="button" data-open="${esc(p.id)}">${esc(p.name)}</button><span class="num">${st.done} de ${st.total} cerradas${st.late?` · <span style="color:var(--accent-ink)">${st.late} vencidas</span>`:""}</span></div>
-      <div class="group">${open.map(x=>taskRow(x)).join("")||`<div class="row muted">Sin tareas abiertas.</div>`}
-      ${st.done?(showDone?t.filter(x=>x.done).map(x=>taskRow(x)).join("")+`<button type="button" class="more" data-donefor="${esc(p.id)}">Ocultar cerradas</button>`:`<button type="button" class="more" data-donefor="${esc(p.id)}">Mostrar ${st.done} cerradas</button>`):""}</div></div>`}).join("");
+    return`<details class="tdet" data-tkey="${esc(p.id)}" ${S.openT.has(p.id)?"open":""}><summary><span class="tn2">${esc(p.name)}</span><span class="tc num">${st.total-st.done} abiertas${st.late?` · <span class="late">${st.late} vencidas</span>`:""} · ${st.done} cerradas</span></summary>
+      <div class="tbody">${open.map(x=>taskRow(x)).join("")||`<div class="row muted">Sin tareas abiertas.</div>`}
+      ${showDone?t.filter(x=>x.done).map(x=>taskRow(x)).join(""):""}
+      <div class="tfoot">${st.done?`<button type="button" data-donefor="${esc(p.id)}">${showDone?"Ocultar cerradas":"Mostrar "+st.done+" cerradas"}</button>`:""}<button type="button" data-open="${esc(p.id)}">Ver proyecto ›</button></div></div></details>`}).join("");
   $("#tasksByProject").innerHTML=html||`<div class="empty">Sincroniza con Asana para ver las tareas.</div>`;
 }
 function taskRow(t,proj){const late=!t.done&&t.due&&t.due<today();
@@ -751,6 +770,9 @@ function renderWeek(){
   if(!S.loaded.a||!S.loaded.p)return;
   const t=today(),wk=addDays(t,7);
   const rows=S.projects.flatMap(p=>(tasksOf(p)||[]).filter(x=>!x.done&&x.due&&x.due<=wk).map(x=>({t:x,p}))).sort((a,b)=>a.t.due.localeCompare(b.t.due));
+  const lateN=rows.filter(r=>r.t.due<t).length;
+  $("#weekSum").innerHTML=rows.length?`${rows.length} tareas${lateN?` · <span class="late">${lateN} vencidas</span>`:""}`:"Nada pendiente";
+  $("#weekDet").open=S.openT.has("__week");
   $("#week").innerHTML=rows.length?rows.map(r=>taskRow(r.t,r.p)).join(""):`<div class="empty">${m?"Nada vence en los próximos 7 días.":"Sincroniza con Asana para ver las tareas."}</div>`;
 }
 function updRow(u,showProj){
