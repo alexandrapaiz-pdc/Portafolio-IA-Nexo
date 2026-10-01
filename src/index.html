@@ -44,7 +44,7 @@ button{cursor:pointer}
 .jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .jump a{font-size:13px;font-weight:500;color:var(--text);text-decoration:none;background:var(--group);padding:7px 14px;border-radius:999px;white-space:nowrap}
 .jump a:hover{background:var(--line)}
-@media (max-width:640px){.nav .stamp,.nav .edit{display:none!important}.tabs{margin-left:6px}.tabs button{padding:5px 9px}}
+@media (max-width:640px){.nav .stamp,.nav .edit,.nav .spacer{display:none!important}.tabs{margin-left:6px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.tabs::-webkit-scrollbar{display:none}.tabs button{padding:5px 9px;flex:none}}
 .nav .stamp{font-size:12px;color:var(--faint)}
 .nav .edit{font-size:12px;color:var(--accent-ink);font-weight:500}
 @media (max-width:680px){.nav .links{display:none}}
@@ -336,6 +336,23 @@ details.tdet .tfoot button:hover{color:var(--text)}
 .vsm-ed input,.vsm-ed select{background:var(--raise);border:1px solid var(--line-2);border-radius:8px;padding:6px 8px;font-size:13px;width:100%}
 .vsm-ed td .x{margin:0}
 
+/* Agent portal (coming soon) */
+.soon{font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:1px 6px;margin-left:5px;vertical-align:1px}
+.ap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.ap-grid{grid-template-columns:1fr}}
+.ap-card{background:var(--group);border-radius:var(--r);padding:20px;display:grid;gap:8px;align-content:start;min-width:0;position:relative}
+.ap-card .ex{font-size:11px;color:var(--faint);font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+.ap-card h3{font-size:18px;letter-spacing:-.025em}
+.ap-card p{font-size:13.5px;color:var(--sub)}
+.ap-card .meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--faint);margin-top:4px}
+.ap-card .btn{justify-self:start;margin-top:6px;opacity:.5;cursor:default}
+.ap-feat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.ap-feat div{padding:18px 18px 0 0;display:grid;gap:4px;min-width:0}
+.ap-feat div+div{padding-left:18px;border-left:1px solid var(--line)}
+.ap-feat span{font-size:15px;font-weight:600;letter-spacing:-.02em}
+.ap-feat p{font-size:13px;color:var(--sub)}
+@media (max-width:760px){.ap-feat{grid-template-columns:1fr 1fr}.ap-feat div:nth-child(3){padding-left:0;border-left:0}}
+
 /* Tasks */
 .task{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 20px;font-size:14px}
 .task .tdot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--faint)}
@@ -402,7 +419,7 @@ details.tdet .tfoot button:hover{color:var(--text)}
   <div class="wrap">
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
-    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="inicio" aria-current="page">Inicio</button><button type="button" data-view="portafolio">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
+    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="inicio" aria-current="page">Inicio</button><button type="button" data-view="portafolio">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button><button type="button" data-view="agentes">Agentes<span class="soon">PRONTO</span></button></div>
     <span class="spacer"></span>
     <span class="edit" id="editChip" hidden title="Puedes editar esta página">Edición</span>
     <span class="stamp" id="stamp"></span>
@@ -560,6 +577,29 @@ details.tdet .tfoot button:hover{color:var(--text)}
   <footer><span>Grupo PDC · Nexo · Liderazgo de IA</span><span>Fuente: Asana · Backlog Personal</span></footer>
 </main>
 
+<main class="wrap" id="viewAgents" hidden>
+  <section class="hero">
+    <div class="eyebrow">Próximamente</div>
+    <h1>Portal de agentes.<span class="h1sub">Todos los agentes de Grupo PDC, en un solo lugar.</span></h1>
+    <p class="lead">Un catálogo para encontrar, usar y pedir acceso a los agentes de la empresa, con su dueño, su KPI y su estado. Vivirá en el dominio de la empresa, con tu cuenta de Grupo PDC.</p>
+  </section>
+  <div class="ap-feat">
+    <div><span>Encuentra</span><p>Cada agente con lo que hace, quién lo mantiene y qué resultado ha logrado.</p></div>
+    <div><span>Úsalo</span><p>Desde el portal o desde Claude vía MCP, con tus mismos permisos.</p></div>
+    <div><span>Pide acceso</span><p>Solicita usar un agente o proponer uno nuevo desde Solicitudes.</p></div>
+    <div><span>Publica el tuyo</span><p>Con el autoservicio, tu área publica su agente tras la revisión de Nexo.</p></div>
+  </div>
+  <section class="block" style="padding-top:64px">
+    <div class="sec-head"><span class="eyebrow">Así se verá</span><h2>Los primeros agentes.</h2><p>Vista previa con los proyectos en curso. Ninguno está publicado todavía.</p></div>
+    <div class="ap-grid" id="apCards"></div>
+  </section>
+  <section class="block" style="padding-top:64px">
+    <div class="sec-head"><span class="eyebrow">Qué falta</span><h2>Se publica cuando estén listos.</h2></div>
+    <div class="group" id="apDeps"></div>
+  </section>
+  <footer><span>Grupo PDC · Nexo · Liderazgo de IA</span><span>Portal de agentes · en diseño</span></footer>
+</main>
+
 <main class="wrap" id="viewTickets" hidden>
   <section class="hero">
     <div class="eyebrow">Solicitudes de IA · Nexo</div>
@@ -674,7 +714,7 @@ const asanaUrl=gid=>"https://app.asana.com/0/0/"+encodeURIComponent(gid);
 function ago(iso){if(!iso)return"";const m=Math.round((Date.now()-new Date(iso).getTime())/60000);if(m<1)return"hace un momento";if(m<60)return"hace "+m+" min";const h=Math.round(m/60);if(h<24)return"hace "+h+" h";return fdate(iso.slice(0,10))}
 
 /* ---------- render ---------- */
-function renderAll(){renderStamp();renderStats();renderPrograms();renderStack();renderPracticas();renderBrain();renderAgents();renderWeek();renderTasksByProject();renderFeed();if(S.open&&!S.editing&&!S.vsmEdit&&!(document.querySelector("#uText")?.value))renderSheet()}
+function renderAll(){renderStamp();renderStats();renderPrograms();renderStack();renderPracticas();renderBrain();renderAgents();renderAgentPortal();renderWeek();renderTasksByProject();renderFeed();if(S.open&&!S.editing&&!S.vsmEdit&&!(document.querySelector("#uText")?.value))renderSheet()}
 function renderStamp(){const d=S.updates[0]?.date;$("#stamp").textContent=d?"Act. "+fdate(d):""}
 function renderStats(){
   const comps=S.components,ready=comps.filter(c=>c.status==="listo").length;
@@ -808,6 +848,19 @@ function renderBrain(){
 function renderAgents(){
   if(!S.loaded.p)return;const ag=agents();
   $("#agents").innerHTML=ag.length?ag.map((p,i)=>projRow(p,String(i+1))).join(""):`<div class="empty">Todavía no hay proyectos.</div>`;
+}
+const AP_AGENTS={avon:["Agente de kickoff de campaña","De la base de ventas a las tablas de KPIs y el top / bottom 10 de ofertas."],
+  contraloria:["Agente de conciliación documental","Concilia facturas contra órdenes de compra y prepara liquidación y retenciones."],
+  step:["Validación de códigos STEP","Revisa los atributos de cada código por etapa antes de llegar a facturación."]};
+function renderAgentPortal(){
+  if(!S.loaded.p)return;
+  $("#apCards").innerHTML=Object.entries(AP_AGENTS).map(([id,[n,d]])=>{const p=pById(id);if(!p)return"";
+    return`<div class="ap-card"><span class="ex">Vista previa</span><h3>${esc(n)}</h3><p>${esc(d)}</p>
+      <div class="meta"><span>${esc(p.name)}</span><span>${esc(p.sponsor||"")}</span><span>${phaseLabel(p)}</span></div>
+      <button type="button" class="btn ghost" disabled>Usar agente</button></div>`}).join("");
+  const deps=["dominio","controles","containerapps","orquestacion"].map(compById).filter(Boolean);
+  $("#apDeps").innerHTML=deps.map(c=>`<div class="row comp" style="grid-template-columns:minmax(0,1fr) auto"><div style="min-width:0"><div class="name">${esc(c.name)}</div><div class="note">${esc(c.owner||"")}</div></div><span class="status ${esc(c.status)}"><i></i>${STATUS[c.status]||""}</span></div>`).join("")+
+    `<div class="row" style="grid-template-columns:minmax(0,1fr) auto"><div><div class="name" style="font-weight:500">Plantilla del portal con tarjetas de proyecto</div><div class="note" style="font-size:13px;color:var(--sub)">Alexandra · tarea en Asana</div></div><span class="status pendiente"><i></i>Pendiente</span></div>`;
 }
 function renderTasksByProject(){
   if(!S.loaded.a||!S.loaded.p)return;
@@ -1005,12 +1058,12 @@ const tLabel=st=>(TSTATUS.find(x=>x[0]===st)||TSTATUS[0])[1];
 S.tickets=[];S.triage={};S.tFilter="abiertas";S.me=null;S.names={};S.view="inicio";S.tOpen=null;S.loaded.t=false;
 const tStatus=t=>S.triage[t.id]?.status||"nuevo";
 const isOpenT=t=>!["proyecto","descartado"].includes(tStatus(t));
-const VIEWS={inicio:"#viewHome",portafolio:"#viewPortfolio",tareas:"#viewTasks",solicitudes:"#viewTickets"};
+const VIEWS={inicio:"#viewHome",portafolio:"#viewPortfolio",tareas:"#viewTasks",solicitudes:"#viewTickets",agentes:"#viewAgents"};
 const viewHash=v=>v==="inicio"?location.pathname+location.search:"#"+v;
 function setView(v,keepScroll){if(!VIEWS[v])v="inicio";S.view=v;if($("#sheet").open)closeSheet();
   Object.entries(VIEWS).forEach(([k,sel])=>$(sel).hidden=k!==v);
   document.querySelectorAll("[data-view]").forEach(b=>b.dataset.view===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
-  try{history.replaceState(null,"",viewHash(v))}catch(e){}if(!keepScroll)window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
+  try{history.replaceState(null,"",viewHash(v))}catch(e){}if(!keepScroll)window.scrollTo(0,0);try{const tb=document.querySelector('.tabs [data-view="'+v+'"]');const tr=tb?.parentElement;if(tb&&tr&&tr.scrollWidth>tr.clientWidth)tr.scrollLeft=tb.offsetLeft-tr.offsetLeft-12}catch(e){}if(v==="solicitudes")renderTickets()}
 async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.tickets.map(t=>t.createdBy).filter(Boolean))];if(!ids.length)return;
   try{const ps=await S.user.profiles(ids);let ch=false;ids.forEach(id=>{const n=ps[id]?.name||"";if(S.names[id]!==n){S.names[id]=n;ch=true}});if(ch)renderTickets()}catch(e){}}
 const who=id=>S.names[id]||"Colaborador";
