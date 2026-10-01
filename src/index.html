@@ -236,6 +236,26 @@ details.comps[open] summary::after{transform:rotate(90deg)}
 .gates .row{grid-template-columns:28px minmax(0,1fr)}
 .gates .row b{font-size:13px;color:var(--accent);font-weight:600}
 .gates .row .note{font-size:13px;color:var(--sub);margin-top:2px}
+/* Mission & framework */
+.mission{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:820px){.mission{grid-template-columns:1fr;gap:24px}}
+.mission blockquote{margin:0;font-size:clamp(22px,2.8vw,30px);line-height:1.25;letter-spacing:-.03em;font-weight:500;color:var(--text)}
+.mission blockquote span{color:var(--faint)}
+.mission .side{display:grid;gap:16px;font-size:15px;color:var(--sub)}
+.mission .side b{color:var(--text);font-weight:600}
+.exo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.exo{grid-template-columns:1fr}}
+.exo .mode h3{font-size:20px}
+.exo .tag2{font-size:12px;color:var(--faint);font-weight:500}
+.istack{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.istack div{padding:16px 14px 0 0;display:grid;gap:4px;min-width:0}
+.istack div+div{padding-left:14px;border-left:1px solid var(--line)}
+.istack b{font-size:12px;color:var(--accent);font-weight:600}
+.istack span{font-size:15px;font-weight:600;letter-spacing:-.02em}
+.istack p{font-size:12.5px;color:var(--sub)}
+.govern{margin-top:12px;border:1px dashed var(--line-2);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;color:var(--sub)}
+.govern b{color:var(--text);font-weight:600}
+@media (max-width:820px){.istack{grid-template-columns:repeat(2,minmax(0,1fr))}.istack div:nth-child(odd){padding-left:0;border-left:0}.istack div:nth-child(n+3){border-top:1px solid var(--line);padding-top:14px;margin-top:10px}}
 /* Programs */
 .programs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (max-width:720px){.programs{grid-template-columns:1fr}}
@@ -323,7 +343,7 @@ details.comps[open] summary::after{transform:rotate(90deg)}
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
     <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="portafolio" aria-current="page">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
-    <div class="links" id="navLinks"><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></div>
+    <div class="links" id="navLinks"><a href="#mision">Misión</a><a href="#marco">ExO 3.0</a><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></div>
     <span class="spacer"></span>
     <span class="edit" id="editChip" hidden>Modo edición</span>
     <span class="stamp" id="stamp"></span>
@@ -339,6 +359,44 @@ details.comps[open] summary::after{transform:rotate(90deg)}
   </section>
 
   <div class="stats" id="stats"></div>
+
+  <section class="block" id="mision">
+    <div class="sec-head"><span class="eyebrow">Misión</span><h2>De libro abierto a código abierto.</h2></div>
+    <div class="mission">
+      <blockquote>Grupo PDC ya es una empresa de libro abierto: los números son de todos. <span>La misión de Nexo IA es que lo que construimos con IA también lo sea, abierto y editable por cualquiera dentro de la empresa.</span></blockquote>
+      <div class="side">
+        <p><b>InnerSource.</b> Prácticas de código abierto, pero dentro de la organización: el código, las guías y los agentes se ven, se reutilizan y cualquiera puede proponer mejoras, con guardrails.</p>
+        <p><b>Así trabajan los laboratorios de IA de frontera.</b> Ahí hasta mercadeo programa: con lenguaje natural, quien conoce el problema edita la solución directamente, sin esperar a un equipo técnico.</p>
+        <p><b>El camino.</b> Primero Nexo construye y prueba el marco; después cada área desarrolla sus propios agentes en autoservicio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="marco">
+    <div class="sec-head">
+      <span class="eyebrow">Marco de trabajo</span>
+      <h2>Organización Exponencial 3.0.</h2>
+      <p>El equipo está formado en el modelo de Organizaciones Exponenciales de Salim Ismail, versión 3.0 de OpenExO: cómo rediseñar una organización alrededor de la inteligencia, el propósito y la ejecución autónoma. Es el mapa que usamos para Servicios Compartidos.</p>
+      <div class="sec-actions"><a href="https://openexo.com/exo-model-3" target="_blank" rel="noopener">Modelo ExO 3.0 en OpenExO ›</a></div>
+    </div>
+    <div class="exo">
+      <div class="mode"><span class="tag2">MTP</span><h3>Propósito Transformador Masivo</h3><p>La razón de existir de la organización: el norte que alinea cada decisión.</p></div>
+      <div class="mode"><span class="tag2">DRIVE</span><h3>El motor de inteligencia</h3><p>Cómo la organización decide, aprende y escala inteligencia, desde la arquitectura de decisiones hasta la agencia elástica. En Nexo: el stack de IA y los agentes.</p></div>
+      <div class="mode"><span class="tag2">SHAPE</span><h3>La forma organizacional</h3><p>Autonomía segura, arquitectura humana, arquitectura adaptativa, control por propósito y confianza en el ecosistema. En Nexo: AI Best Practices y el autoservicio con guardrails.</p></div>
+    </div>
+    <div>
+      <div class="group-title"><b>Intelligence Stack</b><span>Seis capas, como un ciclo OODA a escala de organización, y dónde vive cada una en Nexo</span></div>
+      <div class="istack">
+        <div><b>1</b><span>Propósito</span><p>MTP y prioridades del portafolio</p></div>
+        <div><b>2</b><span>Percibir</span><p>Company Brain: Databricks y SharePoint</p></div>
+        <div><b>3</b><span>Interpretar</span><p>Agentes LangGraph con contexto y glosario</p></div>
+        <div><b>4</b><span>Decidir</span><p>Propuestas del agente con aprobación humana</p></div>
+        <div><b>5</b><span>Orquestar y actuar</span><p>Flujos en Temporal y servidores MCP</p></div>
+        <div><b>6</b><span>Aprender</span><p>Memoria en pgvector y trazas en Langfuse</p></div>
+      </div>
+      <p class="govern"><b>GOVERN / ASSURE · plano de control.</b> Entra ID, Presidio, Key Vault, kill switch, auditoría y las reglas de AI Best Practices cruzan todas las capas.</p>
+    </div>
+  </section>
 
   <section class="block" id="frentes" style="padding-top:64px">
     <div class="programs" id="programs"></div>
@@ -444,7 +502,7 @@ details.comps[open] summary::after{transform:rotate(90deg)}
     <div class="sec-head">
       <span class="eyebrow">Hacia dónde vamos</span>
       <h2>Descentralizar la IA, con guardrails.</h2>
-      <p>Hoy Nexo construye los agentes a partir de estas solicitudes. Cuando el marco esté establecido y probado, se abre una segunda modalidad: que cada área desarrolle sus propios agentes sobre el mismo stack, con las mismas reglas.</p>
+      <p>Hoy Nexo construye los agentes a partir de estas solicitudes. Cuando el marco esté establecido y probado, se abre una segunda modalidad: que cada área desarrolle sus propios agentes sobre el mismo stack, con las mismas reglas. Es lo que ExO 3.0 llama autonomía segura, y lo que InnerSource hace posible: lo que se construye queda abierto para toda la empresa.</p>
     </div>
     <div class="modes">
       <div class="mode"><div class="mk"><span class="now">Hoy</span><span class="tstat nuevo"><i></i>Activo</span></div>
