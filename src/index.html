@@ -236,6 +236,11 @@ details.comps[open] summary::after{transform:rotate(90deg)}
 .gates .row{grid-template-columns:28px minmax(0,1fr)}
 .gates .row b{font-size:13px;color:var(--accent);font-weight:600}
 .gates .row .note{font-size:13px;color:var(--sub);margin-top:2px}
+/* MTP */
+.mtp{display:grid;gap:8px;padding:22px 0 4px;border-top:1px solid var(--line);margin-top:8px;max-width:44em}
+.mtp .k{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.mtp .v{font-size:clamp(24px,3.2vw,34px);font-weight:600;letter-spacing:-.035em;line-height:1.15;color:var(--text);text-wrap:balance}
+.mtp .s{font-size:16px;color:var(--sub);letter-spacing:-.015em}
 /* Mission & framework */
 .mission{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:start}
 @media (max-width:820px){.mission{grid-template-columns:1fr;gap:24px}}
@@ -369,6 +374,7 @@ details.tdet .tfoot button:hover{color:var(--text)}
   <section class="hero">
     <div class="eyebrow">Portafolio de IA · Q4 2026</div>
     <h1>Nexo IA.<span class="h1sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
+    <div class="mtp"><span class="k">Nuestro MTP · Propósito Transformador Masivo</span><p class="v">Que cada persona en Grupo PDC construya con IA.</p><p class="s">Abierta como nuestros números, segura como nuestro estándar.</p></div>
     <p class="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
     <p class="who">Alexandra Paiz, Líder de IA y Herramientas</p>
   </section>
@@ -399,14 +405,14 @@ details.tdet .tfoot button:hover{color:var(--text)}
       <div class="sec-actions"><a href="https://openexo.com/exo-model-3" target="_blank" rel="noopener">Modelo ExO 3.0 en OpenExO ›</a></div>
     </div>
     <div class="exo">
-      <div class="mode"><span class="tag2">MTP</span><h3>Propósito Transformador Masivo</h3><p>La razón de existir de la organización: el norte que alinea cada decisión.</p></div>
+      <div class="mode"><span class="tag2">MTP</span><h3>Propósito Transformador Masivo</h3><p>La razón de existir de la organización: el norte que alinea cada decisión. El nuestro: «Que cada persona en Grupo PDC construya con IA».</p></div>
       <div class="mode"><span class="tag2">DRIVE</span><h3>El motor de inteligencia</h3><p>Cómo la organización decide, aprende y escala inteligencia, desde la arquitectura de decisiones hasta la agencia elástica. En Nexo: el stack de IA y los agentes.</p></div>
       <div class="mode"><span class="tag2">SHAPE</span><h3>La forma organizacional</h3><p>Autonomía segura, arquitectura humana, arquitectura adaptativa, control por propósito y confianza en el ecosistema. En Nexo: AI Best Practices y el autoservicio con guardrails.</p></div>
     </div>
     <div>
       <div class="group-title"><b>Intelligence Stack</b><span>Seis capas, como un ciclo OODA a escala de organización, y dónde vive cada una en Nexo</span></div>
       <div class="istack">
-        <div><b>1</b><span>Propósito</span><p>MTP y prioridades del portafolio</p></div>
+        <div><b>1</b><span>Propósito</span><p>El MTP y las prioridades del portafolio</p></div>
         <div><b>2</b><span>Percibir</span><p>Company Brain: Databricks y SharePoint</p></div>
         <div><b>3</b><span>Interpretar</span><p>Agentes LangGraph con contexto y glosario</p></div>
         <div><b>4</b><span>Decidir</span><p>Propuestas del agente con aprobación humana</p></div>
