@@ -357,15 +357,15 @@ details.tdet .tfoot button:hover{color:var(--text)}
   <div class="wrap">
     <img class="logo logo-light" src="assets/grupo-pdc-principal.png" alt="Grupo PDC">
     <img class="logo logo-dark" src="assets/grupo-pdc-blanco.png" alt="Grupo PDC">
-    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="portafolio" aria-current="page">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
-    <div class="links" id="navLinks"><a href="#mision">Misión</a><a href="#marco">ExO 3.0</a><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></div>
+    <div class="tabs" role="tablist" aria-label="Vistas"><button type="button" data-view="inicio" aria-current="page">Inicio</button><button type="button" data-view="portafolio">Portafolio</button><button type="button" data-view="tareas">Tareas</button><button type="button" data-view="solicitudes">Solicitudes</button></div>
+    <div class="links" id="navLinks"><a href="#stack-sec">Stack</a><a href="#practicas">Buenas prácticas</a><a href="#brain">Company Brain</a><a href="#proyectos">Agentes</a><a href="#bitacora">Bitácora</a></div>
     <span class="spacer"></span>
     <span class="edit" id="editChip" hidden>Modo edición</span>
     <span class="stamp" id="stamp"></span>
   </div>
 </nav>
 
-<main class="wrap" id="viewPortfolio">
+<main class="wrap" id="viewHome">
   <section class="hero">
     <div class="eyebrow">Portafolio de IA · Q4 2026</div>
     <h1>Nexo IA.<span class="h1sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
@@ -374,6 +374,10 @@ details.tdet .tfoot button:hover{color:var(--text)}
   </section>
 
   <div class="stats" id="stats"></div>
+
+  <section class="block" id="frentes" style="padding-top:56px">
+    <div class="programs" id="programs"></div>
+  </section>
 
   <section class="block" id="mision">
     <div class="sec-head"><span class="eyebrow">Misión</span><h2>De libro abierto a código abierto.</h2></div>
@@ -413,8 +417,17 @@ details.tdet .tfoot button:hover{color:var(--text)}
     </div>
   </section>
 
-  <section class="block" id="frentes" style="padding-top:64px">
-    <div class="programs" id="programs"></div>
+  <footer>
+    <span>Grupo PDC · Nexo · Liderazgo de IA</span>
+    <span>Marco: Organizaciones Exponenciales 3.0 (OpenExO)</span>
+  </footer>
+</main>
+
+<main class="wrap" id="viewPortfolio" hidden>
+  <section class="hero" style="padding-bottom:8px">
+    <div class="eyebrow">Portafolio · Q4 2026</div>
+    <h1>Portafolio.</h1>
+    <p class="lead">Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes.</p>
   </section>
 
   <section class="block" id="stack-sec">
@@ -871,7 +884,7 @@ function renderSheet(){
 
 /* ---------- sheet ---------- */
 function openSheet(id){S.open=id;S.editing=false;renderSheet();const d=$("#sheet");if(!d.open)d.showModal();try{history.replaceState(null,"","#"+id)}catch(e){}}
-function closeSheet(){S.open=null;S.editing=false;const d=$("#sheet");if(d.open)d.close();try{if(S.view==="portafolio")history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+function closeSheet(){S.open=null;S.editing=false;const d=$("#sheet");if(d.open)d.close();try{history.replaceState(null,"",viewHash(S.view||"inicio"))}catch(e){}}
 $("#closeSheet").addEventListener("click",closeSheet);
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
 $("#sheet").addEventListener("close",()=>{S.open=null;S.editing=false});
@@ -882,12 +895,15 @@ const TTYPES=["Automatización o agente","Portal o tablero","Análisis de datos"
 const URG=["Baja","Media","Alta"];
 const TSTATUS=[["nuevo","Nueva"],["evaluacion","En evaluación"],["aprobado","Aprobada"],["proyecto","En portafolio"],["descartado","Descartada"]];
 const tLabel=st=>(TSTATUS.find(x=>x[0]===st)||TSTATUS[0])[1];
-S.tickets=[];S.triage={};S.tFilter="abiertas";S.me=null;S.names={};S.view="portafolio";S.tOpen=null;S.loaded.t=false;
+S.tickets=[];S.triage={};S.tFilter="abiertas";S.me=null;S.names={};S.view="inicio";S.tOpen=null;S.loaded.t=false;
 const tStatus=t=>S.triage[t.id]?.status||"nuevo";
 const isOpenT=t=>!["proyecto","descartado"].includes(tStatus(t));
-function setView(v){S.view=v;if($("#sheet").open)closeSheet();$("#viewPortfolio").hidden=v!=="portafolio";$("#viewTasks").hidden=v!=="tareas";$("#viewTickets").hidden=v!=="solicitudes";$("#navLinks").style.visibility=v==="portafolio"?"visible":"hidden";
+const VIEWS={inicio:"#viewHome",portafolio:"#viewPortfolio",tareas:"#viewTasks",solicitudes:"#viewTickets"};
+const viewHash=v=>v==="inicio"?location.pathname+location.search:"#"+v;
+function setView(v,keepScroll){if(!VIEWS[v])v="inicio";S.view=v;if($("#sheet").open)closeSheet();
+  Object.entries(VIEWS).forEach(([k,sel])=>$(sel).hidden=k!==v);$("#navLinks").style.visibility=v==="portafolio"?"visible":"hidden";
   document.querySelectorAll("[data-view]").forEach(b=>b.dataset.view===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
-  try{history.replaceState(null,"",v==="portafolio"?location.pathname+location.search:"#"+v)}catch(e){}window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
+  try{history.replaceState(null,"",viewHash(v))}catch(e){}if(!keepScroll)window.scrollTo(0,0);if(v==="solicitudes")renderTickets()}
 async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.tickets.map(t=>t.createdBy).filter(Boolean))];if(!ids.length)return;
   try{const ps=await S.user.profiles(ids);let ch=false;ids.forEach(id=>{const n=ps[id]?.name||"";if(S.names[id]!==n){S.names[id]=n;ch=true}});if(ch)renderTickets()}catch(e){}}
 const who=id=>S.names[id]||"Colaborador";
@@ -986,7 +1002,7 @@ document.addEventListener("click",async e=>{
   if(e.target.closest("[data-newticket]")){openT("new");return}
   if(e.target.closest("[data-tclose]")){closeT();return}
   const tk=e.target.closest("[data-ticket]");if(tk){openT("view",tk.dataset.ticket);return}
-  const go=e.target.closest("[data-goto]");if(go){document.getElementById(go.dataset.goto)?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});return}
+  const go=e.target.closest("[data-goto]");if(go){const el=document.getElementById(go.dataset.goto);const host=el?.closest("main");if(host&&host.hidden){setView(Object.keys(VIEWS).find(k=>VIEWS[k]==="#"+host.id),true)}el?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});return}
   const df=e.target.closest("[data-donefor]");if(df){S.showDoneFor=S.showDoneFor===df.dataset.donefor?null:df.dataset.donefor;renderTasksByProject();return}
   const cy=e.target.closest("[data-cyc]");if(cy&&S.canWrite){const [pid,field,i]=cy.dataset.cyc.split("|");const pp=pById(pid);if(!pp)return;const arr=clone(pp[field]||[]);const x=arr[+i];
     const nx=field==="levels"?(NEXT_L[x.status]||"activo"):(NEXT_STATUS[x.status]||"en_curso");x.status=nx;await write(()=>pdoc(pid).update({[field]:arr}),x.name+": "+(LSTAT[nx]||[0,nx])[1]);return}
@@ -1041,7 +1057,7 @@ document.addEventListener("submit",async e=>{
 
 /* ---------- boot ---------- */
 renderAll();
-if(location.hash==="#solicitudes")setView("solicitudes");else if(location.hash==="#tareas")setView("tareas");
+{const h=location.hash.slice(1);if(VIEWS[h])setView(h);else S.view="inicio";$("#navLinks").style.visibility="hidden"}
 (async()=>{
   const cl=window.claude;if(!cl||!cl.use){["p","c","u","a"].forEach(k=>S.loaded[k]=true);renderAll();return}
   const [db,user,mcp]=await Promise.all([cl.use("db"),cl.use("user"),cl.use("mcp")]);
