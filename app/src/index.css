@@ -142,3 +142,9 @@
 @keyframes introBar { from { transform: scaleX(0) } to { transform: scaleX(1) } }
 @keyframes pulseDot { 50% { opacity: .35 } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; } }
+
+/* 3D factory on the light page: no black stage, no dark vignette.
+   Unlayered on purpose: the component's own <style> is unlayered and would beat any @layer rule. */
+.agentic-factory-3d.nexo-light { background: transparent; color: var(--text); }
+.agentic-factory-3d.nexo-light .vignette { display: none; }
+.agentic-factory-3d.nexo-light .wordmark { color: var(--faint); }

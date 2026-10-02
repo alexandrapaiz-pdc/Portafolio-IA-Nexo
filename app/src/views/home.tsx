@@ -1,6 +1,6 @@
 import { useRouter } from "@/lib/router"
 import { GlowCard } from "@/components/ui/spotlight-card"
-import { LiquidButton } from "@/components/ui/liquid-glass-button"
+import { Button } from "@/components/ui/button"
 import { Footer, Section, SectionHead, SecP } from "@/components/shared"
 import { RobotBand } from "@/components/robot-band"
 
@@ -32,7 +32,7 @@ export function Home() {
         </div>
         <p className="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
         <p className="text-[13px] text-faint">Alexandra Paiz, Líder de IA y Herramientas</p>
-        <div><LiquidButton size="xl" className="rounded-full px-7 text-[15px] font-semibold text-strong" onClick={() => go("portafolio")}>Ver el portafolio</LiquidButton></div>
+        <div><Button size="lg" className="bg-navy text-white shadow-[0_8px_24px_-10px_rgba(0,33,111,.6)] hover:brightness-125" onClick={() => go("portafolio")}>Ver el portafolio</Button></div>
       </section>
 
       <Section id="mision">
