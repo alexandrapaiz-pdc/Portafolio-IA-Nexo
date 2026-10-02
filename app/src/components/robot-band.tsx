@@ -9,16 +9,19 @@ class SafeWebGL extends Component<{ children: ReactNode }, { failed: boolean }> 
 }
 
 /** Contained pause between long sections: the robot follows the pointer; a click gives it heart eyes.
- *  The 3D scene mounts only once the band is near the viewport. */
+ *  The 3D scene mounts early, once the page is idle. */
 export function RobotBand({ word = "NEXO IA", caption }: { word?: string; caption?: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const [near, setNear] = useState(false)
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect() } }, { rootMargin: "300px" })
+    // Start the 3D scene as soon as the page is idle (or when the band gets close), so it is ready before it scrolls in.
+    const start = () => setNear(true)
+    const idle = window.requestIdleCallback ? window.requestIdleCallback(start, { timeout: 1200 }) : window.setTimeout(start, 600)
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { start(); io.disconnect() } }, { rootMargin: "1500px" })
     io.observe(el)
-    return () => io.disconnect()
+    return () => { io.disconnect(); if (window.cancelIdleCallback) window.cancelIdleCallback(idle as number); else clearTimeout(idle as number) }
   }, [])
   return (
     <div ref={ref} aria-hidden className="relative mt-14 h-[clamp(240px,26vw,300px)] overflow-hidden rounded-[28px]"
