@@ -39,7 +39,7 @@ export function PracticesMap() {
           })}
         </svg>
       </div>
-      <div className="flex flex-wrap gap-[18px] text-[13px] text-sub"><StatusPill status="listo" label="Activo" /><StatusPill status="en_curso" label="En construcción" /><span className="text-faint">Fuente: GitHub · BestPracticesAI, 2 oct</span></div>
+      <div className="flex flex-wrap items-center gap-x-[18px] gap-y-1 text-[13px] leading-5 text-sub"><StatusPill status="listo" label="Activo" /><StatusPill status="en_curso" label="En construcción" /><span className="text-faint">Fuente: GitHub · BestPracticesAI, 2 oct</span></div>
     </figure>
   )
 }

@@ -97,7 +97,7 @@
   .group-box { overflow: hidden; }
   .row { display: grid; align-items: center; gap: 16px; padding: 16px 20px; position: relative; }
   .row + .row::before { content: ""; position: absolute; top: 0; left: 20px; right: 0; height: 1px; background: var(--line); }
-  .status { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--sub); white-space: nowrap; border: 0; background: none; padding: 4px 0; }
+  .status { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--sub); white-space: nowrap; border: 0; background: none; padding: 0; line-height: 20px; }
   .status i { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); }
   .status.en_curso { color: var(--accent-ink); } .status.en_curso i { background: var(--accent); box-shadow: none; }
   .status.listo { color: var(--strong); } .status.listo i { background: var(--strong); box-shadow: none; }

@@ -69,7 +69,7 @@ export function BrainDiagram() {
           })}
         </svg>
       </div>
-      <div className="flex flex-wrap items-center gap-[18px] text-[13px] text-sub"><span>Estado de cada capa:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /><span className="text-faint">Memoria de agentes: capa objetivo</span></div>
+      <div className="flex flex-wrap items-center gap-x-[18px] gap-y-1 text-[13px] leading-5 text-sub"><span>Estado de cada capa:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /><span className="text-faint">Memoria de agentes: capa objetivo</span></div>
     </figure>
   )
 }
