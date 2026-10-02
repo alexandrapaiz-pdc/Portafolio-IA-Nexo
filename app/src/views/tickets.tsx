@@ -53,7 +53,7 @@ export function Tickets() {
 
       <Section className="pt-[72px]">
         <SectionHead eyebrow="Hacia dónde vamos" title="Descentralizar la IA, con guardrails.">
-          <SecP>Hoy Nexo construye los agentes a partir de estas solicitudes. Cuando el marco esté establecido y probado, podría abrirse una segunda modalidad, todavía por confirmar: que cada área desarrolle sus propios agentes sobre el mismo stack, con las mismas reglas y con la ayuda de agentes y skills de Nexo. Es lo que ExO 3.0 llama autonomía segura, y lo que InnerSource hace posible: lo que se construye queda abierto para toda la empresa.</SecP>
+          <SecP>Hoy Nexo construye los agentes. Más adelante, y por confirmar, cada área podría construir los suyos sobre el mismo stack y con las mismas reglas.</SecP>
         </SectionHead>
         <div className="grid grid-cols-2 gap-3.5 max-[720px]:grid-cols-1">
           {[{ k: "Hoy", s: "nuevo", sl: "Activo", h: "Solicitud a Nexo", p: "Describes el problema; Nexo evalúa, prioriza y construye.", li: ["Nexo diseña, construye y opera el agente", "Prioridad según horas manuales, impacto y factibilidad", "Cada proyecto con línea base y KPI antes de construir"] },
@@ -89,7 +89,7 @@ export function Tickets() {
               <TStat s={st(t)} /><ChevronRight size={16} className="text-faint" aria-hidden />
             </button>) }) : <Empty>{!loaded.t ? "Cargando solicitudes…" : filter === "abiertas" ? "No hay solicitudes abiertas. Envía la primera con “Nueva solicitud”." : "No hay solicitudes aquí."}</Empty>}
         </div>
-        <p className="rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Mientras se habilita el estándar en Azure, las solicitudes se guardan en esta página. Se migrarán al sistema definitivo cuando esté listo.</p>
+        <p className="rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Por ahora las solicitudes se guardan aquí; pasarán a Azure cuando esté listo.</p>
       </Section>
       <Footer right="Dudas: Alexandra Paiz, Líder de IA y Herramientas" />
 

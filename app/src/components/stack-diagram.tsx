@@ -59,7 +59,6 @@ export function StackDiagram() {
           ))}
         </svg>
       </div>
-      <figcaption className="max-w-[60em] text-[13px] text-sub">Una pregunta entra por el portal o por Claude, Entra ID la identifica y el agente trabaja con los permisos de esa persona. Presidio quita los datos personales antes de que LiteLLM la envíe al modelo. Temporal dispara los flujos programados y se detiene a pedir aprobación humana antes de cualquier acción. JD Edwards se copia a Databricks por VPN y nunca se consulta directo. Fuente: BestPracticesAI · Nivel 3 · Arquitectura, y plan de datos de Company Brain.</figcaption>
       <div className="flex flex-wrap gap-[18px] text-[13px] text-sub"><span>Estado de cada pieza:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /></div>
     </figure>
   )

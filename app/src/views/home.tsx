@@ -53,7 +53,7 @@ export function Home() {
 
       <Section id="marco">
         <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
-          <SecP>El equipo está formado en el modelo de Organizaciones Exponenciales de Salim Ismail, versión 3.0 de OpenExO: cómo rediseñar una organización alrededor de la inteligencia, el propósito y la ejecución autónoma. Es el mapa que usamos para Servicios Compartidos.</SecP>
+          <SecP>Estamos formados en el modelo ExO 3.0 de Salim Ismail (OpenExO). Es el mapa que usamos para Servicios Compartidos.</SecP>
           <a href="https://openexo.com/exo-model-3" target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Modelo ExO 3.0 en OpenExO ›</a>
         </SectionHead>
         <div className="grid grid-cols-3 gap-3.5 max-[820px]:grid-cols-1">

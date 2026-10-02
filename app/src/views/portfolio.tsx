@@ -90,7 +90,7 @@ export function Portfolio() {
 
       <Section id="stack-sec">
         <SectionHead eyebrow="Nexo AI Stack" title="Lo que desbloquea todo lo demás.">
-          <SecP>Cada componente del stack habilita proyectos. Mientras no esté listo, el avance se mide aquí y en el descubrimiento de cada proyecto.</SecP>
+          <SecP>Cada componente listo desbloquea proyectos.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("infra")}>Ver detalle del stack</Button></div>
         </SectionHead>
         <div className="grid gap-[34px]">
