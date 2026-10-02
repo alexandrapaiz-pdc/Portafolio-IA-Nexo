@@ -5,7 +5,8 @@ import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
 import { Button } from "@/components/ui/button"
 import { GlowCard } from "@/components/ui/spotlight-card"
-import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow } from "@/components/shared"
+import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow, RequestCta } from "@/components/shared"
+import { PracticesMap } from "@/components/practices-map"
 import { StackDiagram } from "@/components/stack-diagram"
 
 const JUMP = [["stack-sec", "Stack"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"], ["bitacora", "Bitácora"]]
@@ -129,7 +130,13 @@ export function Portfolio() {
             {isNum(pr?.pendingDecisions) && <span className="text-sm text-sub">{pr!.pendingDecisions} decisiones pendientes</span>}
           </div>
         </SectionHead>
-        <div className="group-box">{lv.length ? lv.map((x, i) => <LevelRow key={i} x={x} pid="protocolos" field="levels" i={i} />) : <Empty>{loaded.p ? "Sin niveles registrados." : "Cargando…"}</Empty>}</div>
+        <div className="grid gap-[18px]">
+          <PracticesMap />
+          <details className="group">
+            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver los {lv.length} niveles <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
+            <div className="group-box mt-3">{lv.length ? lv.map((x, i) => <LevelRow key={i} x={x} pid="protocolos" field="levels" i={i} />) : <Empty>{loaded.p ? "Sin niveles registrados." : "Cargando…"}</Empty>}</div>
+          </details>
+        </div>
       </Section>
 
       <Section id="brain">
@@ -154,6 +161,7 @@ export function Portfolio() {
         <div className="group-box">{updates.length ? updates.slice(0, 10).map((u) => <UpdateRow key={u.id} u={u} showProject />) : <Empty>Aún no hay actualizaciones. Abre un proyecto y publica la primera.</Empty>}</div>
       </Section>
 
+      <RequestCta />
       <Footer right="Fuentes: reuniones en Granola y backlog en Asana. “Pendiente” indica una línea base aún no medida." />
     </main>
   )

@@ -1,6 +1,6 @@
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { useState } from "react"
-import { ChevronRight } from "lucide-react"
+import { ArrowRight, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Ticket } from "@/lib/domain"
 import { fdate, isNum, nf } from "@/lib/format"
@@ -42,10 +42,10 @@ export function Tickets() {
     <main className="wrap">
       <div className="screen grid gap-12">
       <section className="grid gap-[18px]">
-        <div className="eyebrow">Solicitudes de IA · Nexo</div>
-        <h1 className="h-display">¿Qué deberíamos<br /><span className="text-faint">automatizar?</span></h1>
-        <p className="lead">Cuéntanos qué proceso te quita tiempo. Cada solicitud se evalúa por horas manuales, impacto y factibilidad, y entra al backlog de proyectos de IA.</p>
-        <div><Button variant="accent" onClick={() => setOpen({ mode: "new" })}>Nueva solicitud</Button></div>
+        <div className="eyebrow">Abierto a toda la empresa</div>
+        <h1 className="h-display">Envía tu solicitud.<span className="sub">¿Qué proceso deberíamos automatizar?</span></h1>
+        <p className="lead">Si una tarea manual te quita horas cada semana, cuéntanos. Toma dos minutos.</p>
+        <div className="mt-2"><button type="button" onClick={() => setOpen({ mode: "new" })} className="group inline-flex h-[52px] items-center gap-2 rounded-full bg-accent px-7 text-base font-medium text-white shadow-[0_8px_24px_-10px_rgba(255,81,0,.7)] transition hover:brightness-105">Enviar una solicitud<ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" /></button></div>
       </section>
 
       <div className="grid grid-cols-4 border-t border-line max-[760px]:grid-cols-2">

@@ -1,7 +1,7 @@
 import { useRouter } from "@/lib/router"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { ArrowRight } from "lucide-react"
-import { Footer, Section, SectionHead, SecP } from "@/components/shared"
+import { Footer, RequestCta, Section, SectionHead, SecP } from "@/components/shared"
 import { RobotBand } from "@/components/robot-band"
 
 const ISTACK = [
@@ -15,7 +15,7 @@ const ISTACK = [
 const EXO = [
   ["MTP", "Propósito Transformador Masivo", "La razón de existir de la organización: el norte que alinea cada decisión. El nuestro: «Que cada proceso sistemático corra con IA»."],
   ["DRIVE", "El motor de inteligencia", "Cómo la organización decide, aprende y escala inteligencia, desde la arquitectura de decisiones hasta la agencia elástica. En Nexo: el stack de IA y los agentes."],
-  ["SHAPE", "La forma organizacional", "Autonomía segura, arquitectura humana, arquitectura adaptativa, control por propósito y confianza en el ecosistema. En Nexo: AI Best Practices y el autoservicio con guardrails."],
+  ["SHAPE", "La forma organizacional", "Autonomía segura, arquitectura humana, arquitectura adaptativa, control por propósito y confianza en el ecosistema."],
 ]
 
 export function Home() {
@@ -80,6 +80,7 @@ export function Home() {
           </div>
         </div>
       </Section>
+      <RequestCta />
       <Footer right="Marco: Organizaciones Exponenciales 3.0 (OpenExO)" />
     </main>
   )

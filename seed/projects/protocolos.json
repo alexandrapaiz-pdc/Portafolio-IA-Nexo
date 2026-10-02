@@ -70,7 +70,7 @@
   {
    "name": "Nivel 2.5 · Backends",
    "status": "en_construccion",
-   "who": "Apps que leen y guardan datos: reemplazo de Excel"
+   "who": "Apps que leen y guardan sus propios datos"
   },
   {
    "name": "Nivel 3 · Agentes",
@@ -92,7 +92,7 @@
   "Todo el despliegue no puede centralizarse en el líder de IA."
  ],
  "paused": false,
- "pendingDecisions": 29,
+ "pendingDecisions": 32,
  "phase": "construccion",
  "priority": 0.5,
  "program": "practicas",

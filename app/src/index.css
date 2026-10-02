@@ -152,3 +152,9 @@
 .agentic-factory-3d.nexo-light .wordmark { color: var(--faint); }
 .agentic-factory-3d.nexo-light #tooltip { display: none; }
 .agentic-factory-3d.nexo-light .wordmark { display: none; }
+/* Soften the edges of the 3D box so the machine's floor shadow fades out instead of stopping at a hard line */
+.agentic-factory-3d.nexo-light #scene {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 6%, #000 84%, transparent 100%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 6%, #000 84%, transparent 100%);
+  mask-composite: intersect;
+}

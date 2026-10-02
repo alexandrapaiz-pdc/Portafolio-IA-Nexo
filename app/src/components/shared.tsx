@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react"
-import { ChevronRight } from "lucide-react"
+import { ArrowRight, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { asanaUrl, discovery, phaseLabel, readiness, savings, STATUS, type AsanaTask, type Project, type Update } from "@/lib/domain"
 import { fdate, fnum, isNum, nf, pct, today } from "@/lib/format"
@@ -146,3 +146,20 @@ export function TaskRow({ t, project }: { t: AsanaTask; project?: Project }) {
 
 export const Empty = ({ children }: { children: ReactNode }) => <div className="px-5 py-7 text-center text-faint">{children}</div>
 export const H5 = ({ children }: { children: ReactNode }) => <h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">{children}</h5>
+
+/** Invitation to submit a request, shown at the end of long pages. */
+export function RequestCta() {
+  const { go } = useRouter()
+  return (
+    <section className="mt-24 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-6 card px-8 py-8 max-sm:grid-cols-1 max-sm:px-6">
+      <div className="grid gap-1.5">
+        <h2 className="text-[clamp(22px,2.6vw,28px)] font-medium tracking-[-.03em]">¿Tienes un proceso manual que se repite?</h2>
+        <p className="text-[15px] text-sub">Envíalo a Nexo. Toda solicitud se evalúa y entra al backlog de IA.</p>
+      </div>
+      <button type="button" onClick={() => go("solicitudes")}
+        className="group inline-flex h-[52px] items-center gap-2 justify-self-start rounded-full bg-accent px-6 text-base font-medium text-white shadow-[0_8px_24px_-10px_rgba(255,81,0,.7)] transition hover:brightness-105">
+        Enviar una solicitud<ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+      </button>
+    </section>
+  )
+}
