@@ -140,8 +140,9 @@ void main() {
 `
 
 const UNIFORMS = {
+  // navy → blue → white → lavender → orange → orange: the top of the range holds solid orange a little longer
   colors: [[0, 0.129, 0.435], [0.184, 0.357, 1], [1, 1, 1], [0.839, 0.847, 1], [1, 0.318, 0], [1, 0.318, 0], [1, 0.318, 0], [1, 0.318, 0]] as [number, number, number][],
-  colorCount: 5,
+  colorCount: 6,
   scale: 1.5,
   intensity: 0.55,
   paramA: 0.5,
