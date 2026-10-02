@@ -9,7 +9,7 @@ import { useRouter } from "@/lib/router"
 export function SectionHead({ eyebrow, title, children, className }: { eyebrow: string; title: string; children?: ReactNode; className?: string }) {
   return (
     <div className={cn("grid max-w-[40em] gap-2.5", className)}>
-      <span className="text-[13px] font-medium text-faint">{eyebrow}</span>
+      <span className="inline-flex items-center gap-2 text-[13px] font-medium text-sub before:size-1.5 before:rounded-full before:bg-accent before:content-['']">{eyebrow}</span>
       <h2 className="h-sec">{title}</h2>
       {children}
     </div>
