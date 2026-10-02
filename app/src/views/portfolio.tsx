@@ -8,7 +8,6 @@ import { GlowCard } from "@/components/ui/spotlight-card"
 import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow, RequestCta } from "@/components/shared"
 import { PracticesMap } from "@/components/practices-map"
 import portalMundos from "@/assets/portal-mundos.webp"
-import { BrainDiagram } from "@/components/brain-diagram"
 import { AgentBoard } from "@/components/agent-board"
 import { StackDiagram } from "@/components/stack-diagram"
 
@@ -148,7 +147,6 @@ export function Portfolio() {
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
         <div className="grid gap-[18px]">
-          <BrainDiagram />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver las {parts.length} capas <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
             <div className="group-box mt-3">{parts.length ? parts.map((x, i) => <LevelRow key={i} x={x} pid="companybrain" field="parts" i={i} />) : <Empty>{loaded.p ? "Sin partes registradas." : "Cargando…"}</Empty>}</div>
