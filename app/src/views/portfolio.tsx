@@ -94,8 +94,8 @@ export function Portfolio() {
       </section>
 
       <Section id="stack-sec">
-        <SectionHead eyebrow="Nexo AI Stack" title="Lo que desbloquea todo lo demás.">
-          <SecP>Cada componente listo desbloquea proyectos.</SecP>
+        <SectionHead eyebrow="Frente 1 · Infraestructura" title="Nexo AI Stack">
+          <SecP>Lo que desbloquea todo lo demás: cada componente listo desbloquea proyectos.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("infra")}>Ver detalle del stack</Button></div>
         </SectionHead>
         <div className="grid gap-[34px]">
@@ -124,8 +124,8 @@ export function Portfolio() {
       </Section>
 
       <Section id="practicas">
-        <SectionHead eyebrow="AI Best Practices" title="Estándares para usar y construir con IA.">
-          <SecP>Guías por nivel, desde quien usa Claude hasta quien construye agentes. Viven en GitHub y cualquiera puede proponer mejoras.</SecP>
+        <SectionHead eyebrow="Frente 2 · Estándares" title="AI Best Practices">
+          <SecP>Estándares para usar y construir con IA: guías por nivel, en GitHub, abiertas a mejoras de cualquiera.</SecP>
           <div className="flex flex-wrap items-center gap-2.5">
             <Button variant="ghost" onClick={() => openProject("protocolos")}>Ver detalle</Button>
             {pr?.repo && <a href={pr.repo} target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Abrir en GitHub ›</a>}
@@ -142,8 +142,8 @@ export function Portfolio() {
       </Section>
 
       <Section id="brain">
-        <SectionHead eyebrow="Company Brain" title="El conocimiento de la empresa, listo para agentes.">
-          <SecP>La información de la empresa en un solo lugar, legible por personas y agentes. Los portales son su cara visible.</SecP>
+        <SectionHead eyebrow="Frente 3 · Conocimiento" title="Company Brain">
+          <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
         <div className="grid gap-[18px]">
@@ -163,7 +163,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead eyebrow="AI Agent Projects" title="Agentes, en este orden." />
+        <SectionHead eyebrow="Frente 4 · Automatización" title="AI Agent Projects"><SecP>Los agentes, en orden de prioridad.</SecP></SectionHead>
         <div className="grid gap-[18px]">
           <AgentBoard />
           <details className="group">
@@ -174,7 +174,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="bitacora">
-        <SectionHead eyebrow="Bitácora" title="Lo último." />
+        <SectionHead eyebrow="Avances recientes" title="Bitácora" />
         <div className="group-box">{updates.length ? updates.slice(0, 10).map((u) => <UpdateRow key={u.id} u={u} showProject />) : <Empty>Aún no hay actualizaciones. Abre un proyecto y publica la primera.</Empty>}</div>
       </Section>
 
