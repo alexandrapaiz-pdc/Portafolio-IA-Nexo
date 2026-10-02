@@ -148,3 +148,4 @@
 .agentic-factory-3d.nexo-light { background: transparent; color: var(--text); }
 .agentic-factory-3d.nexo-light .vignette { display: none; }
 .agentic-factory-3d.nexo-light .wordmark { color: var(--faint); }
+.agentic-factory-3d.nexo-light #tooltip { display: none; }
