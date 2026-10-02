@@ -64,8 +64,7 @@ export function StackDiagram() {
           <rect x={246} y={34} width={694} height={110} rx="12" fill="var(--group)" stroke="var(--navy)" strokeOpacity=".35" />
           <text className="dg-g" x={258} y={54} style={{ fill: "var(--navy)" }}>DATOS · RED PRIVADA</text>
           <rect x={246} y={162} width={694} height={46} rx="12" fill="var(--accent)" />
-          <text className="dg-t" x={593} y={181} textAnchor="middle" style={{ fill: "#fff" }}>Bus de eventos · Service Bus + Event Grid</text>
-          <text className="dg-s" x={593} y={198} textAnchor="middle" style={{ fill: "#fff", opacity: .9 }}>los agentes publican y se suscriben; nadie se llama directo</text>
+          <text className="dg-t" x={593} y={185} textAnchor="middle" dominantBaseline="central" style={{ fill: "#fff" }}>Bus de eventos · Service Bus + Event Grid</text>
           <rect x={246} y={230} width={694} height={134} rx="12" fill="var(--accent-soft)" stroke="var(--accent)" strokeOpacity=".45" />
           <text className="dg-g" x={258} y={250} style={{ fill: "var(--accent-ink)" }}>CONTAINER APPS · CONTENEDORES DOCKER · RED PRIVADA</text>
           <text className="dg-g" x={976} y={240} style={{ fill: "var(--accent-ink)" }}>INTERFACES</text>
