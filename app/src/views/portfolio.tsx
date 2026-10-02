@@ -9,6 +9,7 @@ import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, 
 import { PracticesMap } from "@/components/practices-map"
 import portalMundos from "@/assets/portal-mundos.webp"
 import { AgentBoard } from "@/components/agent-board"
+import AiAgentPipeline from "@/components/ui/ai-agent-pipeline"
 import { BrainDiagram } from "@/components/brain-diagram"
 import { StackDiagram } from "@/components/stack-diagram"
 
@@ -168,6 +169,7 @@ export function Portfolio() {
       <Section id="proyectos">
         <SectionHead eyebrow="Frente 4 · Automatización" title="AI Agent Projects"><SecP>Los agentes, en orden de prioridad.</SecP></SectionHead>
         <div className="grid gap-[18px]">
+          <AiAgentPipeline />
           <AgentBoard />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
