@@ -4,6 +4,7 @@ import { clone, isNum, nf, pct, today } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
 import { Button } from "@/components/ui/button"
+import { GlowCard } from "@/components/ui/spotlight-card"
 import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow } from "@/components/shared"
 import { StackDiagram } from "@/components/stack-diagram"
 
@@ -74,13 +75,15 @@ export function Portfolio() {
         {PROGRAMS.map((g) => {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
-            <button key={g.id} type="button" onClick={() => jump(g.sec)} className="grid min-w-0 cursor-pointer content-start gap-2.5 card p-6 text-left transition-shadow hover:shadow-[var(--shadow-hover)]">
+            <GlowCard key={g.id} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
+            <button type="button" onClick={() => jump(g.sec)} className="relative grid h-full min-w-0 cursor-pointer content-start gap-2.5 rounded-2xl border-0 bg-transparent p-6 text-left">
               <span className="text-[clamp(26px,2.8vw,32px)] font-semibold leading-[1.05] tracking-[-.04em]">{g.name}</span>
               <h3 className="text-base font-medium leading-snug tracking-[-.015em] text-sub">{g.line}</h3>
               <p className="text-[13px] text-faint">{lead?.blocker ? `Bloqueo: ${lead.blocker}` : g.id === "agentes" && ag[0] ? `Prioridad 1: ${ag[0].name}` : ""}</p>
               <div className="mt-1.5 flex items-baseline gap-2"><b className="num text-[34px] font-semibold leading-none tracking-[-.04em]">{num}</b><span className="text-[13px] text-faint">{label}</span></div>
               <div className="bar mt-0.5"><i style={{ width: w + "%" }} /></div>
             </button>
+            </GlowCard>
           )
         })}
       </section>

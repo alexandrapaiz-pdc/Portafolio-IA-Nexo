@@ -1,3 +1,4 @@
+import { GlowCard } from "@/components/ui/spotlight-card"
 import { useState } from "react"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -57,11 +58,11 @@ export function Tickets() {
         <div className="grid grid-cols-2 gap-3.5 max-[720px]:grid-cols-1">
           {[{ k: "Hoy", s: "nuevo", sl: "Activo", h: "Solicitud a Nexo", p: "Describes el problema; Nexo evalúa, prioriza y construye.", li: ["Nexo diseña, construye y opera el agente", "Prioridad según horas manuales, impacto y factibilidad", "Cada proyecto con línea base y KPI antes de construir"] },
             { k: "A largo plazo", s: "evaluacion", sl: "Proyecto potencial · por confirmar", h: "Autoservicio con guardrails", p: "Tu área construye su propio agente sobre el stack de Nexo; Nexo da el marco y revisa. Es una posibilidad a futuro, todavía no es un proyecto confirmado.", li: ["Sandbox para experimentar sin tocar datos reales", "Agentes y skills de Nexo que ayudan a construir: plantillas, guías de Nivel 3 y skills de AI Best Practices", "Revisión y aprobación de Nexo antes de pasar a producción", "Mismos controles: solo lectura, aprobación humana, kill switch y auditoría", "Todos los agentes, de Nexo o de cada área, centralizados en el Portal de agentes"] }].map((m) => (
-            <div key={m.h} className="grid min-w-0 content-start gap-2.5 card p-6">
+            <GlowCard key={m.h} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 content-start gap-2.5 p-6 grid-rows-none shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
               <div className="flex items-center gap-2.5 text-[13px] font-semibold"><span className={m.k === "Hoy" ? "text-accent" : "text-faint"}>{m.k}</span><span className={cn("inline-flex items-center gap-[7px] font-normal", m.s === "nuevo" ? "text-accent-ink" : "text-sub")}><i className={cn("size-2 rounded-full", m.s === "nuevo" ? "bg-accent" : "bg-faint")} />{m.sl}</span></div>
               <h3 className="text-[22px] leading-[1.15] tracking-[-.03em]">{m.h}</h3><p className="text-sm text-sub">{m.p}</p>
               <ul className="m-0 mt-1 grid list-none gap-2 p-0 text-sm">{m.li.map((x) => <li key={x} className="grid grid-cols-[auto_minmax(0,1fr)] gap-2.5 before:mt-2 before:size-[5px] before:rounded-full before:bg-faint before:content-['']">{x}</li>)}</ul>
-            </div>
+            </GlowCard>
           ))}
         </div>
         <div>

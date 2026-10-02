@@ -1,5 +1,6 @@
 import { useRouter } from "@/lib/router"
-import { Button } from "@/components/ui/button"
+import { GlowCard } from "@/components/ui/spotlight-card"
+import { LiquidButton } from "@/components/ui/liquid-glass-button"
 import { Footer, Section, SectionHead, SecP } from "@/components/shared"
 
 const ISTACK = [
@@ -30,7 +31,7 @@ export function Home() {
         </div>
         <p className="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
         <p className="text-[13px] text-faint">Alexandra Paiz, Líder de IA y Herramientas</p>
-        <div><Button onClick={() => go("portafolio")}>Ver el portafolio</Button></div>
+        <div><LiquidButton size="xl" className="rounded-full px-7 text-[15px] font-semibold text-strong" onClick={() => go("portafolio")}>Ver el portafolio</LiquidButton></div>
       </section>
 
       <Section id="mision">
@@ -54,9 +55,9 @@ export function Home() {
         </SectionHead>
         <div className="grid grid-cols-3 gap-3.5 max-[820px]:grid-cols-1">
           {EXO.map(([tag, h, p]) => (
-            <div key={tag} className="grid content-start gap-2.5 card p-6">
+            <GlowCard key={tag} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="content-start gap-2.5 p-6 grid-rows-none shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
               <span className="text-xs font-medium text-faint">{tag}</span><h3 className="text-xl leading-[1.15] tracking-[-.03em]">{h}</h3><p className="text-sm text-sub">{p}</p>
-            </div>
+            </GlowCard>
           ))}
         </div>
         <div>

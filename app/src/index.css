@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Light only: dark: utilities (from 21st.dev components) apply only under a .dark class, which the app never sets. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Nexo IA design tokens — white surfaces, cool neutrals, PDC navy and orange. Light only. */
 :root {
   --bg: #ffffff; --group: #f4f6f9; --raise: #ffffff;
@@ -30,6 +33,19 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
   --color-glass: var(--glass);
+  /* shadcn names used by components from 21st.dev, mapped to Nexo tokens */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-primary: var(--navy);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--group);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--group);
+  --color-muted-foreground: var(--sub);
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #d92d20;
+  --color-input: var(--line-2);
+  --color-ring: var(--accent);
   --font-sans: var(--font);
   --radius-r: var(--r);
   --radius-r-sm: var(--r-sm);
