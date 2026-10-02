@@ -9,7 +9,7 @@ import { Empty, Footer, Section, SectionHead, TaskRow } from "@/components/share
 
 function Fold({ title, summary, children }: { title: string; summary: ReactNode; children: ReactNode }) {
   return (
-    <details className="group overflow-hidden rounded-r bg-group">
+    <details className="card group overflow-hidden">
       <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_16px] items-center gap-3.5 px-5 py-4 hover:bg-black/[.025] [&::-webkit-details-marker]:hidden">
         <span className="text-base font-semibold tracking-[-.02em]">{title}</span>
         <span className="num whitespace-nowrap text-[13px] text-sub">{summary}</span>

@@ -147,7 +147,7 @@ export function ProjectSheet() {
         {!!p.kpis?.length && (
           <div><H5>KPIs de impacto</H5><div className="grid grid-cols-2 gap-3.5 max-sm:grid-cols-1">
             {(editing && draft ? draft.kpis : p.kpis).map((k, i) => editing && draft ? (
-              <div key={k.id} className="grid content-start gap-2 rounded-r bg-group px-5 py-[18px]">
+              <div key={k.id} className="grid content-start gap-2 card px-5 py-[18px]">
                 <div className="text-[13px] text-sub">{k.name}</div>
                 <div className="grid grid-cols-3 gap-2">
                   {(["baseline", "current", "target"] as const).map((f) => <Label key={f}>{{ baseline: "Línea base", current: "Actual", target: "Meta" }[f]}<Input type="number" step="any" value={k[f] ?? ""}
@@ -156,7 +156,7 @@ export function ProjectSheet() {
                 <Label>Nota<Input value={k.note || ""} onChange={(e) => { const kpis = [...draft.kpis]; kpis[i] = { ...k, note: e.target.value }; setDraft({ ...draft, kpis }) }} /></Label>
               </div>
             ) : (
-              <div key={k.id} className="grid min-w-0 content-start gap-2 rounded-r bg-group px-5 py-[18px]">
+              <div key={k.id} className="grid min-w-0 content-start gap-2 card px-5 py-[18px]">
                 <div className="text-[13px] text-sub">{k.name}</div>
                 {(() => { const cur = isNum(k.current) ? k.current : isNum(k.baseline) ? k.baseline : null; return <div className={cn("num text-[34px] font-semibold leading-[1.05] tracking-[-.04em]", cur == null ? "text-[15px] font-medium tracking-normal text-faint" : "text-accent")}>{cur == null ? "Línea base pendiente" : fnum(cur, k.unit)}</div> })()}
                 <Spark p={p} k={k} />
@@ -184,7 +184,7 @@ function Composer({ p }: { p: Project }) {
   const { db, write } = useStore()
   const [text, setText] = useState(""), [tag, setTag] = useState(TAGS[0]), [kpiId, setKpiId] = useState(""), [val, setVal] = useState(""), [date, setDate] = useState(today()), [busy, setBusy] = useState(false)
   return (
-    <form className="mb-3.5 grid gap-2.5 rounded-r bg-group px-5 py-4" onSubmit={async (e) => {
+    <form className="mb-3.5 grid gap-2.5 card px-5 py-4" onSubmit={async (e) => {
       e.preventDefault(); if (!text.trim()) return; setBusy(true)
       const value = val === "" ? null : Number(val)
       const ok = await write(async () => {

@@ -25,6 +25,8 @@ npm run build    # dist/index.html (sitio estático de un solo archivo) y dist/a
 
 `npx shadcn add <componente>` funciona donde ui.shadcn.com sea accesible; en este entorno los componentes se escribieron a mano con el mismo patrón (Radix + CVA + `cn`).
 
+**Despliegue temporal (Vercel):** `vercel.json` en la raíz ya define instalación, build y salida (`app/dist`). En Vercel: *Add New → Project*, importar este repositorio, dejar *Root Directory* en la raíz y desplegar; o desde la terminal, `npx vercel` en la raíz. Fuera de claude.ai no existe la base de datos del artifact, así que el sitio muestra la interfaz con estados vacíos (la demo de Agentes sí se ve completa). Activar *Settings → Deployment Protection → Vercel Authentication* para que solo entren cuentas del equipo.
+
 **Despliegue futuro (Azure):** `dist/index.html` es un sitio estático. La capa de datos vive en `src/lib/store.tsx`; para Azure se reemplaza por la API de la plataforma de Nexo sin tocar las vistas.
 
 ## Datos

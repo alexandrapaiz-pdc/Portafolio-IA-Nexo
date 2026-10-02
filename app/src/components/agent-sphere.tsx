@@ -18,11 +18,10 @@ export function AgentSphere() {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches
     let W = 0, H = 0, raf = 0, lastCol = 0, mx = 0, my = 0, tx = 0, ty = 0
     const t0 = performance.now()
-    let col = { dark: false, dot: [0, 33, 111] as RGB, acc: [255, 81, 0] as RGB, core: [0, 33, 111] as RGB, text: "#1d1d1f", faint: "#86868b", raise: "#fff", line: "rgba(0,0,0,.14)", font: "system-ui" }
+    let col = { dot: [0, 33, 111] as RGB, acc: [255, 81, 0] as RGB, core: [0, 33, 111] as RGB, text: "#1d1d1f", faint: "#86868b", raise: "#fff", line: "rgba(0,0,0,.14)", font: "system-ui" }
     const css = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim()
-    const isDark = () => { const t = document.documentElement.dataset.theme; return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches }
     const rgb = (c: string): RGB => { const d = document.createElement("span"); d.style.color = c; document.body.appendChild(d); const v = getComputedStyle(d).color; d.remove(); const m = v.match(/[\d.]+/g) || ["0", "0", "0"]; return [Number(m[0]), Number(m[1]), Number(m[2])] }
-    const colors = () => { const dark = isDark(); col = { dark, dot: rgb(dark ? "#C9D4FF" : "#00216F"), acc: rgb(css("--accent") || "#FF5100"), core: rgb(dark ? "#2F5BFF" : "#00216F"), text: css("--text"), faint: css("--faint"), raise: css("--raise"), line: css("--line-2"), font: css("--font") } }
+    const colors = () => { col = { dot: rgb("#00216F"), acc: rgb(css("--accent") || "#FF5100"), core: rgb("#00216F"), text: css("--text"), faint: css("--faint"), raise: css("--raise"), line: css("--line-2"), font: css("--font") } }
     const rgba = (c: RGB, a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`
     const size = () => { const r = cv.getBoundingClientRect(); if (!r.width) return false; const dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return true }
     const rot = (v: RGB, ry: number, rx: number): RGB => { let [x, y, z] = v; const cy = Math.cos(ry), sy = Math.sin(ry); [x, z] = [x * cy + z * sy, -x * sy + z * cy]; const cx = Math.cos(rx), sx = Math.sin(rx); [y, z] = [y * cx - z * sx, y * sx + z * cx]; return [x, y, z] }
@@ -32,12 +31,12 @@ export function AgentSphere() {
       const proj = (v: RGB) => { const [x, y, z] = rot(v, ry, rx), k = F / (F + z * R); return { x: cx + x * R * k, y: cy + y * R * k, z, k } }
       ctx!.clearRect(0, 0, W, H)
       let g = ctx!.createRadialGradient(cx, cy, R * 0.1, cx, cy, R * 1.5)
-      g.addColorStop(0, rgba(col.core, col.dark ? 0.2 : 0.07)); g.addColorStop(0.6, rgba(col.core, col.dark ? 0.05 : 0.02)); g.addColorStop(1, rgba(col.core, 0))
+      g.addColorStop(0, rgba(col.core, 0.07)); g.addColorStop(0.6, rgba(col.core, 0.02)); g.addColorStop(1, rgba(col.core, 0))
       ctx!.fillStyle = g; ctx!.fillRect(0, 0, W, H)
       ctx!.save(); ctx!.translate(cx, cy); ctx!.rotate(-0.35 + mx * 0.08)
-      ctx!.beginPath(); ctx!.ellipse(0, 0, R * 1.32, R * 0.34, 0, 0, Math.PI * 2); ctx!.strokeStyle = rgba(col.dot, col.dark ? 0.22 : 0.14); ctx!.lineWidth = 1; ctx!.stroke()
+      ctx!.beginPath(); ctx!.ellipse(0, 0, R * 1.32, R * 0.34, 0, 0, Math.PI * 2); ctx!.strokeStyle = rgba(col.dot, 0.14); ctx!.lineWidth = 1; ctx!.stroke()
       const ra = time * 0.0006; ctx!.beginPath(); ctx!.arc(Math.cos(ra) * R * 1.32, Math.sin(ra) * R * 0.34, 2.2, 0, Math.PI * 2); ctx!.fillStyle = rgba(col.acc, 0.9); ctx!.fill(); ctx!.restore()
-      for (const p of PTS.map(proj).sort((a, b) => b.z - a.z)) { const d = (1 - p.z) / 2; ctx!.beginPath(); ctx!.arc(p.x, p.y, 0.55 + d * 1.25, 0, Math.PI * 2); ctx!.fillStyle = rgba(col.dot, 0.06 + d * d * (col.dark ? 0.7 : 0.55)); ctx!.fill() }
+      for (const p of PTS.map(proj).sort((a, b) => b.z - a.z)) { const d = (1 - p.z) / 2; ctx!.beginPath(); ctx!.arc(p.x, p.y, 0.55 + d * 1.25, 0, Math.PI * 2); ctx!.fillStyle = rgba(col.dot, 0.06 + d * d * (0.55)); ctx!.fill() }
       const A = AG.map((a) => ({ a, p: proj(a.v) })), back = A.filter((o) => o.p.z >= 0.15), front = A.filter((o) => o.p.z < 0.15)
       const arc = (o: (typeof A)[number], al: number) => {
         const { a, p } = o; if (!a.live) return
@@ -64,7 +63,7 @@ export function AgentSphere() {
       }
       back.forEach((o) => { arc(o, 0.35); node(o, 0.3, false) })
       const cr = R * 0.17 * (1 + Math.sin(time / 800) * 0.04)
-      g = ctx!.createRadialGradient(cx, cy, cr * 0.8, cx, cy, cr * 3); g.addColorStop(0, rgba(col.core, col.dark ? 0.45 : 0.22)); g.addColorStop(1, rgba(col.core, 0))
+      g = ctx!.createRadialGradient(cx, cy, cr * 0.8, cx, cy, cr * 3); g.addColorStop(0, rgba(col.core, 0.22)); g.addColorStop(1, rgba(col.core, 0))
       ctx!.fillStyle = g; ctx!.beginPath(); ctx!.arc(cx, cy, cr * 3, 0, Math.PI * 2); ctx!.fill()
       ctx!.beginPath(); ctx!.arc(cx, cy, cr + 5, 0, Math.PI * 2); ctx!.strokeStyle = rgba(col.core, 0.25); ctx!.lineWidth = 1; ctx!.stroke()
       ctx!.beginPath(); ctx!.arc(cx, cy, cr, 0, Math.PI * 2); ctx!.fillStyle = rgba(col.core, 1); ctx!.fill()

@@ -74,7 +74,7 @@ export function Portfolio() {
         {PROGRAMS.map((g) => {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
-            <button key={g.id} type="button" onClick={() => jump(g.sec)} className="grid min-w-0 cursor-pointer content-start gap-2.5 rounded-r border-0 bg-group p-6 text-left hover:bg-line">
+            <button key={g.id} type="button" onClick={() => jump(g.sec)} className="grid min-w-0 cursor-pointer content-start gap-2.5 card p-6 text-left transition-shadow hover:shadow-[var(--shadow-hover)]">
               <span className="text-[clamp(26px,2.8vw,32px)] font-semibold leading-[1.05] tracking-[-.04em]">{g.name}</span>
               <h3 className="text-base font-medium leading-snug tracking-[-.015em] text-sub">{g.line}</h3>
               <p className="text-[13px] text-faint">{lead?.blocker ? `Bloqueo: ${lead.blocker}` : g.id === "agentes" && ag[0] ? `Prioridad 1: ${ag[0].name}` : ""}</p>

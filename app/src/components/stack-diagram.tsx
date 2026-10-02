@@ -39,7 +39,7 @@ export function StackDiagram() {
   const st = (id: string | null) => (id && components.find((c) => c.id === id)?.status) || "pendiente"
   return (
     <figure className="m-0 grid gap-3">
-      <div className="overflow-x-auto rounded-r bg-group px-3.5 py-[18px]">
+      <div className="overflow-x-auto card px-3.5 py-[18px]">
         <svg viewBox="0 0 1160 510" className="block h-auto w-full min-w-[760px] text-text" role="img"
           aria-label="Arquitectura del stack de IA de Nexo: el portal y Claude pasan por Entra ID a los agentes LangGraph en Azure Container Apps; Presidio enmascara datos y LiteLLM rutea a Microsoft Foundry; Temporal orquesta con aprobación humana; Databricks, PostgreSQL y Key Vault guardan datos, memoria y secretos; JD Edwards llega a Databricks por Lakeflow vía VPN.">
           <defs><marker id="dgArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="currentColor" opacity=".55" /></marker></defs>

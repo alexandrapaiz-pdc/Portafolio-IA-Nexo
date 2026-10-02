@@ -54,7 +54,7 @@ export function Home() {
         </SectionHead>
         <div className="grid grid-cols-3 gap-3.5 max-[820px]:grid-cols-1">
           {EXO.map(([tag, h, p]) => (
-            <div key={tag} className="grid content-start gap-2.5 rounded-r bg-group p-6">
+            <div key={tag} className="grid content-start gap-2.5 card p-6">
               <span className="text-xs font-medium text-faint">{tag}</span><h3 className="text-xl leading-[1.15] tracking-[-.03em]">{h}</h3><p className="text-sm text-sub">{p}</p>
             </div>
           ))}

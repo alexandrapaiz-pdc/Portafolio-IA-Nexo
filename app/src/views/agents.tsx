@@ -14,7 +14,7 @@ interface Demo { name: string; desc: string; owner: string; unit: string; seed: 
 const DEMO: Record<string, Demo> = {
   avon: { name: "Agente de kickoff de campaña", desc: "De la base de ventas a las tablas de KPIs y el top / bottom 10 de ofertas, por país y campaña.", owner: "Planeación Avon", unit: "corridas", seed: 7, base: 2, amp: 4, hrsPer: 2.2, appr: 92, exc: 3,
     asis: [["Descargar ventas", 1.5, 0], ["Limpiar y consolidar", 4, 8], ["Pedidos año anterior", 2, 4], ["Separar subcategorías", 3, 4], ["Poblar KPIs", 2, 2], ["Top / bottom 10", 2.5, 8]],
-    tobe: [["Base de ventas automática", 0.2, 0, "agente"], ["Agente genera KPIs", 0.3, 0.5, "agente"], ["Revisar y presentar", 1.5, 4, "mixto"]],
+    tobe: [["Base de ventas automática", 0.2, 0, "agente"], ["Agente genera KPIs", 0.3, 0.5, "agente"], ["Revisar y presentar", 1.5, 1, "mixto"]],
     log: [["09:12", "ok", "Kickoff C08'27 Guatemala listo; Planeación aprobó sin cambios."], ["09:05", "ok", "KPIs de El Salvador generados (412 ofertas)."], ["08:58", "ex", "3 ofertas sin subcategoría Children; pasan a revisión."], ["Ayer", "ok", "Top / bottom 10 de Honduras presentado al equipo."], ["Ayer", "ok", "Base de ventas actualizada desde Vikingo Planeación."]] },
   contraloria: { name: "Agente de conciliación documental", desc: "Concilia facturas de Tráfico contra órdenes de compra y prepara liquidación y retenciones para aprobación.", owner: "Contraloría · MegaMás", unit: "documentos", seed: 3, base: 24, amp: 30, hrsPer: 0.18, appr: 88, exc: 11,
     asis: [["Recibir documentos", 0.5, 24], ["Carpeta compartida", 0.5, 48], ["Factura vs. OC", 1, 72], ["Liquidar costos", 1.5, 48], ["Registrar en ERP", 0.5, 24]],
@@ -48,6 +48,7 @@ function Bars({ vals }: { vals: number[] }) {
 export function Agents() {
   const { projects, components } = useStore()
   const [sel, setSel] = useState("avon")
+  const [map, setMap] = useState<"asis" | "tobe">("asis")
   const d = DEMO[sel], p = projects.find((x) => x.id === sel)
   const vals = useMemo(() => series(d), [d]), tot = vals.reduce((a, b) => a + b, 0)
   const A = toSteps(d.asis, "manual"), B = toSteps(d.tobe, "agente"), ka = vsmStats(A), kb = vsmStats(B), mxl = Math.max(ka.lt, kb.lt) || 1
@@ -75,21 +76,28 @@ export function Agents() {
           </div>
           <div className="num grid grid-cols-4 gap-3 max-[720px]:grid-cols-2">
             {([[`${d.unit[0].toUpperCase() + d.unit.slice(1)} en 30 días`, nf(tot), `${nf(vals[vals.length - 1])} hoy`, false], ["Horas manuales liberadas", `${nf(Math.round(tot * d.hrsPer))} h`, "últimos 30 días", true], ["Aprobadas sin cambios", `${d.appr}%`, "revisión humana", false], ["Excepciones", String(d.exc), "enviadas a una persona", false]] as [string, string, string, boolean][]).map(([k, v, s, acc]) => (
-              <div key={k} className="grid min-w-0 gap-1 rounded-r bg-group px-[18px] py-4"><span className="text-[12.5px] text-sub">{k}</span><span className={cn("text-[30px] font-semibold leading-[1.05] tracking-[-.04em]", acc && "text-accent")}>{v}</span><span className="text-xs text-faint">{s}</span></div>
+              <div key={k} className="grid min-w-0 gap-1 card px-[18px] py-4"><span className="text-[12.5px] text-sub">{k}</span><span className={cn("text-[30px] font-semibold leading-[1.05] tracking-[-.04em]", acc && "text-accent")}>{v}</span><span className="text-xs text-faint">{s}</span></div>
             ))}
           </div>
-          <div className="rounded-r bg-group px-[18px] pb-2.5 pt-4">
+          <div className="card px-[18px] pb-2.5 pt-4">
             <div className="mb-1.5 flex flex-wrap justify-between gap-3 text-[13px] text-sub"><span>Actividad diaria · <b className="font-semibold text-text">{d.unit}</b></span><span>Fines de semana con menos volumen</span></div>
             <Bars vals={vals} />
           </div>
-          <div className="num grid gap-2.5 rounded-r bg-group px-[18px] py-4">
+          <div className="num grid gap-2.5 card px-[18px] py-4">
             <div className="text-[13px] text-sub">Lead time por ciclo · mapa de flujo de valor</div>
             {([["Hoy", ka.lt, "bg-faint"], ["Con agente", kb.lt, "bg-accent"]] as [string, number, string][]).map(([l, v, c]) => (
               <div key={l} className="grid grid-cols-[96px_minmax(0,1fr)_72px] items-center gap-3 text-[13px]"><span className="text-sub">{l}</span><div className="h-2.5 overflow-hidden rounded-[5px] bg-line-2"><i className={"block h-full rounded-[5px] " + c} style={{ width: (v / mxl) * 100 + "%" }} /></div><b className="text-right font-semibold">{fh(v)}</b></div>
             ))}
             <p className="text-[12.5px] text-sub">{nf((1 - kb.lt / ka.lt) * 100)}% menos lead time · eficiencia de {nf(ka.eff || 0)}% a {nf(kb.eff || 0)}% · {kb.ag} de {kb.n} pasos con agente</p>
           </div>
-          <div className="grid gap-3.5"><div className="overflow-x-auto rounded-r bg-group px-3.5 py-4"><VsmDiagram steps={B} /></div><VsmLegend note="Flujo con agente · horas de ejemplo" /></div>
+          <div className="grid gap-3.5">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div><H5>Mapa de flujo de valor</H5><p className="-mt-1.5 px-1 text-[13px] text-faint">{map === "asis" ? `Hoy: ${A.length} pasos manuales · lead time ${fh(ka.lt)}` : `Con agente: ${B.length} pasos · lead time ${fh(kb.lt)}`}</p></div>
+              <div className="seg" role="group" aria-label="Elegir mapa">{([["asis", "Hoy"], ["tobe", "Con agente"]] as const).map(([k, l]) => <button key={k} type="button" aria-pressed={map === k} onClick={() => setMap(k)}>{l}</button>)}</div>
+            </div>
+            <div className="overflow-x-auto card px-3.5 py-4"><VsmDiagram steps={map === "asis" ? A : B} /></div>
+            <VsmLegend note={(map === "asis" ? "Flujo actual" : "Flujo con agente") + " · horas de ejemplo"} />
+          </div>
           <div><H5>Actividad reciente</H5>
             <div className="group-box">{d.log.map(([w, c, t], i) => <div key={i} className="row grid-cols-[64px_minmax(0,1fr)] items-start text-[13.5px]"><span className="num text-[12.5px] text-faint">{w}</span><span><span className={cn("font-medium", c === "ok" ? "text-strong" : "text-accent-ink")}>{c === "ok" ? "Listo" : "Excepción"}</span> · {t}</span></div>)}</div>
           </div>

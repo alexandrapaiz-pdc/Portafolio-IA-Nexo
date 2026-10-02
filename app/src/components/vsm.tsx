@@ -91,7 +91,7 @@ export function VsmSection({ p, onEditingChange }: { p: Project; onEditingChange
   if (draft) {
     return (
       <div className="grid gap-3.5">{head}
-        <div className="overflow-x-auto rounded-r bg-group p-4">
+        <div className="overflow-x-auto card p-4">
           <table className="w-full min-w-[780px] table-fixed border-collapse text-[13px]">
             <colgroup><col className="w-[34%]" /><col className="w-[18%]" /><col className="w-[84px]" /><col className="w-[84px]" /><col className="w-[84px]" /><col className="w-[150px]" /><col className="w-[64px]" /></colgroup>
             <thead><tr className="text-left text-xs text-sub">{["Paso", "Quién", "Proceso (h)", "Espera antes (h)", "% C&A", "Modo", ""].map((h) => <th key={h} className="px-1.5 py-1.5 font-medium">{h}</th>)}</tr></thead>
@@ -129,7 +129,7 @@ export function VsmSection({ p, onEditingChange }: { p: Project; onEditingChange
         <VStat k="% C&A acumulado" v={k.rca != null ? nf(k.rca) + "%" : "Pendiente"} tone={k.rca != null ? undefined : "pend"} />
         <VStat k="Pasos con agente" v={`${k.ag} de ${k.n}`} />
       </div>
-      <div className="overflow-x-auto rounded-r bg-group px-3.5 py-4"><VsmDiagram steps={steps} /></div>
+      <div className="overflow-x-auto card px-3.5 py-4"><VsmDiagram steps={steps} /></div>
       <VsmLegend />
       {(tabNote || delta) && <p className="text-[12.5px] text-sub">{tabNote}{delta}</p>}
     </div>

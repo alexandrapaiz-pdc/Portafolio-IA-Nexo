@@ -57,7 +57,7 @@ export function Tickets() {
         <div className="grid grid-cols-2 gap-3.5 max-[720px]:grid-cols-1">
           {[{ k: "Hoy", s: "nuevo", sl: "Activo", h: "Solicitud a Nexo", p: "Describes el problema; Nexo evalúa, prioriza y construye.", li: ["Nexo diseña, construye y opera el agente", "Prioridad según horas manuales, impacto y factibilidad", "Cada proyecto con línea base y KPI antes de construir"] },
             { k: "A largo plazo", s: "evaluacion", sl: "Proyecto potencial · por confirmar", h: "Autoservicio con guardrails", p: "Tu área construye su propio agente sobre el stack de Nexo; Nexo da el marco y revisa. Es una posibilidad a futuro, todavía no es un proyecto confirmado.", li: ["Sandbox para experimentar sin tocar datos reales", "Agentes y skills de Nexo que ayudan a construir: plantillas, guías de Nivel 3 y skills de AI Best Practices", "Revisión y aprobación de Nexo antes de pasar a producción", "Mismos controles: solo lectura, aprobación humana, kill switch y auditoría", "Todos los agentes, de Nexo o de cada área, centralizados en el Portal de agentes"] }].map((m) => (
-            <div key={m.h} className="grid min-w-0 content-start gap-2.5 rounded-r bg-group p-6">
+            <div key={m.h} className="grid min-w-0 content-start gap-2.5 card p-6">
               <div className="flex items-center gap-2.5 text-[13px] font-semibold"><span className={m.k === "Hoy" ? "text-accent" : "text-faint"}>{m.k}</span><span className={cn("inline-flex items-center gap-[7px] font-normal", m.s === "nuevo" ? "text-accent-ink" : "text-sub")}><i className={cn("size-2 rounded-full", m.s === "nuevo" ? "bg-accent" : "bg-faint")} />{m.sl}</span></div>
               <h3 className="text-[22px] leading-[1.15] tracking-[-.03em]">{m.h}</h3><p className="text-sm text-sub">{m.p}</p>
               <ul className="m-0 mt-1 grid list-none gap-2 p-0 text-sm">{m.li.map((x) => <li key={x} className="grid grid-cols-[auto_minmax(0,1fr)] gap-2.5 before:mt-2 before:size-[5px] before:rounded-full before:bg-faint before:content-['']">{x}</li>)}</ul>
@@ -161,7 +161,7 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
         </div>
         {tr.note && !canWrite && <div><h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">Comentario de IA Nexo</h5><div className="group-box px-5 py-4">{tr.note}</div></div>}
         {canWrite && (
-          <form className="grid gap-3.5 rounded-r bg-group px-5 py-4" onSubmit={(e) => { e.preventDefault(); write(() => db.doc("triage/" + id).set({ status, priority: prio === "" ? null : Number(prio), note: note.trim(), updatedAt: new Date().toISOString() }), "Evaluación guardada") }}>
+          <form className="grid gap-3.5 card px-5 py-4" onSubmit={(e) => { e.preventDefault(); write(() => db.doc("triage/" + id).set({ status, priority: prio === "" ? null : Number(prio), note: note.trim(), updatedAt: new Date().toISOString() }), "Evaluación guardada") }}>
             <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
               <Label>Estado<NativeSelect value={status} onChange={(e) => setStatus(e.target.value)}>{TSTATUS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</NativeSelect></Label>
               <Label>Prioridad en backlog<Input type="number" min={1} step={1} value={prio} onChange={(e) => setPrio(e.target.value)} placeholder="1 = primero" /></Label>
