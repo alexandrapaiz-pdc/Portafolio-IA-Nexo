@@ -1,4 +1,5 @@
 import { useRouter } from "@/lib/router"
+import openexoLogo from "@/assets/openexo.png"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { ArrowRight } from "lucide-react"
 import { Footer, RequestCta, Section, SectionHead, SecP } from "@/components/shared"
@@ -58,10 +59,16 @@ export function Home() {
       <RobotBand />
 
       <Section id="marco" className="screen gap-5 pt-[clamp(20px,4vh,48px)]">
-        <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
-          <SecP>Estamos formados en el modelo ExO 3.0 de Salim Ismail (OpenExO). Es el mapa que usamos para Servicios Compartidos.</SecP>
-          <a href="https://openexo.com/exo-model-3" target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Modelo ExO 3.0 en OpenExO ›</a>
-        </SectionHead>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
+            <SecP>Estamos certificados en el modelo ExO 3.0 de Salim Ismail y trabajamos directamente con OpenExO. Es el mapa que usamos para Servicios Compartidos.</SecP>
+            <a href="https://openexo.com/exo-model-3" target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Modelo ExO 3.0 en OpenExO ›</a>
+          </SectionHead>
+          <a href="https://openexo.com" target="_blank" rel="noopener" className="grid justify-items-start gap-2.5 card px-6 py-5 no-underline transition-shadow hover:shadow-[var(--shadow-hover)]">
+            <img src={openexoLogo} alt="OpenExO" className="block h-7 w-auto" />
+            <span className="text-[13px] text-sub">Equipo certificado · ExO 3.0</span>
+          </a>
+        </div>
         <div className="grid grid-cols-3 gap-3.5 max-[820px]:grid-cols-1">
           {EXO.map(([tag, h, p]) => (
             <GlowCard key={tag} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="content-start gap-2.5 p-6 grid-rows-none shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
