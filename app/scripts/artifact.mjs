@@ -4,7 +4,8 @@ import { readFileSync, writeFileSync } from "node:fs"
 const html = readFileSync("dist/index.html", "utf8")
 const head = html.match(/<head>([\s\S]*?)<\/head>/i)[1]
 const body = html.match(/<body>([\s\S]*?)<\/body>/i)[1]
-const keep = head.replace(/<meta[^>]*>\s*/gi, "")
+// <meta followed by whitespace only: inlined code contains strings like "#include <metalnessmap_fragment>"
+const keep = head.replace(/<meta\s[^>]*>\s*/gi, "")
 const title = keep.match(/<title>[\s\S]*?<\/title>/i)[0]
 const rest = keep.replace(title, "")
 writeFileSync("dist/artifact.html", `${title}\n${rest.trim()}\n${body.trim()}\n`)
