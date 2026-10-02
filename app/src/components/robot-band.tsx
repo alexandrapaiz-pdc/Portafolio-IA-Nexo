@@ -21,12 +21,12 @@ export function RobotBand({ word = "NEXO IA", caption }: { word?: string; captio
     return () => io.disconnect()
   }, [])
   return (
-    <div ref={ref} aria-hidden className="relative mt-24 ml-[calc(50%-50vw)] h-[clamp(380px,48vw,540px)] w-screen overflow-hidden"
+    <div ref={ref} aria-hidden className="relative mt-24 ml-[calc(50%-50vw)] h-[clamp(280px,32vw,380px)] w-screen overflow-hidden"
       style={{ background: "radial-gradient(ellipse 60% 70% at 50% 45%, #ffffff 0%, #eef2fa 55%, #e2e8f4 100%)" }}>
       <div className="pointer-events-none absolute inset-0 grid place-items-center">
-        <span className="translate-y-6 select-none whitespace-nowrap text-[clamp(64px,15vw,220px)] font-semibold leading-none tracking-[-.05em] text-navy opacity-[.06]">{word}</span>
+        <span className="translate-y-6 select-none whitespace-nowrap text-[clamp(56px,11vw,160px)] font-semibold leading-none tracking-[-.05em] text-navy opacity-[.06]">{word}</span>
       </div>
-      <div className="absolute inset-0">{near && <SafeWebGL><RobotScene scale={1.3} pantallaColor="#4d7cff" pantallaBrillo={1.3} /></SafeWebGL>}</div>
+      <div className="absolute inset-0">{near && <SafeWebGL><RobotScene scale={0.95} pantallaColor="#4d7cff" pantallaBrillo={1.3} /></SafeWebGL>}</div>
       {caption && <p className="pointer-events-none absolute inset-x-0 bottom-5 text-center text-[13px] text-faint">{caption}</p>}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />

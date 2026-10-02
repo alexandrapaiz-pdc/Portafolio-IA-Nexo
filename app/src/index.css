@@ -74,7 +74,7 @@
   .eyebrow { display: inline-flex; align-items: center; gap: 8px; justify-self: start; padding: 5px 12px 5px 10px; border-radius: 999px; border: 1px solid rgba(15, 23, 42, .08); background: rgba(255, 255, 255, .7); backdrop-filter: blur(8px); box-shadow: 0 1px 2px rgba(15, 23, 42, .04); font-size: 13px; font-weight: 500; color: var(--sub); }
   .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .h-display { font-size: clamp(40px, 6vw, 64px); line-height: 1.04; letter-spacing: -.04em; font-weight: 500; }
-  .h-display .sub { display: block; font-size: .5em; line-height: 1.1; letter-spacing: -.035em; margin-top: .18em; max-width: 16em; color: var(--faint); background: linear-gradient(100deg, #2f5bff 0%, #5b7fff 50%, #93a9ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-bottom: .06em; }
+  .h-display .sub { display: block; font-size: .5em; line-height: 1.1; letter-spacing: -.035em; margin-top: .18em; max-width: 16em; color: var(--faint); color: #4d6fff; }
   .lead { font-size: clamp(17px, 1.9vw, 20px); line-height: 1.5; font-weight: 400; color: var(--sub); max-width: 34em; letter-spacing: -.02em; }
   .h-sec { font-size: clamp(28px, 3.4vw, 36px); line-height: 1.12; font-weight: 500; letter-spacing: -.03em; }
   /* Same glass as the GlowCards; a soft blue spotlight follows the pointer (--mx/--my set in App). */

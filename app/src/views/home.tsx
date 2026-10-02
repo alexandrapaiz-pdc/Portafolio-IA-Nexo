@@ -1,6 +1,6 @@
 import { useRouter } from "@/lib/router"
 import { GlowCard } from "@/components/ui/spotlight-card"
-import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
 import { Footer, Section, SectionHead, SecP } from "@/components/shared"
 import { RobotBand } from "@/components/robot-band"
 
@@ -26,13 +26,13 @@ export function Home() {
         <div className="eyebrow">Portafolio de IA · Q4 2026</div>
         <h1 className="h-display">Nexo IA.<span className="sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
         <div className="mt-2 grid max-w-[44em] gap-2 border-t border-line pb-1 pt-[22px]">
-          <span className="text-xs font-semibold tracking-[.02em] text-accent">Nuestro MTP · Propósito Transformador Masivo</span>
+          <span className="text-xs font-medium tracking-[.02em] text-faint">Nuestro MTP · Propósito Transformador Masivo</span>
           <p className="text-[clamp(22px,2.6vw,28px)] font-medium leading-[1.2] tracking-[-.03em] text-balance">Que cada proceso sistemático corra con IA.</p>
           <p className="text-base tracking-[-.015em] text-sub">Abierta como nuestros números, segura como nuestro estándar.</p>
         </div>
         <p className="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
         <p className="text-[13px] text-faint">Alexandra Paiz, Líder de IA y Herramientas</p>
-        <div><Button size="lg" className="bg-navy text-white shadow-[0_8px_24px_-10px_rgba(0,33,111,.6)] hover:brightness-125" onClick={() => go("portafolio")}>Ver el portafolio</Button></div>
+        <div><button type="button" onClick={() => go("portafolio")} className="group inline-flex h-11 items-center gap-2 rounded-full border border-line-2 bg-white px-5 text-[15px] font-medium text-text transition-colors hover:border-text">Ver el portafolio<ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" /></button></div>
       </section>
 
       <Section id="mision">
