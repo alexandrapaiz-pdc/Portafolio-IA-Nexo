@@ -7,7 +7,7 @@ import { RobotBand } from "@/components/robot-band"
 
 const ISTACK = [
   ["Propósito", "La cascada de metas de la empresa"],
-  ["Percibir", "Company Brain: Databricks y SharePoint"],
+  ["Percibir", "Un Company Brain legible por máquinas"],
   ["Interpretar", "Sistemas sofisticados de memoria para agentes"],
   ["Decidir", "Propuestas del agente con aprobación humana"],
   ["Orquestar y actuar", "Orquestación completa: flujos, aprobaciones y ruteo de modelos"],
