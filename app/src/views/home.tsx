@@ -6,12 +6,12 @@ import { Footer, RequestCta, Section, SectionHead, SecP } from "@/components/sha
 import { RobotBand } from "@/components/robot-band"
 
 const ISTACK = [
-  ["Propósito", "El MTP y las prioridades del portafolio"],
+  ["Propósito", "La cascada de metas de la empresa"],
   ["Percibir", "Company Brain: Databricks y SharePoint"],
-  ["Interpretar", "Agentes LangGraph con contexto y glosario"],
+  ["Interpretar", "Sistemas sofisticados de memoria para agentes"],
   ["Decidir", "Propuestas del agente con aprobación humana"],
-  ["Orquestar y actuar", "Flujos en Temporal y servidores MCP"],
-  ["Aprender", "Memoria en pgvector y trazas en Langfuse"],
+  ["Orquestar y actuar", "Orquestación completa: flujos, aprobaciones y ruteo de modelos"],
+  ["Aprender", "Crecimiento exponencial recursivo: cada ciclo mejora el siguiente"],
 ]
 const EXO = [
   ["MTP", "Propósito Transformador Masivo", "La razón de existir de la organización: el norte que alinea cada decisión. El nuestro: «Que cada proceso sistemático corra con IA»."],
