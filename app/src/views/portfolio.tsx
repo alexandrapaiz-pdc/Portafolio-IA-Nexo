@@ -9,9 +9,11 @@ import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, 
 import { PracticesMap } from "@/components/practices-map"
 import portalMundos from "@/assets/portal-mundos.webp"
 import { AgentBoard } from "@/components/agent-board"
+import { BrainDiagram } from "@/components/brain-diagram"
 import { StackDiagram } from "@/components/stack-diagram"
 
-const JUMP = [["stack-sec", "Stack"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"], ["bitacora", "Bitácora"]]
+const JUMP = [["stack-sec", "Stack"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
+const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
 function LevelRow({ x, pid, field, i }: { x: Level; pid: string; field: "levels" | "parts"; i: number }) {
@@ -147,6 +149,7 @@ export function Portfolio() {
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
         <div className="grid gap-[18px]">
+          <BrainDiagram />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver las {parts.length} capas <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
             <div className="group-box mt-3">{parts.length ? parts.map((x, i) => <LevelRow key={i} x={x} pid="companybrain" field="parts" i={i} />) : <Empty>{loaded.p ? "Sin partes registradas." : "Cargando…"}</Empty>}</div>
@@ -173,10 +176,12 @@ export function Portfolio() {
         </div>
       </Section>
 
+      {SHOW_LOG && (
       <Section id="bitacora">
         <SectionHead eyebrow="Avances recientes" title="Bitácora" />
         <div className="group-box">{updates.length ? updates.slice(0, 10).map((u) => <UpdateRow key={u.id} u={u} showProject />) : <Empty>Aún no hay actualizaciones. Abre un proyecto y publica la primera.</Empty>}</div>
       </Section>
+      )}
 
       <RequestCta />
       <Footer right="Fuentes: reuniones en Granola y backlog en Asana. “Pendiente” indica una línea base aún no medida." />
