@@ -430,8 +430,11 @@ function RobotPrototype({
   blinkCycle = 3.0,
   metalness = 0.0,
   invertY = false,
+  verticalAmount = 1,
 }: {
   invertY?: boolean;
+  /** 0–1: how much the pointer's height tilts the robot (1 = original). */
+  verticalAmount?: number;
   neckParams?: Record<string, number>;
   bodyParams?: Record<string, number>;
   color?: string;
@@ -480,7 +483,7 @@ function RobotPrototype({
 
     // Clamped so a pointer far outside the canvas does not over-rotate the robot; invertY flips the vertical look.
     const tx = THREE.MathUtils.clamp(state.pointer.x, -1, 1);
-    const ty = THREE.MathUtils.clamp(state.pointer.y, -1, 1) * (invertY ? -1 : 1);
+    const ty = THREE.MathUtils.clamp(state.pointer.y, -1, 1) * (invertY ? -1 : 1) * verticalAmount;
 
     const maxMoveX = state.viewport.width / 3.5;
     const targetPosX = tx * maxMoveX;
@@ -1019,6 +1022,7 @@ export function RobotScene({
           blinkCycle={blinkCycle}
           metalness={metalness}
           invertY
+          verticalAmount={0.2}
         />
       </ResponsiveGroup>
     </Canvas>
