@@ -3,7 +3,8 @@ import { StatusPill } from "./shared"
 
 // Company Brain: company sources feed four knowledge layers; agents, portals and Claude read from them.
 // Each layer's dot shows the live status of the matching part of the Company Brain project.
-const SOURCES: [string, string, number][] = [["SharePoint", "SIGO, políticas, SOPs", 0], ["JD Edwards", "ERP", 1], ["STEP", "catálogos", 1], ["Ventas de Avon", "por campaña", 1], ["Asana y Jira", "proyectos", 1]]
+// Sources are kinds of information every mundo has, not one system each: the stack of cards stands for all the mundos.
+const SOURCES: [string, string, number][] = [["Documentos", "políticas, SOPs, SIGO", 0], ["Sistemas y ERP", "transacciones, catálogos", 1], ["Ventas y operación", "por mundo y canal", 1], ["Proyectos y tickets", "seguimiento del trabajo", 1]]
 const CONSUMERS: [string, string][] = [["Agentes", "con contexto y memoria"], ["Portales", "Portal de Mundos y más"], ["Claude", "consultas de cualquier líder"]]
 
 export function BrainDiagram() {
@@ -22,19 +23,23 @@ export function BrainDiagram() {
     <figure className="m-0 grid gap-3">
       <div className="overflow-x-auto card px-3.5 py-[18px]">
         <svg viewBox="0 0 1000 420" className="block h-auto w-full min-w-[720px] text-text" role="img"
-          aria-label="Company Brain: SharePoint, JD Edwards, STEP, ventas de Avon, Asana y Jira alimentan conocimiento documental, datos operativos y productos de datos, unidos por un vocabulario común; agentes, portales y Claude los consultan.">
+          aria-label="Company Brain: los documentos, sistemas transaccionales, ventas y proyectos de cada mundo alimentan conocimiento documental, datos operativos y productos de datos, unidos por un vocabulario común; agentes, portales y Claude los consultan.">
           <defs><marker id="cbArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="currentColor" opacity=".55" /></marker></defs>
-          <text className="dg-g" x={20} y={40}>FUENTES</text>
+          <text className="dg-g" x={20} y={40}>CADA MUNDO DE GRUPO PDC</text>
+          <rect className="dg-group" x={32} y={74} width={206} height={318} rx="14" opacity=".45" />
+          <rect className="dg-group" x={26} y={68} width={206} height={318} rx="14" opacity=".7" />
+          <rect className="dg-box" x={20} y={62} width={206} height={318} rx="14" />
+          <text className="dg-s" x={36} y={366}>El mismo patrón en todos los mundos</text>
           <text className="dg-g" x={310} y={40}>COMPANY BRAIN · LEGIBLE POR MÁQUINAS</text>
           <text className="dg-g" x={790} y={40}>QUIÉN LO USA</text>
           <rect className="dg-azure" x={310} y={54} width={380} height={348} rx="16" />
           {SOURCES.map(([t, s, to], i) => {
-            const y = 62 + i * 66, cy = y + 24, ty = (to === 0 ? LY[0] : LY[1]) + LH / 2 + (to === 0 ? 0 : (i - 2.5) * 7)
+            const y = 76 + i * 68, cy = y + 24, ty = (to === 0 ? LY[0] : LY[1]) + LH / 2 + (to === 0 ? 0 : (i - 2) * 8)
             return (
               <g key={t}>
-                <rect className="dg-box" x={20} y={y} width={190} height={48} rx="10" />
-                <text className="dg-t" x={36} y={y + 21}>{t}</text><text className="dg-s" x={36} y={y + 37}>{s}</text>
-                <path className="dg-a" d={`M210 ${cy} C 270 ${cy}, 270 ${ty}, 328 ${ty}`} markerEnd="url(#cbArrow)" />
+                <rect className="dg-box" x={32} y={y} width={182} height={50} rx="10" />
+                <text className="dg-t" x={46} y={y + 22}>{t}</text><text className="dg-s" x={46} y={y + 39}>{s}</text>
+                <path className="dg-a" d={`M214 ${cy} C 272 ${cy}, 272 ${ty}, 328 ${ty}`} markerEnd="url(#cbArrow)" />
               </g>
             )
           })}
