@@ -41,7 +41,6 @@ export function Portfolio() {
   const ag = agentsOf(projects)
   const comps = [...components].sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
   const ready = comps.filter((c) => c.status === "listo").length, prog = comps.filter((c) => c.status === "en_curso").length
-  const kpis = projects.flatMap((p) => p.kpis || [])
   const byUnit: Record<string, number> = {}
   projects.forEach((p) => { const s = savings(p); if (isNum(s.baseline)) byUnit[s.unit] = (byUnit[s.unit] || 0) + s.baseline })
   const units = Object.entries(byUnit)
@@ -74,7 +73,7 @@ export function Portfolio() {
       <StatsRow>
         <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} />
         <Stat k="Proyectos de agentes" v={ag.length} sub={`Prioridad 1: ${ag[0]?.name || "—"}`} />
-        <Stat k="KPIs de ejecución" v={0} unit={`de ${kpis.length}`} sub="Se miden al desplegar" />
+        <Stat k="Agentes en producción" v={ag.filter((p) => p.phase === "produccion").length} sub="Los KPIs se miden al desplegar" />
         <Stat k="Trabajo manual en alcance" accent v={units.length ? nf(units[0][1]) : "—"} unit={units[0]?.[0]} sub={units.length > 1 ? units.slice(1).map(([u, v]) => `${nf(v)} ${u}`).join(" · ") : "Horas medidas a la fecha"} />
       </StatsRow>
       </div>
