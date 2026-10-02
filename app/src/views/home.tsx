@@ -50,7 +50,7 @@ export function Home() {
           </div>
           <div className="grid content-start gap-2 border-t border-line pt-4">
             <h3 className="text-[15px] font-semibold tracking-[-.01em]">El camino</h3>
-            <p className="text-[15px] leading-relaxed text-sub">Primero Nexo construye y prueba el marco; después cada área desarrolla sus propios agentes con ayuda de nuestros agentes.</p>
+            <p className="text-[15px] leading-relaxed text-sub">Primero Nexo construye y prueba el marco; después se escalará.</p>
           </div>
         </div>
       </Section>
