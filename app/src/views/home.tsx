@@ -35,7 +35,7 @@ export function Home() {
         <div className="mt-6 -ml-5 max-sm:ml-0"><button type="button" onClick={() => go("portafolio")} className="group inline-flex h-[52px] items-center gap-2 rounded-full border border-line-2 bg-white px-5 text-base font-medium leading-none text-text transition-colors hover:border-text">Ver el portafolio<ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" /></button></div>
       </section>
 
-      <Section id="mision" className="screen pt-[clamp(20px,4vh,48px)]">
+      <Section id="mision">
         <SectionHead eyebrow="Misión" title="De libro abierto a código abierto." />
         <blockquote className="m-0 max-w-[34em] text-[clamp(20px,2.2vw,25px)] font-medium leading-[1.3] tracking-[-.025em] text-balance">
           Grupo PDC ya es una empresa de libro abierto: los números son de todos. <span className="text-faint">La misión de Nexo IA es que lo que construimos con IA también lo sea, abierto y editable por cualquier líder.</span>

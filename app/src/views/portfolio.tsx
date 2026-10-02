@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow, RequestCta } from "@/components/shared"
 import { PracticesMap } from "@/components/practices-map"
+import { BrainDiagram } from "@/components/brain-diagram"
+import { AgentBoard } from "@/components/agent-board"
 import { StackDiagram } from "@/components/stack-diagram"
 
 const JUMP = [["stack-sec", "Stack"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"], ["bitacora", "Bitácora"]]
@@ -141,10 +143,16 @@ export function Portfolio() {
 
       <Section id="brain">
         <SectionHead eyebrow="Company Brain" title="El conocimiento de la empresa, listo para agentes.">
-          <SecP>Integraciones con Databricks y la información de la empresa en un solo lugar. Los portales, empezando por Portal de Mundos, son su cara visible.</SecP>
+          <SecP>La información de la empresa en un solo lugar, legible por personas y agentes. Los portales son su cara visible.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
-        <div className="group-box">{parts.length ? parts.map((x, i) => <LevelRow key={i} x={x} pid="companybrain" field="parts" i={i} />) : <Empty>{loaded.p ? "Sin partes registradas." : "Cargando…"}</Empty>}</div>
+        <div className="grid gap-[18px]">
+          <BrainDiagram />
+          <details className="group">
+            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver las {parts.length} capas <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
+            <div className="group-box mt-3">{parts.length ? parts.map((x, i) => <LevelRow key={i} x={x} pid="companybrain" field="parts" i={i} />) : <Empty>{loaded.p ? "Sin partes registradas." : "Cargando…"}</Empty>}</div>
+          </details>
+        </div>
         <div>
           <div className="flex flex-wrap items-baseline gap-2.5 px-1 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Portales</b><span>El frente interactivo del Company Brain</span></div>
           <div className="group-box">{projects.filter((p) => inProgram(p, "brain") && p.id !== "companybrain").map((p) => <ProjectRow key={p.id} p={p} />)}</div>
@@ -152,8 +160,14 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead eyebrow="AI Agent Projects" title="Agentes, en este orden."><SecP>Prioridad acordada con Benji y Óscar el 30 de septiembre.</SecP></SectionHead>
-        <div className="group-box">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
+        <SectionHead eyebrow="AI Agent Projects" title="Agentes, en este orden." />
+        <div className="grid gap-[18px]">
+          <AgentBoard />
+          <details className="group">
+            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
+            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
+          </details>
+        </div>
       </Section>
 
       <Section id="bitacora">
