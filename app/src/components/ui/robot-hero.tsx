@@ -429,7 +429,9 @@ function RobotPrototype({
   pantallaBrillo = 1.2,
   blinkCycle = 3.0,
   metalness = 0.0,
+  invertY = false,
 }: {
+  invertY?: boolean;
   neckParams?: Record<string, number>;
   bodyParams?: Record<string, number>;
   color?: string;
@@ -476,8 +478,9 @@ function RobotPrototype({
 
     const dt = Math.min(delta, 0.1);
 
-    const tx = state.pointer.x;
-    const ty = state.pointer.y;
+    // Clamped so a pointer far outside the canvas does not over-rotate the robot; invertY flips the vertical look.
+    const tx = THREE.MathUtils.clamp(state.pointer.x, -1, 1);
+    const ty = THREE.MathUtils.clamp(state.pointer.y, -1, 1) * (invertY ? -1 : 1);
 
     const maxMoveX = state.viewport.width / 3.5;
     const targetPosX = tx * maxMoveX;
@@ -999,6 +1002,7 @@ export function RobotScene({
           pantallaBrillo={pantallaBrillo}
           blinkCycle={blinkCycle}
           metalness={metalness}
+          invertY
         />
       </ResponsiveGroup>
     </Canvas>
