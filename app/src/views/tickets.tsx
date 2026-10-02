@@ -11,7 +11,7 @@ import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Empty, Footer, Section, SectionHead, SecP, Stat, StatsRow } from "@/components/shared"
 
-const AREAS = ["Nexo", "MegaMás", "Avon", "PDC Brands", "Vikingo", "Otra"]
+const AREAS = ["Nexo", "PDC Brands", "Vikingo Distribución", "Vikingo AI", "Mostro", "Corporativo"]
 const TTYPES = ["Automatización o agente", "Portal o tablero", "Análisis de datos", "Licencia o acceso a Claude", "Quiero construirlo yo (autoservicio)", "Otro"]
 const URG = ["Baja", "Media", "Alta"]
 const TSTATUS: [string, string][] = [["nuevo", "Nueva"], ["evaluacion", "En evaluación"], ["aprobado", "Aprobada"], ["proyecto", "En portafolio"], ["descartado", "Descartada"]]
@@ -103,7 +103,7 @@ export function Tickets() {
 
 function NewTicket({ onClose }: { onClose: () => void }) {
   const { db, me, toast } = useStore()
-  const [f, setF] = useState({ title: "", area: AREAS[0], type: TTYPES[0], urgency: "Media", problem: "", current: "", hours: "", people: "", wanted: "", impact: "", systems: "" })
+  const [f, setF] = useState({ title: "", area: AREAS[0], type: TTYPES[0], urgency: "Media", problem: "", current: "", hours: "", people: "", impact: "", systems: "" })
   const [busy, setBusy] = useState(false)
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
   return (
@@ -114,22 +114,21 @@ function NewTicket({ onClose }: { onClose: () => void }) {
           <form className="grid gap-3.5" onSubmit={async (e) => {
             e.preventDefault(); if (!f.title.trim() || !f.problem.trim()) return; setBusy(true)
             const n = (v: string) => (v === "" ? null : Number(v))
-            const doc = { code: code(), title: f.title.trim(), area: f.area, type: f.type, urgency: f.urgency, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), wanted: f.wanted || null, impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
+            const doc = { code: code(), title: f.title.trim(), area: f.area, type: f.type, urgency: f.urgency, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
             try { await db.collection("tickets").add(doc); onClose(); toast("Solicitud enviada: " + doc.code) }
             catch (err: unknown) { setBusy(false); toast((err as { code?: string })?.code === "invalid_argument" ? "Tu acceso a esta página es de solo lectura. Pide acceso de colaborador para enviar solicitudes." : "No se pudo enviar. Intenta de nuevo.") }
           }}>
             <Label>Título<Input required maxLength={120} value={f.title} onChange={set("title")} placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra" /></Label>
             <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
-              <Label>Área<NativeSelect value={f.area} onChange={set("area")}>{AREAS.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Mundo<NativeSelect value={f.area} onChange={set("area")}>{AREAS.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
               <Label>Tipo<NativeSelect value={f.type} onChange={set("type")}>{TTYPES.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
               <Label>Urgencia<NativeSelect value={f.urgency} onChange={set("urgency")}>{URG.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
             </div>
             <Label>¿Qué problema quieres resolver?<Textarea required value={f.problem} onChange={set("problem")} placeholder="Qué duele hoy y a quién afecta." /></Label>
             <Label>¿Cómo se hace hoy?<Textarea value={f.current} onChange={set("current")} placeholder="Pasos, herramientas y quién participa." /></Label>
-            <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
+            <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
               <Label>Horas manuales al mes<Input type="number" min={0} step="any" value={f.hours} onChange={set("hours")} placeholder="Ej. 20" /></Label>
               <Label>Personas involucradas<Input type="number" min={0} step={1} value={f.people} onChange={set("people")} placeholder="Ej. 3" /></Label>
-              <Label>Fecha deseada<Input type="date" value={f.wanted} onChange={set("wanted")} /></Label>
             </div>
             <Label>¿Cómo sabremos que funcionó?<Input value={f.impact} onChange={set("impact")} placeholder="Ej. Cerrar el mes 3 días antes; 0 facturas vencidas" /></Label>
             <Label>Sistemas y datos<Input value={f.systems} onChange={set("systems")} placeholder="Ej. Excel, JD Edwards, SharePoint, correo" /></Label>
@@ -148,7 +147,7 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
   const [status, setStatus] = useState(tr.status || "nuevo"), [prio, setPrio] = useState(tr.priority != null ? String(tr.priority) : ""), [note, setNote] = useState(tr.note || ""), [armed, setArmed] = useState(false)
   if (!t) return null
   const st = tr.status || "nuevo"
-  const F: [string, string | undefined][] = [["Área", t.area], ["Tipo", t.type], ["Solicitante", who(t.createdBy)], ["Enviada", fdate((t.createdAt || "").slice(0, 10))], ["Urgencia", t.urgency], ["Fecha deseada", t.wanted ? fdate(t.wanted) : ""], ["Horas manuales al mes", isNum(t.hours) ? nf(t.hours) + " h" : ""], ["Personas involucradas", isNum(t.people) ? String(t.people) : ""], ["Cómo se hace hoy", t.current], ["Cómo sabremos que funcionó", t.impact], ["Sistemas y datos", t.systems]]
+  const F: [string, string | undefined][] = [["Mundo", t.area], ["Tipo", t.type], ["Solicitante", who(t.createdBy)], ["Enviada", fdate((t.createdAt || "").slice(0, 10))], ["Urgencia", t.urgency], ["Horas manuales al mes", isNum(t.hours) ? nf(t.hours) + " h" : ""], ["Personas involucradas", isNum(t.people) ? String(t.people) : ""], ["Cómo se hace hoy", t.current], ["Cómo sabremos que funcionó", t.impact], ["Sistemas y datos", t.systems]]
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent title={t.code || "Solicitud"}>
