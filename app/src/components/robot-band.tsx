@@ -26,7 +26,7 @@ export function RobotBand({ word = "NEXO IA", caption }: { word?: string; captio
       <div className="pointer-events-none absolute inset-0 grid place-items-center">
         <span className="translate-y-6 select-none whitespace-nowrap text-[clamp(48px,9vw,120px)] font-semibold leading-none tracking-[-.05em] text-navy opacity-[.06]">{word}</span>
       </div>
-      <div className="absolute inset-0">{near && <SafeWebGL><RobotScene scale={1.2} pantallaColor="#4d7cff" pantallaBrillo={1.3} /></SafeWebGL>}</div>
+      <div className="absolute inset-0">{near && <SafeWebGL><RobotScene scale={1.5} pantallaColor="#4d7cff" pantallaBrillo={1.3} /></SafeWebGL>}</div>
       {caption && <p className="pointer-events-none absolute inset-x-0 bottom-5 text-center text-[13px] text-faint">{caption}</p>}
     </div>
   )
