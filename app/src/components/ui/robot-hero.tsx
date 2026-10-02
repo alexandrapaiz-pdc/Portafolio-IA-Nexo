@@ -967,6 +967,21 @@ export function RobotHero({
 
 export default RobotHero;
 
+/** Recomputes the pointer from the last mouse position and the canvas' current place on screen every frame,
+ *  so scrolling (which fires no pointer events) keeps the robot's gaze right. Neutral until the mouse moves. */
+const lastClient: { x: number | null; y: number | null } = { x: null, y: null };
+if (typeof window !== "undefined")
+  window.addEventListener("pointermove", (e) => { lastClient.x = e.clientX; lastClient.y = e.clientY; }, { passive: true });
+function PagePointer() {
+  useFrame((state) => {
+    if (lastClient.x === null || lastClient.y === null) { state.pointer.set(0, 0); return; }
+    const r = state.gl.domElement.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    state.pointer.set(((lastClient.x - r.left) / r.width) * 2 - 1, -((lastClient.y - r.top) / r.height) * 2 + 1);
+  }, -1);
+  return null;
+}
+
 /** The robot alone, for a band inside a page: no navbar, transparent canvas, offline lighting.
  *  It follows the pointer anywhere on the page (eventSource = document body) and shows heart eyes on click. */
 export function RobotScene({
@@ -986,6 +1001,7 @@ export function RobotScene({
       gl={{ alpha: true }}
       style={{ background: "transparent" }}
     >
+      <PagePointer />
       <ambientLight intensity={0.75} color="#ffffff" />
       <Environment resolution={128}>
         <Lightformer form="rect" intensity={2} position={[0, 4, 2]} scale={[6, 2, 1]} />
