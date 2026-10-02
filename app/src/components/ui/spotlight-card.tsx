@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 // - classes merge with cn() so callers can override padding, rows and shadow;
 // - no touch-action: none, so a swipe on a card still scrolls the page on phones;
 // - typed inline styles (CSS custom properties) for TypeScript;
-// - a 'pdc' glow (PDC orange, no hue drift) and optional backdrop / border colors.
+// - a 'pdc' glow (PDC blue, no hue drift) and optional backdrop / border colors.
 
 interface GlowCardProps {
   children: ReactNode;
@@ -25,7 +25,7 @@ const glowColorMap = {
   green: { base: 120, spread: 200 },
   red: { base: 0, spread: 200 },
   orange: { base: 30, spread: 200 },
-  pdc: { base: 19, spread: 0 }
+  pdc: { base: 226, spread: 0 }
 };
 
 const sizeMap = {
