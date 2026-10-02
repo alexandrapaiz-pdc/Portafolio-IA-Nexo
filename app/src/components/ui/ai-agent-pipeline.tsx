@@ -19,13 +19,14 @@ const messages = [
   "En espera del siguiente evento del bus…",
 ]
 
-const SLOW = 1.8 // global pace: every motion runs this many times slower than the original
+const SLOW = 1.8 // pulses and blinks: this many times slower than the original
+const FLOW = 3.6 // dots travelling along the connectors: slower still, so the flow reads calmly
 const BLUE = "#2f5bff", NAVY = "#00216f", ORANGE = "#ff5100"
 
 function AnimatedDot({ path, duration, delay, size, opacity, color = BLUE }: { path: string; duration: number; delay: number; size: number; opacity: number; color?: string }) {
   return (
     <circle r={size} fill={color} opacity={opacity}>
-      <animateMotion dur={`${duration * SLOW}s`} repeatCount="indefinite" begin={`${delay * SLOW}s`} path={path} />
+      <animateMotion dur={`${duration * FLOW}s`} repeatCount="indefinite" begin={`${delay * FLOW}s`} path={path} />
     </circle>
   )
 }
