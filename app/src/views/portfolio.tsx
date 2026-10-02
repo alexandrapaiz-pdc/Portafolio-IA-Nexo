@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow, RequestCta } from "@/components/shared"
 import { PracticesMap } from "@/components/practices-map"
+import portalMundos from "@/assets/portal-mundos.webp"
 import { BrainDiagram } from "@/components/brain-diagram"
 import { AgentBoard } from "@/components/agent-board"
 import { StackDiagram } from "@/components/stack-diagram"
@@ -155,6 +156,10 @@ export function Portfolio() {
         </div>
         <div>
           <div className="flex flex-wrap items-baseline gap-2.5 px-1 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Portales</b><span>El frente interactivo del Company Brain</span></div>
+          <figure className="m-0 mb-3.5 overflow-hidden card p-0">
+            <img src={portalMundos} alt="Portal de Mundos: los seis mundos de Grupo PDC como planetas alrededor del logo; PDC Brands al centro con el botón Entrar a PDC Brands." className="block h-auto w-full" loading="lazy" />
+            <figcaption className="flex flex-wrap justify-between gap-2 px-5 py-3 text-[13px] text-sub"><span><b className="font-semibold text-text">Portal de Mundos</b> · un tablero por cada uno de los 6 mundos</span><span className="text-faint">Piloto: PDC Brands</span></figcaption>
+          </figure>
           <div className="group-box">{projects.filter((p) => inProgram(p, "brain") && p.id !== "companybrain").map((p) => <ProjectRow key={p.id} p={p} />)}</div>
         </div>
       </Section>
