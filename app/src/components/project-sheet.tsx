@@ -29,7 +29,7 @@ function Spark({ p, k }: { p: Project; k: Kpi }) {
 }
 
 export function ProjectSheet() {
-  const { project: id, closeProject, go } = useRouter()
+  const { project: id, closeProject } = useRouter()
   const store = useStore()
   const { projects, components, updates, asana, canWrite, db, write } = store
   const p = projects.find((x) => x.id === id)
@@ -115,7 +115,6 @@ export function ProjectSheet() {
         {at && at.length > 0 && ats && (
           <div className="group-box flex flex-wrap items-center justify-between gap-3 px-5 py-4">
             <span className="num text-sm text-sub">Asana: {ats.total - ats.done} tareas abiertas{ats.late ? ` · ${ats.late} vencidas` : ""} · {ats.done} cerradas</span>
-            <Button variant="ghost" onClick={() => go("tareas")}>Ver en Tareas</Button>
           </div>
         )}
 

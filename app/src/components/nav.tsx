@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import logoLight from "@/assets/grupo-pdc-principal.png"
 
 const TABS: { v: View; label: string; soon?: boolean }[] = [
-  { v: "inicio", label: "Inicio" }, { v: "portafolio", label: "Portafolio" }, { v: "tareas", label: "Tareas" }, { v: "agentes", label: "Agentes", soon: true },
+  { v: "inicio", label: "Inicio" }, { v: "portafolio", label: "Portafolio" }, { v: "agentes", label: "Agentes", soon: true },
 ]
 
 export function Nav() {

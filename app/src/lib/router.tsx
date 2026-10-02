@@ -2,7 +2,7 @@
    hash form an artifact link carries. A project id in the hash opens its detail sheet. */
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react"
 
-export const VIEWS = ["inicio", "portafolio", "tareas", "agentes", "solicitudes"] as const
+export const VIEWS = ["inicio", "portafolio", "agentes", "solicitudes"] as const // "tareas" hidden for now
 export type View = (typeof VIEWS)[number]
 
 interface Router {
