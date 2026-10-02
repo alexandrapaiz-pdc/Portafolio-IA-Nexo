@@ -74,7 +74,7 @@ export function Portfolio() {
       </StatsRow>
       </div>
 
-      <section className="snap-start grid grid-cols-2 gap-3.5 pt-10 max-[720px]:grid-cols-1">
+      <section className="grid grid-cols-2 gap-3.5 pt-10 max-[720px]:grid-cols-1">
         {PROGRAMS.map((g) => {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
