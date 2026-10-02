@@ -1,91 +1,83 @@
 {
- "priority": 2,
- "wave": 1,
+ "asana": {
+  "gid": "1218995598415931",
+  "include": "Mundos"
+ },
+ "blocker": "",
  "bu": "Grupo PDC",
- "name": "Portal de Mundos",
- "sponsor": "Sergio",
- "tagline": "Tablero de gestión por mundo para el comité ejecutivo",
- "phase": "piloto",
- "summary": "Un tablero por mundo con métricas semanales y mensuales, cadenas de valor, proyectos clave, metas y proyecciones, para reemplazar las presentaciones del comité. Piloto: PDC Brands.",
- "pains": [
-  "Con la salida de Jorge se pierde su instancia local de n8n.",
-  "El comité ejecutivo revisa el desempeño con presentaciones armadas a mano.",
-  "Excel es una fuente de datos frágil (se mantiene por gestión del cambio).",
-  "Los flujos de n8n no se pueden versionar en Git en la instalación actual.",
-  "Cada portal tiene su propio enlace; la privacidad por creador limita la vista de portal de portales."
- ],
- "needs": [
-  "stack",
-  "azure",
-  "github",
-  "n8n",
-  "dominio",
-  "controles"
- ],
- "blocker": "Salida de Jorge: su instancia local de n8n se pierde si no se independiza.",
  "discovery": [
   {
-   "label": "Jorge comparte el frontend en GitHub",
+   "done": false,
    "due": null,
-   "done": false
+   "label": "Acceso de Alexandra al hosting"
   },
   {
-   "label": "Exportar flujos de n8n a JSON",
+   "done": false,
    "due": null,
-   "done": false
+   "label": "Dominio propio con IT"
   },
   {
-   "label": "Acceso de Alexandra a flujos y hosting",
+   "done": false,
    "due": null,
-   "done": false
-  },
-  {
-   "label": "n8n propio y dominio con IT",
-   "due": null,
-   "done": false
-  },
-  {
-   "label": "Arquitectura de largo plazo con Edgar",
-   "due": null,
-   "done": false
+   "label": "Arquitectura de largo plazo con Edgar"
   }
  ],
  "kpis": [
   {
+   "baseline": 1,
+   "current": 1,
    "id": "worlds",
    "name": "Mundos publicados en el portal",
-   "unit": "",
-   "baseline": 1,
+   "note": "Piloto PDC Brands. Total de mundos por confirmar.",
    "target": null,
-   "current": 1,
-   "updated": "2026-09-30",
-   "note": "Piloto PDC Brands. Total de mundos por confirmar."
+   "unit": "",
+   "updated": "2026-09-30"
   },
   {
+   "baseline": 0,
+   "current": 0,
    "id": "reviews",
    "name": "Revisiones del comité hechas desde el portal",
-   "unit": "",
-   "baseline": 0,
+   "note": "",
    "target": null,
-   "current": 0,
-   "updated": "2026-09-30",
-   "note": ""
+   "unit": "",
+   "updated": "2026-09-30"
   },
   {
+   "baseline": 0,
+   "current": 0,
    "id": "flows_owned",
    "name": "Flujos del portal en stack propio",
-   "unit": "%",
-   "baseline": 0,
+   "note": "",
    "target": 100,
-   "current": 0,
-   "updated": "2026-09-30",
-   "note": ""
+   "unit": "%",
+   "updated": "2026-09-30"
   }
  ],
+ "name": "Portal de Mundos",
+ "needs": [
+  "stack",
+  "azure",
+  "github",
+  "dominio",
+  "controles"
+ ],
+ "next": "Dominio propio con IT y arquitectura de largo plazo con Edgar.",
+ "noAzure": true,
+ "pains": [
+  "El comité ejecutivo revisa el desempeño con presentaciones armadas a mano.",
+  "Excel es una fuente de datos frágil (se mantiene por gestión del cambio).",
+  "Cada portal tiene su propio enlace; la privacidad por creador limita la vista de portal de portales."
+ ],
+ "paused": false,
+ "phase": "piloto",
+ "priority": 2,
+ "program": "brain",
  "savings": {
   "note": "Horas de preparación de presentaciones por revisión: línea base pendiente."
  },
- "next": "Frontend en GitHub y flujos exportados (Jorge).",
- "paused": false,
- "noAzure": true
+ "sponsor": "Sergio",
+ "summary": "Un tablero por mundo para reemplazar las presentaciones del comité. Plantilla SIGO IA: un HTML autocontenido con 7 bloques (Métricos, Planeadores, Cadenas de Valor, Proyectos clave, Estructura, Metas y Bonos, Proyecciones Financieras), todos funcionales salvo dos sub-pestañas de Estructura. Hoy lee Excel vía Microsoft Graph. Piloto: PDC Brands.",
+ "tagline": "Tablero de gestión por mundo para el comité ejecutivo",
+ "wave": 1
 }

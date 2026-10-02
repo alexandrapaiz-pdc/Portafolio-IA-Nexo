@@ -1,113 +1,106 @@
 {
- "priority": 0,
- "wave": 0,
+ "asana": {
+  "exclude": "Mundos|Tier 1|Benji|agent deployment",
+  "gid": "1218995598415931"
+ },
+ "blocker": "Cuenta admin de Azure con IT.",
  "bu": "Nexo",
- "name": "Infraestructura IA Nexo",
- "sponsor": "Alexandra Paiz",
- "tagline": "Habilitador de todo el portafolio",
- "enabler": true,
- "phase": "habilitacion",
- "summary": "Stack propio de Nexo, independiente de Vikingo AI, para estandarizar el despliegue de unos 10 proyectos de automatización. Soporte de Vikingo vía tickets idea-to-launch.",
- "pains": [
-  "Cada equipo usa herramientas y licencias distintas, sin estándar.",
-  "Los flujos de n8n viven en una licencia a nombre de George, sin acceso de administrador transferido.",
-  "Se crean soluciones con Claude sin documentación ni controles antes de producción.",
-  "El acceso a JD Edwards requiere VPN y debe ser solo lectura."
+ "discovery": [
+  {
+   "done": false,
+   "due": "2026-10-02",
+   "label": "Definir componentes del stack"
+  },
+  {
+   "done": false,
+   "due": "2026-10-02",
+   "label": "Ticket(s) idea-to-launch con Vikingo: JDE, data warehouse, dominio"
+  },
+  {
+   "done": false,
+   "due": "2026-10-02",
+   "label": "Solicitud final de licencias Claude a Luisca"
+  },
+  {
+   "done": false,
+   "due": "2026-10-06",
+   "label": "Responsable y calendario de Databricks"
+  },
+  {
+   "done": false,
+   "due": "2026-10-07",
+   "label": "Plantilla del portal de agentes"
+  },
+  {
+   "done": false,
+   "due": "2026-10-08",
+   "label": "Vista consolidada de los proyectos para Óscar"
+  },
+  {
+   "done": false,
+   "due": "2026-10-09",
+   "label": "Modelo de controles y permisos"
+  }
  ],
+ "enabler": true,
+ "impactLabel": "Habilita los 7 proyectos",
+ "kpis": [
+  {
+   "baseline": 0,
+   "current": 0,
+   "id": "stack_projects",
+   "name": "Proyectos corriendo en el stack Nexo",
+   "note": "",
+   "target": 10,
+   "unit": "",
+   "updated": "2026-09-30"
+  },
+  {
+   "baseline": null,
+   "current": null,
+   "id": "licenses",
+   "name": "Licencias Claude asignadas",
+   "note": "Lista de solicitantes en consolidación.",
+   "target": null,
+   "unit": "",
+   "updated": ""
+  },
+  {
+   "baseline": 0,
+   "current": 0,
+   "id": "prod_checklist",
+   "name": "Checklist de producción completado",
+   "note": "",
+   "target": 100,
+   "unit": "%",
+   "updated": "2026-09-30"
+  }
+ ],
+ "name": "Nexo AI Stack",
  "needs": [
   "stack",
   "azure",
   "github",
   "licencias",
-  "n8n",
   "controles",
   "jde",
   "datos",
   "orquestacion",
   "dominio"
  ],
- "blocker": "Cuenta admin de Azure con IT.",
- "discovery": [
-  {
-   "label": "Definir componentes del stack",
-   "due": "2026-10-02",
-   "done": false
-  },
-  {
-   "label": "Ticket(s) idea-to-launch con Vikingo: JDE, data warehouse, dominio",
-   "due": "2026-10-02",
-   "done": false
-  },
-  {
-   "label": "Solicitud final de licencias Claude a Luisca",
-   "due": "2026-10-02",
-   "done": false
-  },
-  {
-   "label": "Responsable y calendario de Databricks + respaldo n8n",
-   "due": "2026-10-06",
-   "done": false
-  },
-  {
-   "label": "Plantilla del portal de agentes",
-   "due": "2026-10-07",
-   "done": false
-  },
-  {
-   "label": "Vista consolidada de los proyectos para Óscar",
-   "due": "2026-10-08",
-   "done": false
-  },
-  {
-   "label": "Modelo de controles y permisos",
-   "due": "2026-10-09",
-   "done": false
-  }
- ],
- "kpis": [
-  {
-   "id": "stack_projects",
-   "name": "Proyectos corriendo en el stack Nexo",
-   "unit": "",
-   "baseline": 0,
-   "target": 10,
-   "current": 0,
-   "updated": "2026-09-30",
-   "note": ""
-  },
-  {
-   "id": "n8n_flows",
-   "name": "Flujos n8n migrados a instancia propia",
-   "unit": "",
-   "baseline": null,
-   "target": null,
-   "current": null,
-   "updated": "",
-   "note": "Total de flujos por confirmar con Jorge."
-  },
-  {
-   "id": "licenses",
-   "name": "Licencias Claude asignadas",
-   "unit": "",
-   "baseline": null,
-   "target": null,
-   "current": null,
-   "updated": "",
-   "note": "Lista de solicitantes en consolidación."
-  },
-  {
-   "id": "prod_checklist",
-   "name": "Checklist de producción completado",
-   "unit": "%",
-   "baseline": 0,
-   "target": 100,
-   "current": 0,
-   "updated": "2026-09-30",
-   "note": ""
-  }
- ],
- "savings": {},
  "next": "Stack definido y ticket con Vikingo abierto — 2 oct.",
+ "pains": [
+  "Cada equipo usa herramientas y licencias distintas, sin estándar.",
+  "Se crean soluciones con Claude sin documentación ni controles antes de producción.",
+  "El acceso a JD Edwards requiere VPN y debe ser solo lectura."
+ ],
  "paused": false,
- "impactLabel": "Habilita los 7 proyectos"
+ "phase": "habilitacion",
+ "priority": 0,
+ "program": "stack",
+ "savings": {},
+ "sponsor": "Alexandra Paiz",
+ "summary": "Stack propio de Nexo, independiente de Vikingo AI, para estandarizar el despliegue de unos 10 proyectos de automatización. Soporte de Vikingo vía tickets idea-to-launch.",
+ "tagline": "Habilitador de todo el portafolio",
+ "wave": 0
 }

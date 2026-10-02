@@ -8,7 +8,6 @@ def save(c, i, d): json.dump(d, open(out / c / f"{i}.json", "w"), ensure_ascii=F
 c = load("components", "azure"); c.update(name="Cuenta admin de Azure", owner="IT · Luis Carlos", key=True,
   note="Bloqueador principal. Desbloquea Databricks, Entra ID, Key Vault y el marketplace de agentes; luego conexiones a SharePoint y JD Edwards."); save("components", "azure", c)
 c = load("components", "github"); c.update(name="GitHub empresarial", note="Código solo en repositorios privados. Mientras tanto, GitHub personal privado y luego se migra."); save("components", "github", c)
-c = load("components", "n8n"); c.update(note="Con la salida de Jorge se pierde su instancia local: independizar portal y flujos."); save("components", "n8n", c)
 c = load("components", "orquestacion"); c.update(name="Orquestación y agentes: Temporal + LangGraph", note="Cuenta Temporal pay-as-you-go por abrir."); save("components", "orquestacion", c)
 c = load("components", "controles"); c.update(owner="Alexandra · Benji"); save("components", "controles", c)
 
@@ -26,8 +25,7 @@ p.update(name="Avon · Kickoff y APT", tagline="Prioridad 1, acordada con Lisa",
 p["pains"] = ["El kickoff de cada campaña toma 15 h de trabajo manual."] + p["pains"]
 save("projects", "avon", p)
 
-p = load("projects", "mundos"); p.update(noAzure=True, blocker="Salida de Jorge: su instancia local de n8n se pierde si no se independiza.")
-p["pains"] = ["Con la salida de Jorge se pierde su instancia local de n8n."] + p["pains"]; save("projects", "mundos", p)
+p = load("projects", "mundos"); p.update(noAzure=True)
 
 p = load("projects", "contraloria"); p["pains"] = ["Contratos vencen por falta de ejecución."] + p["pains"]; save("projects", "contraloria", p)
 p = load("projects", "step"); p.update(noAzure=True); save("projects", "step", p)
@@ -49,7 +47,7 @@ save("projects", "protocolos", dict(priority=0.5, wave=0, bu="Nexo", enabler=Tru
   savings={}, next="Reunión con Benji para definir protocolos."))
 
 save("updates", "u-0930-prio", {"projectId": "infra", "date": "2026-09-30", "tag": "Decisión", "kpiId": None, "value": None, "createdAt": "2026-09-30T18:30:00Z",
-  "text": "Con Benji y Óscar se fijó el orden: 1) kickoff de Avon, 2) Portal de Mundos y n8n, 3) Contraloría, 4) STEP, 5) MegaMás vacaciones, 6) MegaMás Soporte IT. La cuenta admin de Azure es el bloqueador principal."})
+  "text": "Con Benji y Óscar se fijó el orden: 1) kickoff de Avon, 2) Portal de Mundos, 3) Contraloría, 4) STEP, 5) MegaMás vacaciones, 6) MegaMás Soporte IT. La cuenta admin de Azure es el bloqueador principal."})
 save("updates", "u-0930-avon", {"projectId": "avon", "date": "2026-09-30", "tag": "Hito", "kpiId": None, "value": None, "createdAt": "2026-09-30T18:31:00Z",
   "text": "Prioridad 1 acordada con Lisa: automatizar el kickoff elimina 15 h de trabajo manual por campaña."})
 save("updates", "u-0930-proto", {"projectId": "protocolos", "date": "2026-09-30", "tag": "Decisión", "kpiId": None, "value": None, "createdAt": "2026-09-30T18:32:00Z",

@@ -1,84 +1,176 @@
 {
- "priority": 4,
- "wave": 1,
+ "asana": {
+  "gid": "1218995343549245"
+ },
+ "blocker": "Decisión de Databricks.",
  "bu": "Nexo",
+ "discovery": [
+  {
+   "done": false,
+   "due": "2026-10-09",
+   "label": "Revisar documentación y PoC de Rodny"
+  },
+  {
+   "done": false,
+   "due": "2026-10-09",
+   "label": "Flujo de validación por área"
+  }
+ ],
+ "kpis": [
+  {
+   "baseline": null,
+   "current": null,
+   "id": "errors",
+   "name": "Códigos con errores de configuración por mes",
+   "note": "",
+   "target": null,
+   "unit": "",
+   "updated": ""
+  },
+  {
+   "baseline": null,
+   "current": null,
+   "id": "blocked",
+   "name": "Artículos bloqueados para facturar",
+   "note": "",
+   "target": null,
+   "unit": "",
+   "updated": ""
+  },
+  {
+   "baseline": 33000,
+   "current": 33000,
+   "id": "impact",
+   "name": "Impacto económico por errores",
+   "note": "Estimación muy preliminar del caso Ayudín 3X.",
+   "target": 0,
+   "unit": "US$",
+   "updated": "2026-09-30"
+  },
+  {
+   "baseline": null,
+   "current": null,
+   "id": "time",
+   "name": "Tiempo de creación de un código",
+   "note": "",
+   "target": null,
+   "unit": "días",
+   "updated": ""
+  }
+ ],
  "name": "Generación de Códigos STEP",
- "sponsor": "Rodny",
- "tagline": "Creación y validación de códigos por área",
- "phase": "descubrimiento",
- "summary": "Flujo de validación por etapas (Marca → Soporte de marcas → Inventarios → Ingeniería → Manufactura → Catálogos) para crear códigos en STEP sin redigitar.",
+ "needs": [
+  "stack",
+  "azure",
+  "datos",
+  "jde"
+ ],
+ "next": "Flujo de validación por área — 9 oct.",
+ "noAzure": true,
  "pains": [
   "Artículos listos en bodega no se pueden facturar por atributos mal configurados en JD Edwards.",
   "El gerente de marca copia un Excel anterior porque no domina los campos técnicos.",
   "Catálogos vuelve a ingresar los datos en el sistema.",
   "Errores como costeo incorrecto o producto manufacturado registrado como comprado."
  ],
- "needs": [
-  "stack",
-  "azure",
-  "n8n",
-  "datos",
-  "jde"
- ],
- "blocker": "Decisión Databricks / n8n.",
- "discovery": [
-  {
-   "label": "Revisar documentación y PoC de Rodny",
-   "due": "2026-10-09",
-   "done": false
-  },
-  {
-   "label": "Flujo de validación por área",
-   "due": "2026-10-09",
-   "done": false
-  }
- ],
- "kpis": [
-  {
-   "id": "errors",
-   "name": "Códigos con errores de configuración por mes",
-   "unit": "",
-   "baseline": null,
-   "target": null,
-   "current": null,
-   "updated": "",
-   "note": ""
-  },
-  {
-   "id": "blocked",
-   "name": "Artículos bloqueados para facturar",
-   "unit": "",
-   "baseline": null,
-   "target": null,
-   "current": null,
-   "updated": "",
-   "note": ""
-  },
-  {
-   "id": "impact",
-   "name": "Impacto económico por errores",
-   "unit": "US$",
-   "baseline": 33000,
-   "target": 0,
-   "current": 33000,
-   "updated": "2026-09-30",
-   "note": "Estimación muy preliminar del caso Ayudín 3X."
-  },
-  {
-   "id": "time",
-   "name": "Tiempo de creación de un código",
-   "unit": "días",
-   "baseline": null,
-   "target": null,
-   "current": null,
-   "updated": "",
-   "note": ""
-  }
- ],
+ "paused": false,
+ "phase": "descubrimiento",
+ "priority": 3,
+ "program": "agentes",
  "savings": {
   "note": "Horas de redigitación y reproceso: línea base pendiente."
  },
- "next": "Flujo de validación por área — 9 oct.",
- "paused": false,
- "noAzure": true
+ "sponsor": "Rodny",
+ "summary": "Flujo de validación por etapas (Marca → Soporte de marcas → Inventarios → Ingeniería → Manufactura → Catálogos) para crear códigos en STEP sin redigitar.",
+ "tagline": "Creación y validación de códigos por área",
+ "vsm": {
+  "asis": [
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Llenar Excel del código (copiando uno anterior)",
+    "pt": null,
+    "wait": null,
+    "who": "Gerente de marca"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Validar ciertos datos",
+    "pt": null,
+    "wait": null,
+    "who": "Soporte de marcas"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Redigitar en el sistema",
+    "pt": null,
+    "wait": null,
+    "who": "Catálogos"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Detectar errores al facturar",
+    "pt": null,
+    "wait": null,
+    "who": "Manufactura · Ventas"
+   }
+  ],
+  "asisNote": "Atributos mal configurados en JD Edwards bloquean la facturación (caso Ayudín 3X, ~US$33k preliminar). Tiempos por medir.",
+  "tobe": [
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Iniciar solicitud en STEP",
+    "pt": null,
+    "wait": null,
+    "who": "Marca"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Validar campos de marca",
+    "pt": null,
+    "wait": null,
+    "who": "Soporte de marcas"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Agregar variables logísticas",
+    "pt": null,
+    "wait": null,
+    "who": "Inventarios"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Agregar pesos y dimensiones",
+    "pt": null,
+    "wait": null,
+    "who": "Ingeniería"
+   },
+   {
+    "ca": null,
+    "mode": "mixto",
+    "name": "Configurar producción",
+    "pt": null,
+    "wait": null,
+    "who": "Manufactura"
+   },
+   {
+    "ca": null,
+    "mode": "manual",
+    "name": "Check final sin redigitar",
+    "pt": null,
+    "wait": null,
+    "who": "Catálogos"
+   }
+  ],
+  "tobeNote": "Flujo de validación por etapas propuesto con Rodny. Dónde entra el agente en cada etapa está por definir.",
+  "updated": "2026-10-01"
+ },
+ "wave": 1
 }

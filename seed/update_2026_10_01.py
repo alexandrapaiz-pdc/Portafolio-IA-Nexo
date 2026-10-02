@@ -27,7 +27,7 @@ w("u_protocolos", {"phase": "construccion", "discovery": disc, "blocker": "Revis
   "summary": "Repositorio BestPracticesAI con estándares por nivel: 1 · Usuario de Claude (activo), 2 · Constructor de apps (activo), 2.5 · Backends (en construcción), 3 · Agentes (en construcción). Incluye biblioteca de skills de Nexo y reglas base: agentes solo lectura, repos nunca públicos, sin secretos en código.",
   "next": "Cerrar las decisiones pendientes de Nivel 1 y 2 y la revisión de ciberseguridad."})
 
-w("u_mundos", {"summary": "Un tablero por mundo para reemplazar las presentaciones del comité. Plantilla SIGO IA: un HTML autocontenido con 7 bloques (Métricos, Planeadores, Cadenas de Valor, Proyectos clave, Estructura, Metas y Bonos, Proyecciones Financieras), todos funcionales salvo dos sub-pestañas de Estructura. Hoy lee Excel vía n8n y Microsoft Graph. Piloto: PDC Brands."})
+w("u_mundos", {"summary": "Un tablero por mundo para reemplazar las presentaciones del comité. Plantilla SIGO IA: un HTML autocontenido con 7 bloques (Métricos, Planeadores, Cadenas de Valor, Proyectos clave, Estructura, Metas y Bonos, Proyecciones Financieras), todos funcionales salvo dos sub-pestañas de Estructura. Hoy lee Excel vía Microsoft Graph. Piloto: PDC Brands."})
 
 w("p_companybrain", {"priority": 0.7, "wave": 0, "bu": "Nexo", "enabler": True, "noAzure": False, "paused": False,
   "name": "Company Brain", "sponsor": "Alexandra Paiz", "tagline": "Capa de conocimiento para agentes y personas", "impactLabel": "Datos y vocabulario para 4 proyectos",

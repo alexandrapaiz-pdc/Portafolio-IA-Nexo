@@ -1,8 +1,8 @@
 {
- "order": 8,
- "name": "Capa de datos: Databricks · Postgres + pgvector",
- "owner": "Alexandra",
- "status": "pendiente",
- "note": "Responsable y calendario de Databricks por definir; n8n como respaldo temporal.",
- "updated": "2026-09-30"
+  "name": "Capa de datos: Databricks (Unity Catalog, Lakeflow) · Postgres + pgvector",
+  "note": "Plan de datos de Company Brain en borrador (30 sep). JD Edwards entra por Lakeflow vía VPN, nunca directo.",
+  "order": 8,
+  "owner": "Alexandra",
+  "status": "pendiente",
+  "updated": "2026-10-01"
 }
