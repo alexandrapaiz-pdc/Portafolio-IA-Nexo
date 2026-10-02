@@ -94,9 +94,9 @@ export default function EnterpriseAIPipeline() {
         <rect x="306" y="53" width="105" height="70" rx="11" fill="#fff4ee" stroke={ORANGE} strokeOpacity=".55" strokeWidth="1" />
                 <text x="358" y="78" textAnchor="middle" style={{ ...label, fill: "#d94400", fillOpacity: .75 }}>AGENTE</text>
         <text x="358" y="97" textAnchor="middle" style={{ ...title, fontSize: 13 }}>Razonando</text>
-        <PulsingDot cx={346} cy={113} color={ORANGE} duration={1.2} delay={0} />
-        <PulsingDot cx={358} cy={113} color={ORANGE} duration={1.2} delay={0.4} />
-        <PulsingDot cx={370} cy={113} color={ORANGE} duration={1.2} delay={0.8} />
+        <PulsingDot cx={346} cy={113} color={ORANGE} duration={2.6} delay={0} />
+        <PulsingDot cx={358} cy={113} color={ORANGE} duration={2.6} delay={0.87} />
+        <PulsingDot cx={370} cy={113} color={ORANGE} duration={2.6} delay={1.73} />
 
         {([["Borrador listo", 35, false], ["Aprobación", 73, true], ["Registro y traza", 111, true]] as [string, number, boolean][]).map(([t, y, pulse], k) => (
           <g key={t}>

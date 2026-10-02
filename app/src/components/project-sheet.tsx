@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { H5, StatusPill, UpdateRow, Empty } from "./shared"
-import { VsmSection } from "./vsm"
 
 function Spark({ p, k }: { p: Project; k: Kpi }) {
   const { updates } = useStore()
@@ -172,7 +171,7 @@ export function ProjectSheet() {
           </div></div>
         )}
 
-        {(isAg || p.vsm) && <div><H5>Mapa de flujo de valor</H5><VsmSection p={p} /></div>}
+        {(isAg || p.vsm) && <div><H5>Mapa de flujo de valor</H5><div className="group-box flex items-center gap-3 px-5 py-4 text-[15px] text-sub"><span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-medium tracking-[.08em] text-accent">PRÓXIMAMENTE</span>El mapa de este proceso se publicará pronto.</div></div>}
 
 {SHOW_DETAIL && (<>
         {p.next && <div><H5>Próximo hito</H5><div className="group-box px-5 py-4">{p.next}</div></div>}
