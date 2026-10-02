@@ -23,7 +23,7 @@ export function Home() {
   const { go } = useRouter()
   return (
     <main className="wrap">
-      <section className="screen grid gap-[18px]">
+      <section className="grid gap-[18px] pb-6 pt-[88px]">
         <div className="eyebrow">Portafolio de IA · Q4 2026</div>
         <h1 className="h-display">Nexo IA.<span className="sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
         <div className="mt-2 grid max-w-[44em] gap-2 border-t border-line pb-1 pt-[22px]">
@@ -58,7 +58,7 @@ export function Home() {
 
       <RobotBand />
 
-      <Section id="marco" className="screen gap-5 pt-[clamp(20px,4vh,48px)]">
+      <Section id="marco" className="gap-5">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
             <SecP>Estamos certificados en el modelo ExO 3.0 de Salim Ismail y trabajamos directamente con OpenExO. Es el mapa que usamos para Servicios Compartidos.</SecP>

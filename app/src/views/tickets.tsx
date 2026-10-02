@@ -40,8 +40,8 @@ export function Tickets() {
 
   return (
     <main className="wrap">
-      <div className="screen grid gap-12">
-      <section className="grid gap-[18px]">
+      <div className="grid gap-12">
+      <section className="grid gap-[18px] pb-6 pt-[88px]">
         <div className="eyebrow">Abierto a toda la empresa</div>
         <h1 className="h-display">Envía tu solicitud.<span className="sub">¿Qué proceso deberíamos automatizar?</span></h1>
         <p className="lead">Si una tarea manual te quita horas cada semana, cuéntanos. Toma dos minutos.</p>

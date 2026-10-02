@@ -58,8 +58,8 @@ export function Portfolio() {
 
   return (
     <main className="wrap">
-      <div className="screen grid gap-10">
-      <section className="grid gap-[18px]">
+      <div className="grid gap-10">
+      <section className="grid gap-[18px] pb-6 pt-[88px]">
         <div className="eyebrow">Portafolio · Q4 2026</div>
         <h1 className="h-display">Portafolio.</h1>
         <p className="lead">Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes.</p>

@@ -35,7 +35,7 @@ export function Tasks() {
 
   return (
     <main className="wrap">
-      <div className="screen grid gap-6">
+      <div className="grid gap-6">
       <section className="grid gap-[18px]">
         <div className="eyebrow">Backlog personal en Asana</div>
         <h1 className="h-display">Tareas.</h1>
