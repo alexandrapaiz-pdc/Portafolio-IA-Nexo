@@ -49,7 +49,7 @@ export function Home() {
         </div>
       </Section>
 
-      <RobotBand caption="Haz clic en el robot." />
+      <RobotBand />
 
       <Section id="marco">
         <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
