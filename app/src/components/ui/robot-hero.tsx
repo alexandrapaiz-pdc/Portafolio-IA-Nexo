@@ -1021,7 +1021,6 @@ export function RobotScene({
           pantallaBrillo={pantallaBrillo}
           blinkCycle={blinkCycle}
           metalness={metalness}
-          invertY
           verticalAmount={0.2}
         />
       </ResponsiveGroup>
