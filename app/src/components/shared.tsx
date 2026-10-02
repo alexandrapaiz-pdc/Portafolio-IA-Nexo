@@ -62,6 +62,8 @@ export function MiniBar({ label, done, total }: { label: string; done: number; t
   )
 }
 
+const SHOW_ROW_DETAIL = false // stack and discovery bars, blockers: hidden, execution view only
+
 export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
   const { components } = useStore()
   const { openProject } = useRouter()
@@ -81,18 +83,22 @@ export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
       <div className="min-w-0">
         <div className="text-[17px] font-semibold tracking-[-.02em]">{p.name}</div>
         <div className="mt-0.5 text-[13px] text-sub">{[p.sponsor, phaseLabel(p)].filter(Boolean).join(" · ")}</div>
+{SHOW_ROW_DETAIL && (
         <div className="mt-1.5 flex flex-wrap gap-2.5 text-xs text-faint">
           {p.noAzure && <span className="font-medium text-accent-ink">Avanza sin Azure</span>}
           {vsmSteps > 0 && <span>Mapa de valor: {vsmSteps} pasos</span>}
           {Number(p.wave) === 2 && <span>Ola 2</span>}
           {p.blocker && <span className="text-sub">Bloqueo: {p.blocker}</span>}
         </div>
+        )}
       </div>
+      {SHOW_ROW_DETAIL ? (
       <div className="grid gap-1.5 text-xs text-sub max-[820px]:hidden">
         <MiniBar label="Stack" done={r.ready} total={r.total} />
         <div className="mt-1" />
         <MiniBar label={p.enabler ? "Hitos" : "Descubrimiento"} done={d.done} total={d.total} />
       </div>
+      ) : <span className="text-[13px] text-sub max-[820px]:hidden">{phaseLabel(p)}</span>}
       <div className="min-w-0 text-right max-[820px]:hidden">{impact}</div>
       <ChevronRight size={16} className="text-faint" aria-hidden />
     </button>

@@ -28,6 +28,10 @@ function Spark({ p, k }: { p: Project; k: Kpi }) {
   )
 }
 
+// Tasks, blockers, discovery checklists and updates are kept in the data but hidden: the sheet shows only
+// what matters once a project runs (phase, hours freed, execution KPIs, value stream).
+const SHOW_DETAIL = false
+
 export function ProjectSheet() {
   const { project: id, closeProject } = useRouter()
   const store = useStore()
@@ -88,6 +92,7 @@ export function ProjectSheet() {
           </div>
         </div>
 
+{SHOW_DETAIL && (<>
         {editing && draft
           ? <div><H5>Bloqueo actual</H5><Input value={draft.blocker} placeholder="Sin bloqueo" onChange={(e) => setDraft({ ...draft, blocker: e.target.value })} /></div>
           : p.blocker && <div><H5>Bloqueo actual</H5><div className="group-box px-5 py-4">{p.blocker}</div></div>}
@@ -117,9 +122,10 @@ export function ProjectSheet() {
             <span className="num text-sm text-sub">Asana: {ats.total - ats.done} tareas abiertas{ats.late ? ` · ${ats.late} vencidas` : ""} · {ats.done} cerradas</span>
           </div>
         )}
+</>)}
 
         {!p.enabler && (
-          <div><H5>Tiempo manual</H5><div className="group-box">
+          <div><H5>Horas de trabajo manual</H5><div className="group-box">
             {editing && draft ? (
               <div className="grid gap-2.5 px-5 py-4">
                 <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
@@ -144,7 +150,7 @@ export function ProjectSheet() {
         )}
 
         {!!p.kpis?.length && (
-          <div><H5>KPIs de impacto</H5><div className="grid grid-cols-2 gap-3.5 max-sm:grid-cols-1">
+          <div><H5>KPIs de ejecución</H5><div className="grid grid-cols-2 gap-3.5 max-sm:grid-cols-1">
             {(editing && draft ? draft.kpis : p.kpis).map((k, i) => editing && draft ? (
               <div key={k.id} className="grid content-start gap-2 card px-5 py-[18px]">
                 <div className="text-[13px] text-sub">{k.name}</div>
@@ -168,12 +174,14 @@ export function ProjectSheet() {
 
         {(isAg || p.vsm) && <div><H5>Mapa de flujo de valor</H5><VsmSection p={p} /></div>}
 
+{SHOW_DETAIL && (<>
         {p.next && <div><H5>Próximo hito</H5><div className="group-box px-5 py-4">{p.next}</div></div>}
 
         <div><H5>Actualizaciones</H5>
           {canWrite && <Composer p={p} />}
           <div className="group-box">{ups.length ? ups.map((u) => <UpdateRow key={u.id} u={u} />) : <Empty>Sin actualizaciones todavía.</Empty>}</div>
         </div>
+</>)}
       </DialogContent>
     </Dialog>
   )

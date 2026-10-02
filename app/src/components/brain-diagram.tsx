@@ -23,14 +23,14 @@ export function BrainDiagram() {
     <figure className="m-0 grid gap-3">
       <div className="overflow-x-auto card px-3.5 py-6">
         <svg viewBox="40 30 940 330" className="block h-auto w-full min-w-[720px]" role="img"
-          aria-label="Company Brain como una base de datos de cinco capas: vocabulario y ontología, conocimiento documental, datos operativos, productos de datos y memoria de agentes. Las fuentes de datos llegan a través de Databricks; portales, agentes y chat la consultan.">
+          aria-label="Company Brain como una base de datos de cinco capas: vocabulario y ontología, conocimiento documental, datos operativos, productos de datos y memoria de agentes. Las fuentes de datos alimentan el Company Brain en Databricks; portales, agentes y chat la consultan.">
           <defs>
             <linearGradient id="cbBody" x1="0" x2="1"><stop offset="0" stopColor="#e9eeff" /><stop offset=".5" stopColor="#ffffff" /><stop offset="1" stopColor="#dfe6ff" /></linearGradient>
             <linearGradient id="cbBodyA" x1="0" x2="1"><stop offset="0" stopColor="#ffe9de" /><stop offset=".5" stopColor="#fff7f2" /><stop offset="1" stopColor="#ffe1d2" /></linearGradient>
           </defs>
           <text className="dg-g" x={70} y={52}>FUENTES DE DATOS</text>
           {[...Array(6)].map((_, i) => {
-            const y = 96 + i * 42, d = `M98 ${y} C 150 ${y}, 160 ${mid}, 196 ${mid}`
+            const y = 96 + i * 42, d = `M98 ${y} C 190 ${y}, 200 ${mid}, ${CX - RX - 4} ${mid}`
             return (
               <g key={i}>
                 <path d={d} fill="none" stroke="#4d6fff" strokeOpacity=".28" strokeWidth="1.2" />
@@ -40,23 +40,22 @@ export function BrainDiagram() {
               </g>
             )
           })}
-          <rect x={198} y={mid - 22} width={92} height={44} rx="12" fill="#fff" stroke="var(--line-2)" />
-          <text x={244} y={mid + 5} textAnchor="middle" style={{ font: "500 13px var(--font)", fill: "var(--navy)" }}>Databricks</text>
-          <path d={`M290 ${mid} H ${CX - RX - 4}`} fill="none" stroke="#4d6fff" strokeOpacity=".35" strokeWidth="1.4" />
-          <path d={`M290 ${mid} H ${CX - RX - 4}`} className="cb-flow" fill="none" stroke="#4d6fff" strokeWidth="1.8" strokeLinecap="round" />
           {LAYERS.map((_, k) => {
             const i = LAYERS.length - 1 - k, y = yOf(i), [t, , p] = LAYERS[i], acc = p === null, sv = st(p)
             return (
               <g key={t}>
                 <path d={`M${CX - RX} ${y} V ${y + H} A ${RX} ${RY} 0 0 0 ${CX + RX} ${y + H} V ${y} Z`} fill={acc ? "url(#cbBodyA)" : "url(#cbBody)"} stroke={acc ? "#ff5100" : "#00216f"} strokeOpacity={acc ? 0.55 : 0.22} />
                 <ellipse cx={CX} cy={y} rx={RX} ry={RY} fill={acc ? "#fff4ee" : "#f6f8ff"} stroke={acc ? "#ff5100" : "#00216f"} strokeOpacity={acc ? 0.55 : 0.22} />
-                {/* the visible front band of each disc runs from y+RY to y+H+RY; center the name in it */}
-                <text x={CX} y={y + RY / 2 + H / 2 + 9} textAnchor="middle" style={{ font: "500 14px var(--font)", letterSpacing: ".01em", fill: acc ? "var(--accent-ink)" : "var(--navy)" }}>{t}</text>
-                {sv && <circle className={"dg-d " + sv} cx={CX + RX - 26} cy={y + RY / 2 + H / 2 + 4} r="4.5" />}
+                {/* the name follows the curve of the disc's front face, like printed on it */}
+                <path id={`cbArc${i}`} d={`M${CX - RX} ${y + H / 2 + 5} A ${RX} ${RY} 0 0 0 ${CX + RX} ${y + H / 2 + 5}`} fill="none" />
+                <text style={{ font: "500 11.5px var(--font)", letterSpacing: ".14em", textTransform: "uppercase", fill: acc ? "#d94400" : "#00216f", fillOpacity: acc ? 0.7 : 0.55 }}>
+                  <textPath href={`#cbArc${i}`} startOffset="50%" textAnchor="middle">{t}</textPath>
+                </text>
+                {sv && <circle className={"dg-d " + sv} cx={CX + RX * 0.84} cy={y + H / 2 + 1 + RY * 0.54} r="4" />}
               </g>
             )
           })}
-          <text className="dg-g" x={CX} y={46} textAnchor="middle" style={{ fill: "var(--navy)" }}>COMPANY BRAIN</text>
+          <text className="dg-g" x={CX} y={42} textAnchor="middle" style={{ fill: "var(--navy)" }}>COMPANY BRAIN · DATABRICKS</text>
           {OUT.map(([t, s], i) => {
             const y = 96 + i * 92, cy = y + 28
             return (
