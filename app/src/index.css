@@ -160,7 +160,7 @@
 }
 /* Company Brain illustration: data flowing along the circuits, agents pulsing */
 .cb-flow { stroke-dasharray: 3 14; animation: cbFlow 1.6s linear infinite; }
-.cb-flow.cb-slow { animation-duration: 2.6s; stroke-dasharray: 2 18; }
+.cb-flow.cb-up { animation-duration: 2.4s; stroke-dasharray: 2 22; }
 .cb-node { animation: cbPulse 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes cbFlow { to { stroke-dashoffset: -34; } }
 @keyframes cbPulse { 50% { opacity: .75; } }
