@@ -15,17 +15,17 @@ export function AgentBoard() {
   const rank = (p: Project) => ag.indexOf(p) + 1
   return (
     <div className="overflow-x-auto">
-      <div className="grid min-w-[720px] grid-cols-4 gap-3">
+      <div className="grid min-w-[720px] grid-cols-4 items-stretch gap-3">
         {COLS.map(([k, label], ci) => {
           const items = ag.filter((p) => (p.phase || "descubrimiento") === k)
           return (
-            <div key={k} className="grid content-start gap-2.5">
+            <div key={k} className="grid grid-rows-[auto_1fr] gap-2.5">
               <div className="flex items-center gap-2 px-1 text-[13px] font-medium text-sub">
                 <i className={cn("size-2 rounded-full", ci === 0 ? "bg-line-2" : ci === COLS.length - 1 ? "bg-strong" : "bg-accent")} />{label}
                 <span className="num ml-auto text-faint">{items.length}</span>
                 {ci < COLS.length - 1 && <ChevronRight size={14} className="text-faint" aria-hidden />}
               </div>
-              <div className="grid min-h-[132px] content-start gap-2 rounded-r bg-group/70 p-2">
+              <div className="grid content-start gap-2 rounded-r border border-dashed border-line-2 p-2">
                 {items.map((p) => {
                   const s = savings(p)
                   return (

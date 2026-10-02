@@ -54,7 +54,7 @@ export default function EnterpriseAIPipeline() {
   const box = { fill: "var(--raise)", stroke: "var(--line-2)", strokeWidth: 0.8 }
 
   return (
-    <div className="card mx-auto w-full max-w-[720px] overflow-hidden">
+    <div className="card w-full overflow-hidden">
       <div className="flex items-center justify-between border-b border-line px-[18px] py-[11px]">
         <div className="flex items-center gap-[7px]">
           <motion.span className="inline-block size-[6px] rounded-full bg-accent" animate={{ opacity: [1, 0.25, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
@@ -63,7 +63,7 @@ export default function EnterpriseAIPipeline() {
         <span className="font-mono text-[10px] text-faint">aprobación humana en cada acción</span>
       </div>
 
-      <svg width="100%" viewBox="0 0 580 160" className="block" role="img" aria-label="Flujo de un agente: un evento dispara la consulta al Company Brain, el agente en LangGraph con Claude prepara un borrador, una persona aprueba y el resultado se registra.">
+      <svg width="100%" viewBox="0 0 580 160" className="mx-auto block max-w-[760px] px-4" role="img" aria-label="Flujo de un agente: un evento dispara la consulta al Company Brain, el agente en LangGraph con Claude prepara un borrador, una persona aprueba y el resultado se registra.">
         <defs>
           <marker id="aiPipeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
             <path d="M2 1.5L7.5 5L2 8.5" fill="none" stroke={BLUE} strokeOpacity=".5" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -110,7 +110,7 @@ export default function EnterpriseAIPipeline() {
         ))}
       </svg>
 
-      <div className="h-[48px] border-t border-line px-[18px] py-[10px]">
+      <div className="h-[48px] border-t border-line px-[18px] py-[12px]">
         <div className="flex h-full items-start gap-2">
           <span className="shrink-0 font-mono text-[13px] leading-[1.4] text-accent">›</span>
           <div className="relative h-full flex-1 overflow-hidden">
