@@ -9,7 +9,6 @@ const LEVELS = [
   { n: "2.5", name: "Backends", who: "Apps con sus propios datos", guides: 4, ships: ["skill crear-backend", "API base", "ejemplo KPIs"], open: 8 },
   { n: "3", name: "Agentes", who: "Sobre el stack de Nexo", guides: 7, ships: ["sandbox local"], open: 0 },
 ]
-const RULES = ["Repositorios privados", "Sin secretos en código ni chats", "Agentes solo lectura", "Aprobación humana", "Acceso a sitios explícito"]
 const DOT: Record<string, string> = { activo: "listo", en_construccion: "en_curso" }
 
 export function PracticesMap() {
@@ -19,8 +18,8 @@ export function PracticesMap() {
   return (
     <figure className="m-0 grid gap-3">
       <div className="overflow-x-auto card px-3.5 py-[18px]">
-        <svg viewBox="0 40 1000 332" className="block h-auto w-full min-w-[720px] text-text" role="img"
-          aria-label="Mapa de AI Best Practices: cuatro niveles en escalera, de usuario de Claude a agentes, con sus guías, skills y plantillas, sobre las reglas base.">
+        <svg viewBox="0 40 1000 272" className="block h-auto w-full min-w-[720px] text-text" role="img"
+          aria-label="Mapa de AI Best Practices: cuatro niveles en escalera, de usuario de Claude a agentes, con sus guías, skills y plantillas.">
           <defs><marker id="pmArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="currentColor" opacity=".55" /></marker></defs>
           {LEVELS.map((L, i) => {
             const x = X0 + i * (W + G), top = 150 - i * 32, st = DOT[lv[i]?.status || ""] || "pendiente"
@@ -38,9 +37,6 @@ export function PracticesMap() {
               </g>
             )
           })}
-          <rect className="dg-group" x={X0} y={BASE + 16} width={4 * W + 3 * G} height={44} rx="12" />
-          <text className="dg-g" x={X0 + 16} y={BASE + 43}>REGLAS BASE</text>
-          <text className="dg-l" x={X0 + 120} y={BASE + 43}>{RULES.join("   ·   ")}</text>
         </svg>
       </div>
       <div className="flex flex-wrap gap-[18px] text-[13px] text-sub"><StatusPill status="listo" label="Activo" /><StatusPill status="en_curso" label="En construcción" /><span className="text-faint">Fuente: GitHub · BestPracticesAI, 2 oct</span></div>

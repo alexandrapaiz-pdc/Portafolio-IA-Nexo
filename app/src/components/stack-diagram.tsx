@@ -27,7 +27,7 @@ const NODES: N[] = [
   ["safety", 476, 388, 146, 62, "Content Safety", "", "controles"],
   ["monitor", 632, 388, 166, 62, "Azure Monitor", "App Insights", null],
   ["registry", 808, 388, 132, 62, "Registro de", "contenedores", "containerapps"],
-  ["nav", 976, 260, 150, 42, "Navegador", "", null, "person"],
+  ["portales", 976, 250, 150, 54, "Portales", "Portal de Mundos y más", null, "person"],
   ["claude", 976, 310, 150, 42, "Claude (MCP)", "", "licencias", "person"],
   ["github", 976, 388, 150, 62, "GitHub", "código y guías", "github", "dark"],
 ]
@@ -55,7 +55,7 @@ export function StackDiagram() {
     <figure className="m-0 grid gap-3">
       <div className="overflow-x-auto card px-3.5 py-[18px]">
         <svg viewBox="0 0 1140 464" className="block h-auto w-full min-w-[820px] text-text" role="img"
-          aria-label="Arquitectura del stack, orientada a eventos. Dentro de la suscripción de Azure: una capa de datos en red privada (Databricks, ADLS Gen2, PostgreSQL con pgvector, Key Vault), un bus de eventos donde los agentes publican y se suscriben, y Container Apps con Presidio, LangGraph, Langfuse, Portal Nexo, LiteLLM, workers de Temporal, Dapr y servidores MCP; abajo Foundry, Content Safety, Azure Monitor y el registro de contenedores. Fuera de Azure: JD Edwards por VPN, Microsoft 365, Asana, Jira y Temporal Cloud. Las personas entran por el navegador o por Claude vía MCP.">
+          aria-label="Arquitectura del stack, orientada a eventos. Dentro de la suscripción de Azure: una capa de datos en red privada (Databricks, ADLS Gen2, PostgreSQL con pgvector, Key Vault), un bus de eventos donde los agentes publican y se suscriben, y Container Apps con Presidio, LangGraph, Langfuse, Portal Nexo, LiteLLM, workers de Temporal, Dapr y servidores MCP; abajo Foundry, Content Safety, Azure Monitor y el registro de contenedores. Fuera de Azure: JD Edwards por VPN, Microsoft 365, Asana, Jira y Temporal Cloud. Las personas entran por los portales, como Portal de Mundos, o por Claude vía MCP.">
           <defs>{(Object.keys(STROKE) as C[]).map((c) => <marker key={c} id={"sd-" + c} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill={STROKE[c]} /></marker>)}</defs>
           <text className="dg-g" x={10} y={48}>FUERA DE AZURE</text>
           <rect className="dg-azure" x={232} y={5} width={722} height={455} rx="16" />
@@ -68,7 +68,7 @@ export function StackDiagram() {
           <text className="dg-s" x={593} y={198} textAnchor="middle" style={{ fill: "#fff", opacity: .9 }}>los agentes publican y se suscriben; nadie se llama directo</text>
           <rect x={246} y={230} width={694} height={134} rx="12" fill="var(--accent-soft)" stroke="var(--accent)" strokeOpacity=".45" />
           <text className="dg-g" x={258} y={250} style={{ fill: "var(--accent-ink)" }}>CONTAINER APPS · CONTENEDORES DOCKER · RED PRIVADA</text>
-          <text className="dg-g" x={976} y={248} style={{ fill: "var(--accent-ink)" }}>PERSONAS</text>
+          <text className="dg-g" x={976} y={240} style={{ fill: "var(--accent-ink)" }}>INTERFACES</text>
           {EDGES.map(([d, c, dash, both], i) => (
             <path key={i} d={d} fill="none" stroke={STROKE[c]} strokeWidth={c === "gray" ? 1.25 : 1.6} strokeDasharray={dash ? "5 4" : undefined}
               markerEnd={`url(#sd-${c})`} markerStart={both ? `url(#sd-${c})` : undefined} />
@@ -81,7 +81,7 @@ export function StackDiagram() {
               <g key={k}>
                 <rect x={x} y={y} width={w} height={h} rx="10" fill={fill} stroke={tone === "person" || tone === "dark" ? "none" : "var(--line-2)"} />
                 <text className="dg-t" x={x + 12} y={one ? y + h / 2 + 4.5 : y + 24} style={ink ? { fill: ink } : undefined}>{t}</text>
-                {sub && <text className="dg-s" x={x + 12} y={y + 42} style={ink ? { fill: ink, opacity: .85 } : undefined}>{sub}</text>}
+                {sub && <text className="dg-s" x={x + 12} y={y + (h < 60 ? 38 : 42)} style={ink ? { fill: ink, opacity: .85 } : undefined}>{sub}</text>}
                 {c && <circle className={"dg-d " + st(c)} cx={x + w - 12} cy={y + 13} r="4" style={ink ? { stroke: "#fff" } : undefined} />}
               </g>
             )
