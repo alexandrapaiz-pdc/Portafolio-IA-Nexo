@@ -2,6 +2,7 @@ import { useRouter } from "@/lib/router"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { LiquidButton } from "@/components/ui/liquid-glass-button"
 import { Footer, Section, SectionHead, SecP } from "@/components/shared"
+import { RobotBand } from "@/components/robot-band"
 
 const ISTACK = [
   ["Propósito", "El MTP y las prioridades del portafolio"],
@@ -47,6 +48,8 @@ export function Home() {
           </div>
         </div>
       </Section>
+
+      <RobotBand caption="Haz clic en el robot." />
 
       <Section id="marco">
         <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
