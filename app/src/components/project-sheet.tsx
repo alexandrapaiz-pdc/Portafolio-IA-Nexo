@@ -10,6 +10,10 @@ import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { H5, StatusPill, UpdateRow, Empty } from "./shared"
 
+// Tasks, blockers, discovery checklists and updates are kept in the data but hidden: the sheet shows only
+// what matters once a project runs (phase, hours freed, execution KPIs, value stream).
+const SHOW_DETAIL = false
+
 function Spark({ p, k }: { p: Project; k: Kpi }) {
   const { updates } = useStore()
   const pts = updates.filter((u) => u.projectId === p.id && u.kpiId === k.id && isNum(u.value)).map((u) => u.value as number).reverse()
@@ -27,9 +31,7 @@ function Spark({ p, k }: { p: Project; k: Kpi }) {
   )
 }
 
-// Tasks, blockers, discovery checklists and updates are kept in the data but hidden: the sheet shows only
-// what matters once a project runs (phase, hours freed, execution KPIs, value stream).
-const SHOW_DETAIL = false
+const DEPLOYED = false // show KPI trends once an agent is in production
 
 export function ProjectSheet() {
   const { project: id, closeProject } = useRouter()
@@ -138,7 +140,7 @@ export function ProjectSheet() {
             ) : (
               <>
                 <div className="num grid grid-cols-3 gap-3 px-5 py-[18px]">
-                  {[["Manual hoy", isNum(s.baseline) ? nf(s.baseline) : "—", ""], ["Liberadas", s.saved != null ? nf(s.saved) : "—", "text-accent"], ["Potencial", s.pot != null ? nf(s.pot) : "—", ""]].map(([k, v, c]) => (
+                  {[["Manual hoy", isNum(s.baseline) ? nf(s.baseline) : "Pendiente", ""], ["Liberadas", s.saved != null ? nf(s.saved) : "Pendiente", "text-accent"], ["Potencial", s.pot != null ? nf(s.pot) : "Pendiente", ""]].map(([k, v, c]) => (
                     <div key={k} className="grid gap-0.5"><span className="text-xs text-faint">{k}</span><span className={cn("text-2xl font-semibold tracking-[-.03em]", c)}>{v}</span></div>
                   ))}
                 </div>
@@ -162,9 +164,10 @@ export function ProjectSheet() {
             ) : (
               <div key={k.id} className="grid min-w-0 content-start gap-2 card px-5 py-[18px]">
                 <div className="text-[13px] text-sub">{k.name}</div>
-                {(() => { const cur = isNum(k.current) ? k.current : isNum(k.baseline) ? k.baseline : null; return <div className={cn("num text-[30px] font-semibold leading-[1.05] tracking-[-.04em]", cur == null ? "text-[15px] font-medium tracking-normal text-faint" : "text-accent")}>{cur == null ? "Línea base pendiente" : fnum(cur, k.unit)}</div> })()}
-                <Spark p={p} k={k} />
-                <div className="num flex flex-wrap gap-4 text-[13px] text-faint"><span>Base <b className="font-medium text-text">{fnum(k.baseline, k.unit)}</b></span><span>Meta <b className="font-medium text-text">{fnum(k.target, k.unit)}</b></span>{k.updated && <span>{fdate(k.updated)}</span>}</div>
+                {/* execution KPIs only count once the agent is deployed; none is yet */}
+                <div className="text-[15px] font-medium text-faint">Pendiente</div>
+                {DEPLOYED && <Spark p={p} k={k} />}
+                <div className="num flex flex-wrap gap-4 text-[13px] text-faint"><span>Base <b className="font-medium text-text">{isNum(k.baseline) ? fnum(k.baseline, k.unit) : "Pendiente"}</b></span><span>Meta <b className="font-medium text-text">{isNum(k.target) ? fnum(k.target, k.unit) : "Pendiente"}</b></span>{k.updated && <span>{fdate(k.updated)}</span>}</div>
                 {k.note && <div className="text-[13px] text-sub">{k.note}</div>}
               </div>
             ))}

@@ -88,7 +88,7 @@ export function StackDiagram() {
           })}
         </svg>
       </div>
-      <div className="flex flex-wrap gap-[18px] text-[12.5px] text-sub"><span>Estado de cada pieza:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /><span className="text-faint">Orientado a eventos · septiembre 2026</span></div>
+      <div className="flex flex-wrap items-center gap-x-[18px] gap-y-1 text-[13px] leading-5 text-sub [&_.status]:py-0"><span>Estado de cada pieza:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /><span className="text-faint">Orientado a eventos · septiembre 2026</span></div>
     </figure>
   )
 }
