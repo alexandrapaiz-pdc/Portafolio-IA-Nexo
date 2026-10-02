@@ -35,7 +35,6 @@ function PulsingDot({ cx, cy, color, duration, delay = 0, r = 2.8 }: { cx: numbe
 
 const label = { fontSize: 9, fill: "var(--faint)", letterSpacing: ".08em", fontFamily: "var(--font)" }
 const title = { fontSize: 11, fill: "var(--navy)", fontFamily: "var(--font)", fontWeight: 500 }
-const mono = { fontSize: 8.5, fill: "var(--faint)", fontFamily: "ui-monospace, Menlo, monospace" }
 
 export default function EnterpriseAIPipeline() {
   const [i, setI] = useState(0)
@@ -85,21 +84,17 @@ export default function EnterpriseAIPipeline() {
         <rect x="16" y="66" width="100" height="44" rx="9" {...box} />
         <text x="66" y="83" textAnchor="middle" style={label}>DISPARADOR</text>
         <text x="66" y="100" textAnchor="middle" style={title}>Evento del bus</text>
-        <text x="66" y="124" textAnchor="middle" style={mono}>o solicitud</text>
 
         <rect x="158" y="66" width="110" height="44" rx="9" {...box} />
         <text x="213" y="83" textAnchor="middle" style={label}>COMPANY BRAIN</text>
         <text x="213" y="100" textAnchor="middle" style={title}>Contexto</text>
-        <text x="213" y="124" textAnchor="middle" style={mono}>pgvector · Databricks</text>
 
-        <rect x="306" y="53" width="105" height="70" rx="11" fill={NAVY} />
-        <rect x="318" y="53.5" width="80" height="1" rx="0.5" fill={ORANGE} fillOpacity=".8" />
-        <text x="358" y="78" textAnchor="middle" style={{ ...label, fill: "rgba(255,255,255,.6)" }}>AGENTE</text>
-        <text x="358" y="97" textAnchor="middle" style={{ ...title, fill: "#fff", fontSize: 13 }}>Razonando</text>
+        <rect x="306" y="53" width="105" height="70" rx="11" fill="#fff4ee" stroke={ORANGE} strokeOpacity=".55" strokeWidth="1" />
+                <text x="358" y="78" textAnchor="middle" style={{ ...label, fill: "#d94400", fillOpacity: .75 }}>AGENTE</text>
+        <text x="358" y="97" textAnchor="middle" style={{ ...title, fontSize: 13 }}>Razonando</text>
         <PulsingDot cx={346} cy={113} color={ORANGE} duration={1.2} delay={0} />
         <PulsingDot cx={358} cy={113} color={ORANGE} duration={1.2} delay={0.4} />
         <PulsingDot cx={370} cy={113} color={ORANGE} duration={1.2} delay={0.8} />
-        <text x="358" y="139" textAnchor="middle" style={mono}>LangGraph · Claude</text>
 
         {([["Borrador listo", 35, false], ["Aprobación", 73, true], ["Registro y traza", 111, true]] as [string, number, boolean][]).map(([t, y, pulse], k) => (
           <g key={t}>

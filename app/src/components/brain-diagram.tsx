@@ -55,7 +55,6 @@ export function BrainDiagram() {
               </g>
             )
           })}
-          <text className="dg-g" x={CX} y={42} textAnchor="middle" style={{ fill: "var(--navy)" }}>COMPANY BRAIN · DATABRICKS</text>
           {OUT.map(([t, s], i) => {
             const y = 96 + i * 92, cy = y + 28
             return (
