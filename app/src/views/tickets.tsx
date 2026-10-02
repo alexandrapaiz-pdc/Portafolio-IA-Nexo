@@ -107,7 +107,7 @@ function NewTicket({ onClose }: { onClose: () => void }) {
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent title="Nueva solicitud">
-        <div className="grid gap-2.5"><h2 className="text-[clamp(30px,5vw,40px)] leading-[1.05] tracking-[-.04em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Entre más concreto, más rápido se evalúa. Los números aproximados están bien.</p></div>
+        <div className="grid gap-2.5"><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Entre más concreto, más rápido se evalúa. Los números aproximados están bien.</p></div>
         {!db || !me ? <p className="text-[17px] text-sub">Inicia sesión en claude.ai con tu cuenta de Grupo PDC para enviar una solicitud.</p> : (
           <form className="grid gap-3.5" onSubmit={async (e) => {
             e.preventDefault(); if (!f.title.trim() || !f.problem.trim()) return; setBusy(true)
@@ -152,7 +152,7 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
       <DialogContent title={t.code || "Solicitud"}>
         <div className="grid gap-3">
           <div className="flex flex-wrap gap-3.5 text-[13px] text-faint"><TStat s={st} />{tr.priority ? <b className="font-semibold text-accent-ink">Prioridad {tr.priority}</b> : null}<span>{t.code}</span></div>
-          <h2 className="text-[clamp(30px,5vw,40px)] leading-[1.05] tracking-[-.04em]">{t.title}</h2>
+          <h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">{t.title}</h2>
           <p className="max-w-[36em] text-[17px] text-sub">{t.problem}</p>
         </div>
         <div><h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">Detalle</h5>

@@ -77,10 +77,10 @@ export function Portfolio() {
           return (
             <GlowCard key={g.id} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
             <button type="button" onClick={() => jump(g.sec)} className="relative grid h-full min-w-0 cursor-pointer content-start gap-2.5 rounded-2xl border-0 bg-transparent p-6 text-left">
-              <span className="text-[clamp(26px,2.8vw,32px)] font-semibold leading-[1.05] tracking-[-.04em]">{g.name}</span>
+              <span className="text-[clamp(23px,2.4vw,28px)] font-medium leading-[1.1] tracking-[-.03em]">{g.name}</span>
               <h3 className="text-base font-medium leading-snug tracking-[-.015em] text-sub">{g.line}</h3>
               <p className="text-[13px] text-faint">{lead?.blocker ? `Bloqueo: ${lead.blocker}` : g.id === "agentes" && ag[0] ? `Prioridad 1: ${ag[0].name}` : ""}</p>
-              <div className="mt-1.5 flex items-baseline gap-2"><b className="num text-[34px] font-semibold leading-none tracking-[-.04em]">{num}</b><span className="text-[13px] text-faint">{label}</span></div>
+              <div className="mt-1.5 flex items-baseline gap-2"><b className="num text-[30px] font-semibold leading-none tracking-[-.04em]">{num}</b><span className="text-[13px] text-faint">{label}</span></div>
               <div className="bar mt-0.5"><i style={{ width: w + "%" }} /></div>
             </button>
             </GlowCard>
@@ -106,8 +106,8 @@ export function Portfolio() {
                   const u = unlocks(c.id)
                   return (
                     <div key={c.id} className="row grid-cols-[minmax(0,1fr)_auto_auto] max-sm:grid-cols-[minmax(0,1fr)_auto]">
-                      <div className="min-w-0"><div className="font-medium">{c.name}{c.key && <span className="ml-2 text-[11px] font-semibold text-accent-ink">Bloqueador principal</span>}</div><div className="mt-0.5 text-[13px] text-sub">{[c.owner, c.note].filter(Boolean).join(" · ")}</div></div>
-                      <span className="num min-w-[92px] text-right text-[12.5px] text-faint max-sm:hidden">{u ? `${u} ${u === 1 ? "proyecto" : "proyectos"}` : "Base"}</span>
+                      <div className="min-w-0"><div className="font-medium">{c.name}{c.key && <span className="ml-2 text-xs font-semibold text-accent-ink">Bloqueador principal</span>}</div><div className="mt-0.5 text-[13px] text-sub">{[c.owner, c.note].filter(Boolean).join(" · ")}</div></div>
+                      <span className="num min-w-[92px] text-right text-[13px] text-faint max-sm:hidden">{u ? `${u} ${u === 1 ? "proyecto" : "proyectos"}` : "Base"}</span>
                       <StatusPill status={c.status} label={STATUS[c.status]} onClick={canWrite ? () => { const ns = NEXT_STATUS[c.status] || "en_curso"; write(() => db.doc("components/" + c.id).update({ status: ns, updated: today() }), `${c.name}: ${STATUS[ns]}`) } : undefined} />
                     </div>
                   )

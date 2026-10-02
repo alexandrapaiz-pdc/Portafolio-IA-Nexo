@@ -49,7 +49,7 @@ export function VsmDiagram({ steps }: { steps: VsmStep[] }) {
 
 export function VsmLegend({ note }: { note?: string }) {
   return (
-    <div className="flex flex-wrap items-center gap-4 text-[12.5px] text-sub">
+    <div className="flex flex-wrap items-center gap-4 text-[13px] text-sub">
       <span><i className="legend-swatch" />Manual</span><span><i className="legend-swatch mixto" />Humano + agente</span><span><i className="legend-swatch agente" />Agente</span>
       <span>{note ?? "△ espera antes del paso · escalera: espera arriba, proceso abajo"}</span>
     </div>
@@ -131,7 +131,7 @@ export function VsmSection({ p, onEditingChange }: { p: Project; onEditingChange
       </div>
       <div className="overflow-x-auto card px-3.5 py-4"><VsmDiagram steps={steps} /></div>
       <VsmLegend />
-      {(tabNote || delta) && <p className="text-[12.5px] text-sub">{tabNote}{delta}</p>}
+      {(tabNote || delta) && <p className="text-[13px] text-sub">{tabNote}{delta}</p>}
     </div>
   )
 }

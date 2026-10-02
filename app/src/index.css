@@ -47,6 +47,9 @@
   --color-input: var(--line-2);
   --color-ring: var(--accent);
   --font-sans: var(--font);
+  /* Type scale: a lighter "semibold" and a readable minimum for small text */
+  --font-weight-semibold: 560;
+  --text-xs: 0.78125rem;
   --radius-r: var(--r);
   --radius-r-sm: var(--r-sm);
 }
@@ -57,7 +60,7 @@
   html, body { margin: 0; background: var(--bg) !important; }
   html { overflow-x: clip; }
   body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.47; letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
-  h1, h2, h3, h4, h5 { margin: 0; font-weight: 600; letter-spacing: -.03em; text-wrap: balance; }
+  h1, h2, h3, h4, h5 { margin: 0; font-weight: 550; letter-spacing: -.025em; text-wrap: balance; }
   p { margin: 0; }
   button { cursor: pointer; font: inherit; color: inherit; letter-spacing: inherit; }
   input, select, textarea { font: inherit; color: inherit; }
@@ -70,10 +73,10 @@
   .wrap { max-width: 1000px; margin: 0 auto; padding-inline: 22px; }
   .eyebrow { display: inline-flex; align-items: center; gap: 8px; justify-self: start; padding: 5px 12px 5px 10px; border-radius: 999px; border: 1px solid rgba(15, 23, 42, .08); background: rgba(255, 255, 255, .7); backdrop-filter: blur(8px); box-shadow: 0 1px 2px rgba(15, 23, 42, .04); font-size: 13px; font-weight: 500; color: var(--sub); }
   .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .h-display { font-size: clamp(44px, 7.4vw, 80px); line-height: 1.02; letter-spacing: -.045em; font-weight: 600; }
-  .h-display .sub { display: block; font-size: .5em; line-height: 1.1; letter-spacing: -.035em; margin-top: .18em; max-width: 16em; color: var(--faint); background: linear-gradient(100deg, #00216f 0%, #2f5bff 55%, #8aa2ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-bottom: .06em; }
-  .lead { font-size: clamp(18px, 2.3vw, 23px); line-height: 1.38; color: var(--sub); max-width: 34em; letter-spacing: -.02em; }
-  .h-sec { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.08; }
+  .h-display { font-size: clamp(40px, 6vw, 64px); line-height: 1.04; letter-spacing: -.04em; font-weight: 500; }
+  .h-display .sub { display: block; font-size: .5em; line-height: 1.1; letter-spacing: -.035em; margin-top: .18em; max-width: 16em; color: var(--faint); background: linear-gradient(100deg, #2f5bff 0%, #5b7fff 50%, #93a9ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-bottom: .06em; }
+  .lead { font-size: clamp(17px, 1.9vw, 20px); line-height: 1.5; font-weight: 400; color: var(--sub); max-width: 34em; letter-spacing: -.02em; }
+  .h-sec { font-size: clamp(28px, 3.4vw, 36px); line-height: 1.12; font-weight: 500; letter-spacing: -.03em; }
   /* Same glass as the GlowCards; a soft blue spotlight follows the pointer (--mx/--my set in App). */
   .card, .group-box {
     background: radial-gradient(240px 240px at calc(var(--mx, -999) * 1px) calc(var(--my, -999) * 1px), hsl(226 100% 70% / .07), transparent) fixed, rgba(248, 250, 252, .72);

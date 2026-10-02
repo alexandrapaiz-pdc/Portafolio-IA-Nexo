@@ -46,8 +46,8 @@ export function Stat({ k, v, unit, sub, accent }: { k: string; v: ReactNode; uni
   return (
     <div className="grid min-w-0 gap-1.5 py-[26px] pr-5 [&+&]:border-l [&+&]:border-line [&+&]:pl-5 max-md:[&:nth-child(3)]:border-l-0 max-md:[&:nth-child(3)]:pl-0 max-md:[&:nth-child(n+3)]:border-t">
       <span className="text-[13px] text-sub">{k}</span>
-      <span className={cn("num flex flex-wrap items-baseline text-[44px] font-semibold leading-none tracking-[-.04em]", accent && "text-accent")}>{v}{unit && <small className="ml-0.5 text-xl font-medium tracking-[-.02em] text-faint">{unit}</small>}</span>
-      {sub && <span className="text-[12.5px] text-faint">{sub}</span>}
+      <span className={cn("num flex flex-wrap items-baseline text-[38px] font-semibold leading-none tracking-[-.04em]", accent && "text-accent")}>{v}{unit && <small className="ml-0.5 text-xl font-medium tracking-[-.02em] text-faint">{unit}</small>}</span>
+      {sub && <span className="text-[13px] text-faint">{sub}</span>}
     </div>
   )
 }

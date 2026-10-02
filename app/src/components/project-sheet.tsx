@@ -82,8 +82,8 @@ export function ProjectSheet() {
               const cls = cn("grid gap-2 border-0 bg-transparent p-0 text-left text-xs text-faint", i === pi && "font-semibold text-text")
               const bar = <i className={cn("block h-1 rounded-sm bg-line-2", i < pi && "bg-strong", i === pi && "bg-accent")} />
               return canWrite
-                ? <button key={pid} type="button" className={cls} onClick={() => pid !== p.phase && write(() => pdoc().update({ phase: pid, paused: false }), "Fase: " + l)}>{bar}<span className="max-sm:text-[10.5px]">{l}</span></button>
-                : <div key={pid} className={cls}>{bar}<span className="max-sm:text-[10.5px]">{l}</span></div>
+                ? <button key={pid} type="button" className={cls} onClick={() => pid !== p.phase && write(() => pdoc().update({ phase: pid, paused: false }), "Fase: " + l)}>{bar}<span className="max-sm:text-xs">{l}</span></button>
+                : <div key={pid} className={cls}>{bar}<span className="max-sm:text-xs">{l}</span></div>
             })}
           </div>
         </div>
@@ -158,10 +158,10 @@ export function ProjectSheet() {
             ) : (
               <div key={k.id} className="grid min-w-0 content-start gap-2 card px-5 py-[18px]">
                 <div className="text-[13px] text-sub">{k.name}</div>
-                {(() => { const cur = isNum(k.current) ? k.current : isNum(k.baseline) ? k.baseline : null; return <div className={cn("num text-[34px] font-semibold leading-[1.05] tracking-[-.04em]", cur == null ? "text-[15px] font-medium tracking-normal text-faint" : "text-accent")}>{cur == null ? "Línea base pendiente" : fnum(cur, k.unit)}</div> })()}
+                {(() => { const cur = isNum(k.current) ? k.current : isNum(k.baseline) ? k.baseline : null; return <div className={cn("num text-[30px] font-semibold leading-[1.05] tracking-[-.04em]", cur == null ? "text-[15px] font-medium tracking-normal text-faint" : "text-accent")}>{cur == null ? "Línea base pendiente" : fnum(cur, k.unit)}</div> })()}
                 <Spark p={p} k={k} />
-                <div className="num flex flex-wrap gap-4 text-[12.5px] text-faint"><span>Base <b className="font-medium text-text">{fnum(k.baseline, k.unit)}</b></span><span>Meta <b className="font-medium text-text">{fnum(k.target, k.unit)}</b></span>{k.updated && <span>{fdate(k.updated)}</span>}</div>
-                {k.note && <div className="text-[12.5px] text-sub">{k.note}</div>}
+                <div className="num flex flex-wrap gap-4 text-[13px] text-faint"><span>Base <b className="font-medium text-text">{fnum(k.baseline, k.unit)}</b></span><span>Meta <b className="font-medium text-text">{fnum(k.target, k.unit)}</b></span>{k.updated && <span>{fdate(k.updated)}</span>}</div>
+                {k.note && <div className="text-[13px] text-sub">{k.note}</div>}
               </div>
             ))}
           </div></div>

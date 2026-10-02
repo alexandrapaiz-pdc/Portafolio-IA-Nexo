@@ -26,7 +26,7 @@ export function Home() {
         <h1 className="h-display">Nexo IA.<span className="sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
         <div className="mt-2 grid max-w-[44em] gap-2 border-t border-line pb-1 pt-[22px]">
           <span className="text-xs font-semibold tracking-[.02em] text-accent">Nuestro MTP · Propósito Transformador Masivo</span>
-          <p className="text-[clamp(24px,3.2vw,34px)] font-semibold leading-[1.15] tracking-[-.035em] text-balance">Que cada proceso sistemático corra con IA.</p>
+          <p className="text-[clamp(22px,2.6vw,28px)] font-medium leading-[1.2] tracking-[-.03em] text-balance">Que cada proceso sistemático corra con IA.</p>
           <p className="text-base tracking-[-.015em] text-sub">Abierta como nuestros números, segura como nuestro estándar.</p>
         </div>
         <p className="lead">El stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes. Medimos el avance en horas de trabajo manual liberadas y en los KPIs de cada dolor de negocio.</p>
@@ -37,12 +37,12 @@ export function Home() {
       <Section id="mision">
         <SectionHead eyebrow="Misión" title="De libro abierto a código abierto." />
         <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start gap-10 max-[820px]:grid-cols-1 max-[820px]:gap-6">
-          <blockquote className="m-0 text-[clamp(22px,2.8vw,30px)] font-medium leading-tight tracking-[-.03em]">
+          <blockquote className="m-0 text-[clamp(20px,2.2vw,25px)] font-medium leading-tight tracking-[-.03em]">
             Grupo PDC ya es una empresa de libro abierto: los números son de todos. <span className="text-faint">La misión de Nexo IA es que lo que construimos con IA también lo sea, abierto y editable por cualquier líder.</span>
           </blockquote>
           <div className="grid gap-4 text-[15px] text-sub">
             <p><b className="font-semibold text-text">InnerSource.</b> Prácticas de código abierto, pero dentro de la organización: el código, las guías y los agentes se ven, se reutilizan y cualquiera puede proponer mejoras, con guardrails.</p>
-            <p><b className="font-semibold text-text">Así trabajan los laboratorios de IA de frontera.</b> Ahí hasta mercadeo programa: con lenguaje natural, quien conoce el problema edita la solución directamente, sin esperar a un equipo técnico.</p>
+            <p><b className="font-semibold text-text">Así trabajan los laboratorios de IA de frontera.</b> En empresas como Anthropic, equipos que no son de ingeniería, como mercadeo, legal o finanzas, construyen sus propias herramientas con agentes de programación: describen en lenguaje natural lo que necesitan y el agente escribe el código. Quien conoce el proceso arma la primera versión; ingeniería la revisa, la asegura y la lleva a producción.</p>
             <p><b className="font-semibold text-text">El camino.</b> Primero Nexo construye y prueba el marco; después cada área desarrolla sus propios agentes en autoservicio.</p>
           </div>
         </div>
@@ -65,7 +65,7 @@ export function Home() {
           <div className="grid grid-cols-6 border-t border-line max-[820px]:grid-cols-2">
             {ISTACK.map(([n, d], i) => (
               <div key={n} className="grid min-w-0 content-start gap-1 py-4 pr-3.5 [&+&]:border-l [&+&]:border-line [&+&]:pl-3.5 max-[820px]:[&:nth-child(odd)]:border-l-0 max-[820px]:[&:nth-child(odd)]:pl-0 max-[820px]:[&:nth-child(n+3)]:border-t">
-                <b className="text-xs font-semibold text-accent">{i + 1}</b><span className="text-[15px] font-semibold tracking-[-.02em]">{n}</span><p className="text-[12.5px] text-sub">{d}</p>
+                <b className="text-xs font-semibold text-accent">{i + 1}</b><span className="text-[15px] font-semibold tracking-[-.02em]">{n}</span><p className="text-[13px] text-sub">{d}</p>
               </div>
             ))}
           </div>
