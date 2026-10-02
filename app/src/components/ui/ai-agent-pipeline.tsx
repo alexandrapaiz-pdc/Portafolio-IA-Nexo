@@ -19,18 +19,19 @@ const messages = [
   "En espera del siguiente evento del bus…",
 ]
 
+const SLOW = 1.8 // global pace: every motion runs this many times slower than the original
 const BLUE = "#2f5bff", NAVY = "#00216f", ORANGE = "#ff5100"
 
 function AnimatedDot({ path, duration, delay, size, opacity, color = BLUE }: { path: string; duration: number; delay: number; size: number; opacity: number; color?: string }) {
   return (
     <circle r={size} fill={color} opacity={opacity}>
-      <animateMotion dur={`${duration}s`} repeatCount="indefinite" begin={`${delay}s`} path={path} />
+      <animateMotion dur={`${duration * SLOW}s`} repeatCount="indefinite" begin={`${delay * SLOW}s`} path={path} />
     </circle>
   )
 }
 
 function PulsingDot({ cx, cy, color, duration, delay = 0, r = 2.8 }: { cx: number; cy: number; color: string; duration: number; delay?: number; r?: number }) {
-  return <motion.circle cx={cx} cy={cy} r={r} fill={color} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }} />
+  return <motion.circle cx={cx} cy={cy} r={r} fill={color} animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: duration * SLOW, delay: delay * SLOW, repeat: Infinity, ease: "easeInOut" }} />
 }
 
 const label = { fontSize: 9, fill: "var(--faint)", letterSpacing: ".08em", fontFamily: "var(--font)" }
@@ -39,7 +40,7 @@ const title = { fontSize: 11, fill: "var(--navy)", fontFamily: "var(--font)", fo
 export default function EnterpriseAIPipeline() {
   const [i, setI] = useState(0)
   useEffect(() => {
-    const t = setInterval(() => setI((p) => (p + 1) % messages.length), 2700)
+    const t = setInterval(() => setI((p) => (p + 1) % messages.length), 4200)
     return () => clearInterval(t)
   }, [])
 
@@ -56,7 +57,7 @@ export default function EnterpriseAIPipeline() {
     <div className="card w-full overflow-hidden">
       <div className="flex items-center justify-between border-b border-line px-[18px] py-[11px]">
         <div className="flex items-center gap-[7px]">
-          <motion.span className="inline-block size-[6px] rounded-full bg-accent" animate={{ opacity: [1, 0.25, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.span className="inline-block size-[6px] rounded-full bg-accent" animate={{ opacity: [1, 0.25, 1] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }} />
           <span className="font-mono text-[10px] tracking-[0.1em] text-faint">CÓMO CORRE UN AGENTE · ILUSTRATIVO</span>
         </div>
         <span className="font-mono text-[10px] text-faint">aprobación humana en cada acción</span>
@@ -105,13 +106,13 @@ export default function EnterpriseAIPipeline() {
         ))}
       </svg>
 
-      <div className="h-[48px] border-t border-line px-[18px] py-[12px]">
-        <div className="flex h-full items-start gap-2">
-          <span className="shrink-0 font-mono text-[13px] leading-[1.4] text-accent">›</span>
-          <div className="relative h-full flex-1 overflow-hidden">
+      <div className="h-[48px] border-t border-line px-[18px]">
+        <div className="flex h-full items-center gap-2">
+          <span className="shrink-0 font-mono text-[12px] leading-5 text-accent">›</span>
+          <div className="relative h-5 flex-1 overflow-hidden">
             <AnimatePresence mode="wait">
-              <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.25 }}
-                className="absolute inset-0 font-mono text-[11.5px] leading-[1.55] text-sub">{messages[i]}</motion.div>
+              <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.4 }}
+                className="absolute inset-0 truncate font-mono text-[12px] leading-5 text-sub">{messages[i]}</motion.div>
             </AnimatePresence>
           </div>
         </div>
