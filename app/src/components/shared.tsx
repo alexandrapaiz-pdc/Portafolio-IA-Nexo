@@ -74,8 +74,10 @@ export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
   const vsmSteps = p.vsm?.asis?.length || 0
   return (
     <button type="button" onClick={() => openProject(p.id)}
-      className="row w-full cursor-pointer border-0 bg-transparent text-left hover:bg-black/[.025] grid-cols-[44px_minmax(0,1fr)_150px_170px_16px] max-[820px]:grid-cols-[36px_minmax(0,1fr)_16px] [&+&]:before:left-20">
-      <span className="num text-[26px] font-semibold leading-none tracking-[-.04em] max-[820px]:text-[22px]">{rank ?? ""}</span>
+      className={cn("row w-full cursor-pointer border-0 bg-transparent text-left hover:bg-black/[.025]",
+        rank ? "grid-cols-[44px_minmax(0,1fr)_150px_170px_16px] max-[820px]:grid-cols-[36px_minmax(0,1fr)_16px] [&+&]:before:left-20"
+          : "grid-cols-[minmax(0,1fr)_150px_170px_16px] max-[820px]:grid-cols-[minmax(0,1fr)_16px]")}>
+      {rank && <span className="num text-[26px] font-semibold leading-none tracking-[-.04em] max-[820px]:text-[22px]">{rank}</span>}
       <div className="min-w-0">
         <div className="text-[17px] font-semibold tracking-[-.02em]">{p.name}</div>
         <div className="mt-0.5 text-[13px] text-sub">{[p.sponsor, phaseLabel(p)].filter(Boolean).join(" · ")}</div>
