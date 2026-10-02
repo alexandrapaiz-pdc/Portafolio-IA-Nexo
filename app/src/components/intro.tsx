@@ -18,7 +18,7 @@ export function Intro() {
   }
   useEffect(() => {
     if (!show) return
-    const t = setTimeout(close, 5000)
+    const t = setTimeout(close, 10000)
     const k = (e: KeyboardEvent) => { if (e.key === "Escape" || e.key === "Enter") close() }
     window.addEventListener("keydown", k)
     return () => { clearTimeout(t); window.removeEventListener("keydown", k) }
@@ -36,7 +36,7 @@ export function Intro() {
         <Button variant="glass" size="lg" className="mt-2" onClick={(e) => { e.stopPropagation(); close() }}>Entrar</Button>
       </div>
       <div aria-hidden className="absolute bottom-[calc(36px+env(safe-area-inset-bottom,0px))] left-1/2 h-0.5 w-[120px] -translate-x-1/2 overflow-hidden rounded-sm bg-white/20">
-        <i className="block h-full w-full origin-left bg-white motion-safe:animate-[introBar_5s_linear_forwards]" />
+        <i className="block h-full w-full origin-left bg-white motion-safe:animate-[introBar_10s_linear_forwards]" />
       </div>
     </div>
   )

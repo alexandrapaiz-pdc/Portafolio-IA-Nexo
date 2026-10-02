@@ -29,7 +29,7 @@ export function Nav() {
           {TABS.map((t) => (
             <button key={t.v} data-v={t.v} type="button" onClick={() => go(t.v)} aria-current={view === t.v ? "page" : undefined}
               className={cn("flex-none whitespace-nowrap rounded-full border-0 bg-transparent px-3 py-[5px] text-[13px] font-medium text-sub max-sm:px-2.5", view === t.v && "bg-group text-text")}>
-              {t.label}{t.soon && <Badge variant="soon" className="ml-1.5 align-[1px]">PRONTO</Badge>}
+              {t.label}{t.soon && <Badge variant="soon" className="ml-1.5 align-[1px]">EN CONSTRUCCIÓN</Badge>}
             </button>
           ))}
         </div>
