@@ -21,7 +21,7 @@ export function RobotBand({ word = "NEXO IA", caption }: { word?: string; captio
     return () => io.disconnect()
   }, [])
   return (
-    <div ref={ref} aria-hidden className="relative mt-20 h-[clamp(240px,26vw,300px)] overflow-hidden rounded-[28px]"
+    <div ref={ref} aria-hidden className="relative mt-20 snap-center h-[clamp(240px,26vw,300px)] overflow-hidden rounded-[28px]"
       style={{ background: "radial-gradient(ellipse 55% 75% at 50% 45%, #ffffff 0%, #f1f4fb 60%, #e8edf7 100%)" }}>
       <div className="pointer-events-none absolute inset-0 grid place-items-center">
         <span className="translate-y-6 select-none whitespace-nowrap text-[clamp(48px,9vw,120px)] font-semibold leading-none tracking-[-.05em] text-navy opacity-[.06]">{word}</span>

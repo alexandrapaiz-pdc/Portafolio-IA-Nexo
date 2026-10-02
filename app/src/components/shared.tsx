@@ -18,7 +18,7 @@ export function SectionHead({ eyebrow, title, children, className }: { eyebrow: 
 export const SecP = ({ children }: { children: ReactNode }) => <p className="text-[17px] tracking-[-.015em] text-sub">{children}</p>
 
 export function Section({ id, children, className }: { id?: string; children: ReactNode; className?: string }) {
-  return <section id={id} className={cn("grid scroll-mt-[60px] gap-[26px] pt-[84px]", className)}>{children}</section>
+  return <section id={id} className={cn("grid snap-start scroll-mt-[60px] gap-[26px] pt-[84px]", className)}>{children}</section>
 }
 
 export function Hero({ eyebrow, title, sub, children, className }: { eyebrow: string; title: string; sub?: string; children?: ReactNode; className?: string }) {

@@ -40,7 +40,8 @@ export function Tickets() {
 
   return (
     <main className="wrap">
-      <section className="grid gap-[18px] pb-14 pt-[88px]">
+      <div className="screen grid gap-12">
+      <section className="grid gap-[18px]">
         <div className="eyebrow">Solicitudes de IA · Nexo</div>
         <h1 className="h-display">¿Qué deberíamos<br /><span className="text-faint">automatizar?</span></h1>
         <p className="lead">Cuéntanos qué proceso te quita tiempo. Cada solicitud se evalúa por horas manuales, impacto y factibilidad, y entra al backlog de proyectos de IA.</p>
@@ -49,6 +50,7 @@ export function Tickets() {
 
       <div className="grid grid-cols-4 border-t border-line max-[760px]:grid-cols-2">
         {STEPS.map(([h, p], i) => <div key={h} className="grid min-w-0 gap-1 pr-[18px] pt-[18px] [&+&]:border-l [&+&]:border-line [&+&]:pl-[18px] max-[760px]:[&:nth-child(3)]:border-l-0 max-[760px]:[&:nth-child(3)]:pl-0"><b className="text-[13px] font-semibold text-accent">{i + 1}</b><span className="text-[15px] font-semibold tracking-[-.02em]">{h}</span><p className="text-[13px] text-sub">{p}</p></div>)}
+      </div>
       </div>
 
       <Section className="pt-[72px]">

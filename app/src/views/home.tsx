@@ -22,7 +22,7 @@ export function Home() {
   const { go } = useRouter()
   return (
     <main className="wrap">
-      <section className="grid gap-[18px] pb-14 pt-[88px]">
+      <section className="screen grid gap-[18px]">
         <div className="eyebrow">Portafolio de IA · Q4 2026</div>
         <h1 className="h-display">Nexo IA.<span className="sub">Inteligencia artificial para Servicios Compartidos.</span></h1>
         <div className="mt-2 grid max-w-[44em] gap-2 border-t border-line pb-1 pt-[22px]">
@@ -34,7 +34,7 @@ export function Home() {
         <div className="mt-6 -ml-5 max-sm:ml-0"><button type="button" onClick={() => go("portafolio")} className="group inline-flex h-[52px] items-center gap-2 rounded-full border border-line-2 bg-white px-5 text-base font-medium leading-none text-text transition-colors hover:border-text">Ver el portafolio<ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" /></button></div>
       </section>
 
-      <Section id="mision">
+      <Section id="mision" className="screen pt-[clamp(20px,4vh,48px)]">
         <SectionHead eyebrow="Misión" title="De libro abierto a código abierto." />
         <blockquote className="m-0 max-w-[34em] text-[clamp(20px,2.2vw,25px)] font-medium leading-[1.3] tracking-[-.025em] text-balance">
           Grupo PDC ya es una empresa de libro abierto: los números son de todos. <span className="text-faint">La misión de Nexo IA es que lo que construimos con IA también lo sea, abierto y editable por cualquier líder.</span>
@@ -57,7 +57,7 @@ export function Home() {
 
       <RobotBand />
 
-      <Section id="marco">
+      <Section id="marco" className="screen gap-5 pt-[clamp(20px,4vh,48px)]">
         <SectionHead eyebrow="Marco de trabajo" title="Organización Exponencial 3.0.">
           <SecP>Estamos formados en el modelo ExO 3.0 de Salim Ismail (OpenExO). Es el mapa que usamos para Servicios Compartidos.</SecP>
           <a href="https://openexo.com/exo-model-3" target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Modelo ExO 3.0 en OpenExO ›</a>
@@ -73,7 +73,7 @@ export function Home() {
           <div className="flex flex-wrap items-baseline gap-2.5 px-1 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Intelligence Stack</b></div>
           <div className="grid grid-cols-6 border-t border-line max-[820px]:grid-cols-2">
             {ISTACK.map(([n, d], i) => (
-              <div key={n} className="grid min-w-0 content-start gap-1 py-4 pr-3.5 [&+&]:border-l [&+&]:border-line [&+&]:pl-3.5 max-[820px]:[&:nth-child(odd)]:border-l-0 max-[820px]:[&:nth-child(odd)]:pl-0 max-[820px]:[&:nth-child(n+3)]:border-t">
+              <div key={n} className="grid min-w-0 content-start gap-1 py-3 pr-3.5 [&+&]:border-l [&+&]:border-line [&+&]:pl-3.5 max-[820px]:[&:nth-child(odd)]:border-l-0 max-[820px]:[&:nth-child(odd)]:pl-0 max-[820px]:[&:nth-child(n+3)]:border-t">
                 <b className="text-xs font-semibold text-accent">{i + 1}</b><span className="text-[15px] font-semibold tracking-[-.02em]">{n}</span><p className="text-[13px] text-sub">{d}</p>
               </div>
             ))}

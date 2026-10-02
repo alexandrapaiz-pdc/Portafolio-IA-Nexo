@@ -35,7 +35,8 @@ export function Tasks() {
 
   return (
     <main className="wrap">
-      <section className="grid gap-[18px] pb-7 pt-[88px]">
+      <div className="screen grid gap-6">
+      <section className="grid gap-[18px]">
         <div className="eyebrow">Backlog personal en Asana</div>
         <h1 className="h-display">Tareas.</h1>
         <p className="lead">El trabajo del día a día detrás de cada frente, sincronizado desde Asana.</p>
@@ -52,6 +53,8 @@ export function Tasks() {
           {rows.length ? rows.map((r) => <TaskRow key={r.t.gid} t={r.t} project={r.p} />) : <Empty>{loaded.a ? "Nada vence en los próximos 7 días." : "Cargando tareas…"}</Empty>}
         </Fold>
       </Section>
+
+      </div>
 
       <Section>
         <SectionHead eyebrow="Por proyecto" title="Todo lo abierto." />

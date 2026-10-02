@@ -7,7 +7,7 @@ import AgenticFactory3D from "@/components/ui/agentic-factory-3d"
 export function Agents() {
   return (
     <main className="wrap">
-      <section className="grid grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] items-center gap-6 pb-10 pt-16 max-[820px]:grid-cols-1 max-[820px]:pt-12">
+      <section className="grid grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] screen items-center gap-6 max-[820px]:grid-cols-1">
         <div className="grid gap-[18px]">
           <div className="eyebrow">En construcción</div>
           <h1 className="h-display max-w-[7em]">Portal de agentes.</h1>

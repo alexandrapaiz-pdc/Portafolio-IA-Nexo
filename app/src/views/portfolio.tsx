@@ -53,7 +53,8 @@ export function Portfolio() {
 
   return (
     <main className="wrap">
-      <section className="grid gap-[18px] pb-10 pt-[88px]">
+      <div className="screen grid gap-10">
+      <section className="grid gap-[18px]">
         <div className="eyebrow">Portafolio · Q4 2026</div>
         <h1 className="h-display">Portafolio.</h1>
         <p className="lead">Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes.</p>
@@ -70,8 +71,9 @@ export function Portfolio() {
         <Stat k="Líneas base medidas" v={measured} unit={`de ${kpis.length}`} sub="KPIs con punto de partida" />
         <Stat k="Trabajo manual en alcance" accent v={units.length ? nf(units[0][1]) : "—"} unit={units[0]?.[0]} sub={units.length > 1 ? units.slice(1).map(([u, v]) => `${nf(v)} ${u}`).join(" · ") : "Horas medidas a la fecha"} />
       </StatsRow>
+      </div>
 
-      <section className="grid grid-cols-2 gap-3.5 pt-10 max-[720px]:grid-cols-1">
+      <section className="snap-start grid grid-cols-2 gap-3.5 pt-10 max-[720px]:grid-cols-1">
         {PROGRAMS.map((g) => {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
