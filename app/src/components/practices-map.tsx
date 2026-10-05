@@ -7,7 +7,7 @@ const LEVELS = [
   { n: "1", name: "Usuario de Claude", who: "Cualquier persona con licencia", guides: 11, ships: ["skill pdc-startup"], open: 16 },
   { n: "2", name: "Constructor de apps", who: "Portales, tableros y páginas", guides: 9, ships: ["skill publicar-app", "plantilla README"], open: 8 },
   { n: "2.5", name: "Backends", who: "Apps con sus propios datos", guides: 4, ships: ["skill crear-backend", "API base", "ejemplo KPIs"], open: 8 },
-  { n: "3", name: "Agentes", who: "Sobre el stack de Nexo", guides: 7, ships: ["sandbox local"], open: 0 },
+  { n: "3", name: "Agentes", who: "Sobre el stack de Nexo", guides: 7, ships: ["sandbox local"], open: 0, future: true },
 ]
 const DOT: Record<string, string> = { activo: "listo", en_construccion: "en_curso" }
 
@@ -25,15 +25,21 @@ export function PracticesMap() {
             const x = X0 + i * (W + G), top = 150 - i * 32, st = DOT[lv[i]?.status || ""] || "pendiente"
             return (
               <g key={L.n}>
-                <rect className="dg-box" x={x} y={top} width={W} height={BASE - top} rx="12" />
+                <g opacity={L.future ? 0.45 : 1}>
+                <rect className="dg-box" x={x} y={top} width={W} height={BASE - top} rx="12" strokeDasharray={L.future ? "4 4" : undefined} />
                 <text className="dg-g" x={x + 16} y={top + 24}>NIVEL {L.n}</text>
-                <circle className={"dg-d " + st} cx={x + W - 18} cy={top + 20} r="4.5" />
+                {!L.future && <circle className={"dg-d " + st} cx={x + W - 18} cy={top + 20} r="4.5" />}
                 <text className="dg-t" x={x + 16} y={top + 46} style={{ fontSize: 15 }}>{L.name}</text>
                 <text className="dg-s" x={x + 16} y={top + 64}>{L.who}</text>
                 {L.ships.map((s, k) => <text key={s} className="dg-l" x={x + 16} y={BASE - 64 + k * 16 - (L.ships.length - 1) * 16}>· {s}</text>)}
                 <text className="dg-t" x={x + 16} y={BASE - 18} style={{ fontSize: 13 }}>{L.guides} guías</text>
-                <text className="dg-s" x={x + W - 16} y={BASE - 18} textAnchor="end">{L.open ? `${L.open} por decidir` : "sin pendientes"}</text>
-                {i < LEVELS.length - 1 && <path className="dg-a" d={`M${x + W - 40} ${top - 14} Q${x + W + G / 2} ${top - 40} ${x + W + G + 40} ${top - 46}`} markerEnd="url(#pmArrow)" />}
+                {!L.future && <text className="dg-s" x={x + W - 16} y={BASE - 18} textAnchor="end">{L.open ? `${L.open} por decidir` : "sin pendientes"}</text>}
+                </g>
+                {L.future && <g>
+                  <rect x={x + W - 122} y={top + 10} width={108} height={20} rx="10" fill="var(--group)" stroke="var(--line-2)" />
+                  <text x={x + W - 68} y={top + 20} textAnchor="middle" dominantBaseline="central" style={{ fontSize: 10, fontWeight: 500, letterSpacing: ".06em", fill: "var(--sub)" }}>PRÓXIMAMENTE</text>
+                </g>}
+                {i < LEVELS.length - 1 && <path className="dg-a" opacity={LEVELS[i + 1].future ? 0.4 : 1} strokeDasharray={LEVELS[i + 1].future ? "3 4" : undefined} d={`M${x + W - 40} ${top - 14} Q${x + W + G / 2} ${top - 40} ${x + W + G + 40} ${top - 46}`} markerEnd="url(#pmArrow)" />}
               </g>
             )
           })}
