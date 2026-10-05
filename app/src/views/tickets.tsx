@@ -11,6 +11,8 @@ import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Empty, Footer, Section, SectionHead, SecP, Stat, StatsRow } from "@/components/shared"
 
+// Self-service roadmap (A largo plazo: autoservicio con guardrails). Hidden until the organization is ready for it.
+const SHOW_SELF_SERVICE = false
 const AREAS = ["Nexo", "PDC Brands", "Vikingo Distribución", "Vikingo AI", "Mostro", "Corporativo"]
 const TTYPES = ["Automatización o agente", "Portal o tablero", "Análisis de datos", "Licencia o acceso a Claude", "Quiero construirlo yo (autoservicio)", "Otro"]
 const URG = ["Baja", "Media", "Alta"]
@@ -53,6 +55,7 @@ export function Tickets() {
       </div>
       </div>
 
+      {SHOW_SELF_SERVICE && (
       <Section className="pt-[72px]">
         <SectionHead eyebrow="Hacia dónde vamos" title="Descentralizar la IA, con guardrails.">
           <SecP>Hoy Nexo construye los agentes. Más adelante, y por confirmar, cada área podría construir los suyos sobre el mismo stack y con las mismas reglas.</SecP>
@@ -72,6 +75,7 @@ export function Tickets() {
           <div className="group-box">{GATES.map(([h, n], i) => <div key={h} className="row grid-cols-[28px_minmax(0,1fr)]"><b className="text-[13px] font-semibold text-accent">{i + 1}</b><div><div>{h}</div><div className="mt-0.5 text-[13px] text-sub">{n}</div></div></div>)}</div>
         </div>
       </Section>
+      )}
 
       <Section className="pt-[72px]">
         <SectionHead eyebrow="Backlog" title="Solicitudes recibidas." />
