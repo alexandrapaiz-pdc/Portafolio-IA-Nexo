@@ -23,7 +23,7 @@ const NODES: N[] = [
   ["workers", 428, 310, 162, 42, "Workers Temporal", "", "orquestacion", "app"],
   ["dapr", 600, 310, 162, 42, "Dapr pub/sub", "", "containerapps", "app"],
   ["mcp", 772, 310, 158, 42, "Servidores MCP", "", "containerapps", "app"],
-  ["foundry", 246, 388, 220, 62, "Foundry", "Claude · Kimi K2.6", "foundry"],
+  ["foundry", 246, 388, 220, 62, "Foundry", "Claude · embeddings", "foundry"],
   ["safety", 476, 388, 146, 62, "Content Safety", "", "controles"],
   ["monitor", 632, 388, 166, 62, "Azure Monitor", "App Insights", null],
   ["registry", 808, 388, 132, 62, "Registro de", "contenedores", "containerapps"],
@@ -59,8 +59,8 @@ export function StackDiagram() {
           <defs>{(Object.keys(STROKE) as C[]).map((c) => <marker key={c} id={"sd-" + c} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill={STROKE[c]} /></marker>)}</defs>
           <text className="dg-g" x={10} y={48}>FUERA DE AZURE</text>
           <rect className="dg-azure" x={232} y={5} width={722} height={455} rx="16" />
-          <text className="dg-g" x={246} y={25}>SUSCRIPCIÓN DE AZURE · EAST US 2</text>
-          <circle className={"dg-d " + st("azure")} cx={490} cy={21} r="4" />
+          <text className="dg-g" x={246} y={25}>SUSCRIPCIÓN NEXO · EAST US</text>
+          <circle className={"dg-d " + st("azure")} cx={448} cy={21} r="4" />
           <rect x={246} y={34} width={694} height={110} rx="12" fill="var(--group)" stroke="var(--navy)" strokeOpacity=".35" />
           <text className="dg-g" x={258} y={54} style={{ fill: "var(--navy)" }}>DATOS · RED PRIVADA</text>
           <rect x={246} y={162} width={694} height={46} rx="12" fill="var(--accent)" />
@@ -87,7 +87,7 @@ export function StackDiagram() {
           })}
         </svg>
       </div>
-      <div className="flex flex-wrap items-center gap-x-[18px] gap-y-1 text-[13px] leading-5 text-sub"><span>Estado de cada pieza:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /><span className="text-faint">Orientado a eventos · septiembre 2026</span></div>
+      <div className="flex flex-wrap items-center gap-x-[18px] gap-y-1 text-[13px] leading-5 text-sub"><span>Estado de cada pieza:</span><StatusPill status="listo" /><StatusPill status="en_curso" /><StatusPill status="pendiente" /><span className="text-faint">Fuente: GitHub · nexo-stack, 5 oct</span></div>
     </figure>
   )
 }
