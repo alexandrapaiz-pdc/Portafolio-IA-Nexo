@@ -1,0 +1,84 @@
+# Despliegue automático, como Vercel: cada cambio en main se prueba, se construye
+# y se publica en Azure Container Apps. Sin contraseñas: GitHub entra a Azure con
+# OIDC (identidad federada) y solo puede actualizar esta app.
+#
+# Variables del repositorio (Settings → Secrets and variables → Actions → Variables);
+# son identificadores, no secretos:
+#   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID   identidad de despliegue
+#   ACR_NAME, RESOURCE_GROUP, APP_NAME                        a dónde se despliega
+name: Desplegar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: desplegar
+  cancel-in-progress: false
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q tests
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: postgres
+
+  desplegar:
+    needs: pruebas
+    runs-on: ubuntu-latest
+    environment: produccion
+    env:
+      ACR: ${{ vars.ACR_NAME }}
+      RG: ${{ vars.RESOURCE_GROUP }}
+      APP: ${{ vars.APP_NAME }}
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Construir la imagen en el registro
+        run: az acr build --registry "$ACR" --image "$APP:${GITHUB_SHA::7}" .
+      - name: Publicar la nueva versión
+        run: |
+          az containerapp update -n "$APP" -g "$RG" \
+            --image "$ACR.azurecr.io/$APP:${GITHUB_SHA::7}" \
+            --revision-suffix "r${GITHUB_RUN_NUMBER}"
+      - name: Verificar que la versión arrancó
+        run: |
+          REV="$APP--r${GITHUB_RUN_NUMBER}"
+          for i in $(seq 1 30); do
+            ESTADO=$(az containerapp revision show -n "$APP" -g "$RG" --revision "$REV" --query properties.provisioningState -o tsv)
+            echo "$REV: $ESTADO"
+            [ "$ESTADO" = "Provisioned" ] && exit 0
+            [ "$ESTADO" = "Failed" ] && exit 1
+            sleep 10
+          done
+          echo "La versión no terminó de arrancar en 5 minutos"; exit 1
