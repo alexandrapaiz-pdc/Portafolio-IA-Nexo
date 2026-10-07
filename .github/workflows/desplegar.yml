@@ -29,6 +29,9 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_PASSWORD: postgres
+          # test_conexion_con_token_de_entra connects with a fake Entra token as the password;
+          # this throwaway database only exists inside the run, so it accepts any password.
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports: ["5432:5432"]
         options: >-
           --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
