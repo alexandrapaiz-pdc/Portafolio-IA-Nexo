@@ -1,7 +1,9 @@
 /* Data store: wraps the claude.ai artifact runtime (db, user, mcp) behind one React context.
-   The page renders without it (empty states) and lights up when the capabilities resolve. */
+   The page renders without it (empty states) and lights up when the capabilities resolve.
+   Built with --mode nexo (Azure), the same calls go to the app's own API (nexo-runtime.ts). */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import type { AsanaTask, Component, Project, Ticket, Triage, Update } from "./domain"
+import { nexoRuntime } from "./nexo-runtime"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Any = any
@@ -33,6 +35,8 @@ const SYNC_MSG: Record<string, string> = {
   approval_required: "Tu organización requiere aprobación para esta herramienta de Asana.",
   server_unavailable: "Asana no respondió. Intenta en un momento.",
   tool_error: "Asana devolvió un error: ",
+  no_configurado: "Falta el token de Asana de la app en Key Vault.",
+  asana_rechazo: "Asana rechazó el token de la app. Renuévalo en Key Vault.",
 }
 const OPT = "name,subtasks.name,subtasks.completed,subtasks.completed_at,subtasks.due_on"
 
@@ -67,7 +71,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   // Boot: resolve capabilities, then subscribe once to each collection.
   useEffect(() => {
-    const cl = window.claude
+    const cl = import.meta.env.MODE === "nexo" ? nexoRuntime : window.claude
     const all = () => setLoaded({ p: true, c: true, u: true, a: true, t: true })
     if (!cl?.use) { all(); setNoDb(true); return }
     const unsubs: (() => void)[] = []

@@ -95,7 +95,7 @@ export function Tickets() {
               <TStat s={st(t)} /><ChevronRight size={16} className="text-faint" aria-hidden />
             </button>) }) : <Empty>{!loaded.t ? "Cargando solicitudes…" : filter === "abiertas" ? "No hay solicitudes abiertas. Envía la primera con “Nueva solicitud”." : "No hay solicitudes aquí."}</Empty>}
         </div>
-        <p className="rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Por ahora las solicitudes se guardan aquí; pasarán a Azure cuando esté listo.</p>
+        {import.meta.env.MODE !== "nexo" && <p className="rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Por ahora las solicitudes se guardan aquí; pasarán a Azure cuando esté listo.</p>}
       </Section>
       <Footer right="Dudas: Alexandra Paiz, Líder de IA y Herramientas" />
 
