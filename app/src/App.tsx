@@ -9,6 +9,9 @@ import { Portfolio } from "@/views/portfolio"
 import { Agents } from "@/views/agents"
 import { Tickets } from "@/views/tickets"
 
+// Full-screen shader welcome ("Bienvenido al futuro de Nexo"): off, the motion was dizzying.
+const SHOW_INTRO = false
+
 function Shell() {
   const { view } = useRouter()
   useEffect(() => {
@@ -26,7 +29,7 @@ function Shell() {
       {view === "agentes" && <Agents />}
       {view === "solicitudes" && <Tickets />}
       <ProjectSheet />
-      <Intro />
+      {SHOW_INTRO && <Intro />}
     </>
   )
 }
