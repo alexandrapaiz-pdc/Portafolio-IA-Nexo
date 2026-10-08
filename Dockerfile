@@ -21,6 +21,10 @@ COPY api/app ./app
 COPY api/migraciones ./migraciones
 COPY --from=pagina /web/dist/index.html ./static/index.html
 ENV PAGINA=/srv/static/index.html MIGRACIONES=/srv/migraciones PYTHONUNBUFFERED=1
+ARG BUILD_SHA=local
+ARG BUILD_TIME=
+ENV NEXO_BUILD_SHA=$BUILD_SHA NEXO_BUILD_TIME=$BUILD_TIME
+LABEL org.opencontainers.image.revision=$BUILD_SHA
 USER api
 EXPOSE 8000
 HEALTHCHECK CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/salud')"
