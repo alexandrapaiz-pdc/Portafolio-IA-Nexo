@@ -30,7 +30,7 @@ from fastapi import Body, Depends, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, HTMLResponse
 from psycopg import errors
 
-from . import conexion
+from . import conexion, correos
 from .almacen import Coleccion
 from .colecciones import COLECCIONES
 from .identidad import Persona, persona_actual
@@ -67,8 +67,13 @@ def migrar() -> list[str]:
 @asynccontextmanager
 async def ciclo(app: FastAPI):
     migrar()
-    yield
-    conexion.cerrar()
+    entregas = correos.Entregas()
+    entregas.iniciar()
+    try:
+        yield
+    finally:
+        await entregas.cerrar()
+        conexion.cerrar()
 
 
 app = FastAPI(title="Portafolio IA Nexo", lifespan=ciclo, docs_url=None, redoc_url=None)
@@ -161,6 +166,8 @@ def _escribir(c: Coleccion, doc_id: str, persona: Persona, nuevo, parcial: bool 
                 datos.update({k: antes[k] for k in c.sellos if k in antes})  # lo sellado no cambia
                 accion = "actualizar" if parcial else "reemplazar"
             c.guardar(cur, doc_id, datos, persona, accion, antes)
+            if c.nombre == "tickets" and accion == "crear":
+                correos.encolar(cur, doc_id, datos, persona)
             seq = c.ultimo_seq(cur)
     except errors.UniqueViolation as e:
         raise HTTPException(409, "Ya existe un registro con ese código") from e
@@ -211,6 +218,37 @@ def importar(persona: Yo, colecciones: Annotated[dict[str, dict[str, dict]], Bod
                 c.guardar(cur, validar_id(doc_id), datos, persona, "importar", c.obtener(cur, doc_id, bloquear=True))
             cuenta[col] = len(docs)
     return {"importados": cuenta}
+
+
+@app.get("/api/solicitudes/formulario")
+def formulario(persona: Yo):
+    return FileResponse(correos.FORMULARIO, media_type=correos.MIME_DOCX, filename="Guia-workflow-IA.docx")
+
+
+@app.get("/api/solicitudes/correos")
+def estado_correos(persona: Yo):
+    if not persona.editor:
+        raise HTTPException(403, "Solo los editores pueden revisar entregas")
+    with conexion.pool().connection() as con, con.cursor() as cur:
+        cur.execute("""SELECT solicitud_id, codigo, estado, intentos, ultimo_error, aceptado_en
+                       FROM correos_solicitudes ORDER BY creado_en DESC LIMIT 100""")
+        claves = [c.name for c in cur.description]
+        return {"activo": os.environ.get("NEXO_CORREO_ACTIVO") == "1",
+                "entregas": [dict(zip(claves, fila)) for fila in cur.fetchall()]}
+
+
+@app.post("/api/solicitudes/correos/{doc_id}/reintentar")
+def reintentar_correo(doc_id: str, persona: Yo):
+    if not persona.editor:
+        raise HTTPException(403, "Solo los editores pueden reintentar entregas")
+    with conexion.pool().connection() as con, con.cursor() as cur:
+        cur.execute("""UPDATE correos_solicitudes SET estado = 'pendiente', intentos = 0,
+                       proximo_intento = now(), ultimo_error = NULL
+                       WHERE solicitud_id = %s AND estado = 'fallido' RETURNING solicitud_id""",
+                    (validar_id(doc_id),))
+        if not cur.fetchone():
+            raise HTTPException(409, "La entrega no está fallida o no existe")
+    return {"estado": "pendiente"}
 
 
 ASANA = "https://app.asana.com/api/1.0/tasks/"

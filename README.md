@@ -61,3 +61,7 @@ Los datos iniciales se cargan una vez en `/importar` (solo editores) con la expo
 `seed/` guarda los datos iniciales y las actualizaciones aplicadas a la base de datos del artifact (proyectos, componentes, bitácora, Asana, mapas de valor).
 
 `legacy/` conserva la versión anterior en un solo archivo HTML.
+
+## Guía de intake por correo
+
+La API de Azure encola el formulario Word al crear una solicitud. La activación del buzón, los reintentos y las pruebas están en [docs/correos-intake.md](docs/correos-intake.md). El envío está desactivado hasta autorizar y configurar el buzón; la descarga del formulario funciona con sesión.

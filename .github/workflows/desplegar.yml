@@ -22,7 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        # Docker Official Images mirror avoids shared-runner Docker Hub pull limits.
+        image: public.ecr.aws/docker/library/postgres:16
         env:
           POSTGRES_PASSWORD: postgres
           # test_conexion_con_token_de_entra connects with a fake Entra token as the password;

@@ -51,7 +51,7 @@ export function Stat({ k, v, unit, sub, accent }: { k: string; v: ReactNode; uni
     </div>
   )
 }
-export const StatsRow = ({ children }: { children: ReactNode }) => <div className="grid grid-cols-4 border-y border-line max-md:grid-cols-2">{children}</div>
+export const StatsRow = ({ children, className }: { children: ReactNode; className?: string }) => <div className={cn("grid grid-cols-4 border-y border-line max-md:grid-cols-2", className)}>{children}</div>
 
 export function MiniBar({ label, done, total }: { label: string; done: number; total: number }) {
   return (
