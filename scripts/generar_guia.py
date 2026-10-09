@@ -6,6 +6,9 @@ Las figuras son ejemplos; las respuestas y tablas siguen siendo editables.
 from pathlib import Path
 import re
 import tempfile
+import uuid
+from zipfile import ZipFile
+from lxml import etree
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.oxml import OxmlElement
@@ -19,7 +22,7 @@ OUT = ROOT / 'api/app/recursos/guia-workflow-ia.docx'
 def diagram(path, micro=False):
     im = Image.new('RGB', (1500, 900 if micro else 240), 'white')
     d = ImageDraw.Draw(im)
-    candidates = ['/System/Library/Fonts/Supplemental/Arial.ttf', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf']
+    candidates = [str(ROOT / 'scripts/fonts/Inter-Regular.ttf'), '/System/Library/Fonts/Supplemental/Arial.ttf', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf']
     font = next((ImageFont.truetype(p, 25) for p in candidates if Path(p).exists()), ImageFont.load_default(size=25))
     def label(x, y, t):
         d.multiline_text((x, y), t, fill='#152536', font=font, anchor='mm', align='center', spacing=5)
@@ -68,6 +71,38 @@ def text(p, value):
         r=p.add_run(part); r.bold=bool(i%2)
 
 
+def embed_fonts(path):
+    """Embed OFL-licensed Inter so Word preserves the typography on other machines."""
+    with ZipFile(path) as z:
+        files={n:z.read(n) for n in z.namelist()}
+    ns='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    relns='http://schemas.openxmlformats.org/package/2006/relationships'
+    rns='http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+    fonts=etree.fromstring(files['word/fontTable.xml'])
+    font=etree.SubElement(fonts, '{'+ns+'}font', {'{'+ns+'}name':'Inter'})
+    rels=etree.Element('{'+relns+'}Relationships',nsmap={None:relns})
+    for n,(style,filename) in enumerate([('Regular','Inter-Regular.ttf'),('Bold','Inter-SemiBold.ttf')]):
+        key=uuid.UUID('00000000-0000-0000-0000-00000000000'+str(n+1))
+        data=bytearray((ROOT/'scripts/fonts'/filename).read_bytes())
+        for i in range(32): data[i] ^= key.bytes[::-1][i%16]
+        target=f'fonts/Inter-{style}.odttf'
+        files['word/'+target]=bytes(data)
+        rid='rIdInter'+style
+        etree.SubElement(rels,'{'+relns+'}Relationship',Id=rid,Type=rns+'/font',Target=target)
+        etree.SubElement(font,'{'+ns+'}embed'+style,{'{'+rns+'}id':rid,'{'+ns+'}fontKey':'{'+str(key).upper()+'}'})
+    files['word/fontTable.xml']=etree.tostring(fonts,xml_declaration=True,encoding='UTF-8',standalone=True)
+    files['word/_rels/fontTable.xml.rels']=etree.tostring(rels,xml_declaration=True,encoding='UTF-8',standalone=True)
+    types=etree.fromstring(files['[Content_Types].xml'])
+    etree.SubElement(types,'{http://schemas.openxmlformats.org/package/2006/content-types}Default',Extension='odttf',ContentType='application/vnd.openxmlformats-officedocument.obfuscatedFont')
+    files['[Content_Types].xml']=etree.tostring(types,xml_declaration=True,encoding='UTF-8',standalone=True)
+    settings=etree.fromstring(files['word/settings.xml'])
+    etree.SubElement(settings,'{'+ns+'}embedTrueTypeFonts')
+    files['word/settings.xml']=etree.tostring(settings,xml_declaration=True,encoding='UTF-8',standalone=True)
+    from zipfile import ZIP_DEFLATED
+    with ZipFile(path,'w',compression=ZIP_DEFLATED) as z:
+        for name,data in files.items(): z.writestr(name,data)
+
+
 def build():
     doc=Document()
     sec=doc.sections[0]
@@ -75,16 +110,25 @@ def build():
     sec.top_margin=sec.bottom_margin=Inches(.65)
     sec.left_margin=sec.right_margin=Inches(.65)
     for name in ['Normal','Title','Heading 1','Heading 2','Heading 3','List Bullet']:
-        st=doc.styles[name]; st.font.name='Arial'; st.font.color.rgb=RGBColor(0,0,0)
+        st=doc.styles[name]; st.font.name='Inter'; st.font.color.rgb=RGBColor(0,0,0)
     for st in doc.styles:
+        for fonts in st.element.xpath('.//w:rFonts'):
+            for attr in list(fonts.attrib):
+                if 'Theme' in attr: del fonts.attrib[attr]
         for border in st.element.xpath('.//w:pBdr'):
             border.getparent().remove(border)
     doc.styles['Normal'].font.size=Pt(11)
-    doc.styles['Normal'].paragraph_format.space_after=Pt(7)
-    doc.styles['Normal'].paragraph_format.line_spacing=1.06
+    doc.styles['Normal'].paragraph_format.space_after=Pt(8)
+    doc.styles['Normal'].paragraph_format.line_spacing=1.12
     doc.styles['Title'].font.size=Pt(24)
-    doc.styles['Heading 1'].font.size=Pt(16)
-    doc.styles['Heading 2'].font.size=Pt(13)
+    doc.styles['Title'].font.bold=False
+    doc.styles['Heading 1'].font.size=Pt(17)
+    doc.styles['Heading 1'].font.bold=False
+    doc.styles['Heading 1'].paragraph_format.space_before=Pt(16)
+    doc.styles['Heading 1'].paragraph_format.space_after=Pt(9)
+    doc.styles['Heading 2'].font.size=Pt(14)
+    doc.styles['Heading 2'].font.bold=False
+    doc.styles['Heading 2'].paragraph_format.space_after=Pt(8)
     # Forms are unprotected: respondents can type answers and add table rows.
     doc.core_properties.title='Guía para proponer un workflow de IA'
     doc.core_properties.author='IA Nexo'
@@ -109,31 +153,39 @@ def build():
                     if not all(re.fullmatch(r'[-: ]+',c) for c in cells): rows.append(cells)
                     i+=1
                 table=doc.add_table(rows=0,cols=len(rows[0])); table.style='Table Grid'
+                borders=OxmlElement('w:tblBorders')
+                for edge in ('top','left','bottom','right','insideH','insideV'):
+                    e=OxmlElement('w:'+edge); e.set(qn('w:val'),'single'); e.set(qn('w:sz'),'4'); e.set(qn('w:color'),'DFE3E7'); borders.append(e)
+                table._tbl.tblPr.append(borders)
                 for n,row in enumerate(rows):
                     cells=table.add_row().cells
                     for cell,value in zip(cells,row):
                         p=cell.paragraphs[0]; p.paragraph_format.space_after=Pt(5); p.paragraph_format.space_before=Pt(5)
                         text(p,value.replace('min-persona/caso', 'min-persona por caso'))
-                        for r in p.runs: r.font.size=Pt(9)
+                        for r in p.runs: r.font.size=Pt(9.5)
                         if n==0:
                             for r in p.runs: r.bold=True
-                            shade=OxmlElement('w:shd'); shade.set(qn('w:fill'),'E8EDF2'); cell._tc.get_or_add_tcPr().append(shade)
+                            shade=OxmlElement('w:shd'); shade.set(qn('w:fill'),'F5F6F7'); cell._tc.get_or_add_tcPr().append(shade)
                     trPr=table.rows[-1]._tr.get_or_add_trPr(); trPr.append(OxmlElement('w:cantSplit'))
                     if n==0: trPr.append(OxmlElement('w:tblHeader'))
                 doc.add_paragraph().paragraph_format.space_after=Pt(0)
                 continue
             if line.startswith('#'):
                 level=len(line)-len(line.lstrip('#')); title=line.lstrip('# ').replace('¿','').replace('?','').replace(':','')
+                if level==1: title=title.replace('un workflow', '\nun workflow')
                 heading=doc.add_paragraph(title, 'Title' if level==1 else ('Heading 1' if level==2 else 'Heading 2'))
-                if title.startswith(('4.', 'Fuentes de información','Mapa de flujo','5.')): heading.paragraph_format.page_break_before=True
+
             elif line.startswith('- '): text(doc.add_paragraph(style='List Bullet'),line[2:])
-            else: text(doc.add_paragraph(),line)
+            else:
+                paragraph=doc.add_paragraph(); text(paragraph,line)
+                if line.startswith('**Ejemplo'): paragraph.paragraph_format.keep_with_next=True
             # Simple answer space in the narrative sections, without adding people tables.
             if line.startswith(('¿De qué **','¿Qué proceso realiza','Dentro de ese proceso,','**Enlace a la carpeta:**')):
                 doc.add_paragraph('Respuesta: __________________________________________________')
             i+=1
     OUT.parent.mkdir(parents=True,exist_ok=True)
     doc.save(OUT)
+    embed_fonts(OUT)
     print(OUT)
 
 if __name__=='__main__': build()

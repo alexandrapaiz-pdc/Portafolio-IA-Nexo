@@ -34,7 +34,7 @@ Si el service principal o el alcance ya existen, reutilizarlos después de verif
 
 ## Actualizar el formulario
 
-La fuente está en `docs/guia-workflow-ia.md`. `scripts/generar_guia.py` genera `api/app/recursos/guia-workflow-ia.docx` con python-docx y Pillow. El Dockerfile copia ese directorio junto con la API. Después de regenerar, revisar todas las páginas renderizadas antes de subir el binario. El PDF compartido es una versión de consulta; el Word permite editar texto y agregar filas.
+La fuente está en `docs/guia-workflow-ia.md`. `scripts/generar_guia.py` genera `api/app/recursos/guia-workflow-ia.docx` con python-docx y Pillow. Incluye Inter bajo licencia OFL y lo incrusta en Word para conservar la apariencia de la guía Markdown. El Dockerfile copia ese directorio junto con la API. Después de regenerar, revisar todas las páginas renderizadas antes de subir el binario. El PDF compartido es una versión de consulta; el Word permite editar texto y agregar filas.
 
 ## Pruebas
 

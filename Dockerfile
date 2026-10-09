@@ -4,7 +4,7 @@
 # Pasos completos de despliegue: guía privada en BestPracticesAI (nivel 2.5).
 
 # 1) La página, compilada en modo Azure (usa la API de la app en lugar del artifact)
-FROM node:22-slim AS pagina
+FROM public.ecr.aws/docker/library/node:22-slim AS pagina
 WORKDIR /web
 COPY app/package.json app/package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -12,7 +12,7 @@ COPY app/ ./
 RUN npm run build:nexo
 
 # 2) La API (FastAPI) que también entrega la página
-FROM python:3.12-slim
+FROM public.ecr.aws/docker/library/python:3.12-slim
 RUN useradd --create-home --uid 10001 api
 WORKDIR /srv
 COPY api/requirements.txt .
