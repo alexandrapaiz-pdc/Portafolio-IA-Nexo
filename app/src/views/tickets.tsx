@@ -136,7 +136,8 @@ function NewTicket({ onClose }: { onClose: () => void }) {
             </div>
             <Label>¿Cómo sabremos que funcionó?<Input value={f.impact} onChange={set("impact")} placeholder="Ej. Cerrar el mes 3 días antes; 0 facturas vencidas" /></Label>
             <Label>Sistemas y datos<Input value={f.systems} onChange={set("systems")} placeholder="Ej. Excel, JD Edwards, SharePoint, correo" /></Label>
-            <p className="text-xs text-faint">Cada solicitud llega por correo a Alexandra Paiz (IA Nexo) y queda visible para quienes tienen acceso a esta página.</p>
+            <p className="text-xs text-faint">La solicitud queda registrada para IA Nexo y visible para quienes tienen acceso a esta página.</p>
+            {import.meta.env.MODE === "nexo" && <a href="/api/solicitudes/formulario" className="text-sm text-accent-ink underline">Descargar la guía del workflow en Word</a>}
             <div className="flex justify-end gap-2"><Button variant="ghost" type="button" onClick={onClose}>Cancelar</Button><Button variant="accent" type="submit" disabled={busy}>Enviar solicitud</Button></div>
           </form>
         )}

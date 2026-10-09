@@ -13,6 +13,7 @@ import AiAgentPipeline from "@/components/ui/ai-agent-pipeline"
 import { BrainDiagram } from "@/components/brain-diagram"
 import { StackDiagram } from "@/components/stack-diagram"
 
+const SHOW_STACK = false // Oculto temporalmente; conservar componentes y datos para reactivarlo.
 const JUMP = [["stack-sec", "Stack"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
 const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
@@ -62,24 +63,24 @@ export function Portfolio() {
       <section className="grid gap-[18px] pb-6 pt-[88px]">
         <div className="eyebrow">Portafolio · Q4 2026</div>
         <h1 className="h-display">Portafolio.</h1>
-        <p className="lead">Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes.</p>
+        <p className="lead">{SHOW_STACK ? "Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes." : "Tres frentes: las buenas prácticas, el Company Brain y los proyectos de agentes."}</p>
         <nav aria-label="Secciones del portafolio" className="mt-1.5 flex flex-wrap gap-2">
-          {JUMP.map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
+          {JUMP.filter(([id]) => SHOW_STACK || id !== "stack-sec").map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
         </nav>
       </section>
 
       {noDb && <p className="mb-6 rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Inicia sesión en claude.ai para ver los datos del portafolio.</p>}
 
-      <StatsRow>
-        <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} />
+      <StatsRow className={SHOW_STACK ? undefined : "grid-cols-3"}>
+        {SHOW_STACK && <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} />}
         <Stat k="Proyectos de agentes" v={ag.length} sub={`Prioridad 1: ${ag[0]?.name || "—"}`} />
         <Stat k="Agentes en producción" v={ag.filter((p) => p.phase === "produccion").length} sub="Los KPIs se miden al desplegar" />
         <Stat k="Trabajo manual en alcance" accent v={units.length ? nf(units[0][1]) : "—"} unit={units[0]?.[0]} sub={units.length > 1 ? units.slice(1).map(([u, v]) => `${nf(v)} ${u}`).join(" · ") : "Horas medidas a la fecha"} />
       </StatsRow>
       </div>
 
-      <section className="grid grid-cols-2 gap-3.5 pt-10 max-[720px]:grid-cols-1">
-        {PROGRAMS.map((g) => {
+      <section className={`grid ${SHOW_STACK ? "grid-cols-2" : "grid-cols-3"} gap-3.5 pt-10 max-[720px]:grid-cols-1`}>
+        {PROGRAMS.filter((g) => SHOW_STACK || g.id !== "stack").map((g) => {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
             <GlowCard key={g.id} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
@@ -95,7 +96,7 @@ export function Portfolio() {
         })}
       </section>
 
-      <Section id="stack-sec">
+      {SHOW_STACK && <Section id="stack-sec">
         <SectionHead eyebrow="Frente 1 · Infraestructura" title="Nexo AI Stack">
           <SecP>Lo que desbloquea todo lo demás: cada componente listo desbloquea proyectos.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("infra")}>Ver detalle del stack</Button></div>
@@ -123,10 +124,10 @@ export function Portfolio() {
             </details>
           </div>
         </div>
-      </Section>
+      </Section>}
 
       <Section id="practicas">
-        <SectionHead eyebrow="Frente 2 · Estándares" title="AI Best Practices">
+        <SectionHead eyebrow={`Frente ${SHOW_STACK ? 2 : 1} · Estándares`} title="AI Best Practices">
           <SecP>Estándares para usar y construir con IA: guías por nivel, en GitHub, abiertas a mejoras de cualquiera.</SecP>
           <div className="flex flex-wrap items-center gap-2.5">
             <Button variant="ghost" onClick={() => openProject("protocolos")}>Ver detalle</Button>
@@ -144,7 +145,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="brain">
-        <SectionHead eyebrow="Frente 3 · Conocimiento" title="Company Brain">
+        <SectionHead eyebrow={`Frente ${SHOW_STACK ? 3 : 2} · Conocimiento`} title="Company Brain">
           <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
@@ -166,7 +167,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead eyebrow="Frente 4 · Automatización" title="AI Agent Projects"><SecP>Los agentes, en orden de prioridad.</SecP></SectionHead>
+        <SectionHead eyebrow={`Frente ${SHOW_STACK ? 4 : 3} · Automatización`} title="AI Agent Projects"><SecP>Los agentes, en orden de prioridad.</SecP></SectionHead>
         <div className="grid gap-[18px]">
           <AiAgentPipeline />
           <AgentBoard />
