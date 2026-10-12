@@ -189,16 +189,29 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
   )
 }
 
-// Right after sending: the next step is the intake guide, which AI may help fill.
+// Right after sending: the requester downloads the intake guide, fills it (AI may help) and sends it back.
+const INTAKE_STEPS: [string, string][] = [
+  ["Descarga la guía de intake", "Ábrela en SharePoint y descárgala con Archivo › Descargar, o trabaja en tu propia copia."],
+  ["Llénala, con IA si quieres", "Claude u otra herramienta de IA aprobada por la empresa puede ayudarte a redactar las respuestas a partir de tus notas o documentos del proceso. Revisa que todo sea correcto."],
+  ["Envíala", "Mándala a alexandra.paiz@grupopdc.com con el código de tu solicitud en el asunto."],
+]
 function Sent({ code, onClose }: { code: string; onClose: () => void }) {
+  const [got, setGot] = useState(false)
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-5">
       <div className="grid gap-2.5"><span className="num text-[13px] font-medium text-faint">{code}</span><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Solicitud enviada.</h2>
-        <p className="text-[17px] text-sub">{EMAILS ? "Revisa tu correo: te enviamos la guía de intake. Complétala para que podamos evaluar el proceso contigo." : "El siguiente paso es completar la guía de intake, para que podamos evaluar el proceso contigo."}</p></div>
-      <p className="rounded-r-sm bg-group px-4 py-3 text-sm text-sub"><b className="font-semibold text-text">Puedes usar IA para llenarla.</b> Claude u otra herramienta de IA aprobada por la empresa puede ayudarte a redactar las respuestas a partir de tus notas o documentos del proceso. Revisa que todo sea correcto antes de enviarla.</p>
-      <div className="flex flex-wrap justify-end gap-2">
-        <Button variant="ghost" type="button" onClick={onClose}>Cerrar</Button>
-        <a href={GUIA_INTAKE} target="_blank" rel="noopener" className="inline-flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-medium text-white no-underline hover:brightness-105">Abrir la guía de intake<ArrowRight size={16} /></a>
+        <p className="text-[17px] text-sub">Falta un paso: completar la guía de intake, para que podamos evaluar el proceso contigo.{EMAILS ? " También te la enviamos por correo." : ""}</p></div>
+      <ol className="m-0 grid list-none gap-3.5 border-t border-line p-0 pt-4">
+        {INTAKE_STEPS.map(([h, d], i) => (
+          <li key={h} className="grid grid-cols-[22px_minmax(0,1fr)] gap-2.5"><b className="num text-[15px] font-semibold text-accent">{i + 1}</b>
+            <div className="grid gap-0.5"><span className="text-[15px] font-semibold tracking-[-.01em]">{h}</span><span className="text-sm text-sub">{d}</span>
+              {i === 0 && <a href={GUIA_INTAKE} target="_blank" rel="noopener" onClick={() => setGot(true)} className="mt-2 inline-flex h-10 items-center gap-2 justify-self-start rounded-full bg-accent px-5 text-sm font-medium text-white no-underline hover:brightness-105">Descargar la guía de intake<ArrowRight size={16} /></a>}
+            </div></li>
+        ))}
+      </ol>
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        {!got && <span className="text-xs text-faint">Descarga la guía antes de cerrar.</span>}
+        <Button variant="ghost" type="button" onClick={onClose}>{got ? "Listo" : "Cerrar"}</Button>
       </div>
     </div>
   )
