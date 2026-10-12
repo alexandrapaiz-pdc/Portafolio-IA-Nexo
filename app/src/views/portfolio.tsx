@@ -17,7 +17,7 @@ import { StackDiagram } from "@/components/stack-diagram"
 // Nexo AI Stack hidden: agents run on the Vikingo AI agent platform instead.
 const SHOW_STACK = false
 const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
-const SHOW_LOG = true // Bitácora hidden for now; updates still live in each project sheet
+const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
 function LevelRow({ x, pid, field, i }: { x: Level; pid: string; field: "levels" | "parts"; i: number }) {
