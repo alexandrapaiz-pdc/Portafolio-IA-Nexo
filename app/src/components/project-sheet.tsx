@@ -48,7 +48,7 @@ export function ProjectSheet() {
   const r = readiness(p, components), s = savings(p), d = discovery(p), pi = PHASES.findIndex((x) => x[0] === p.phase)
   const ups = updates.filter((u) => u.projectId === p.id)
   const isAg = inProgram(p, "agentes"), ag = agentsOf(projects), prog = PROGRAMS.find((g) => g.lead === p.id || (!isAg && inProgram(p, g.id)))
-  const title = isAg ? `AI Agent Projects · Prioridad ${ag.indexOf(p) + 1}` : prog?.name || "Proyecto"
+  const title = isAg ? `AI Agent Projects · ${p.priority == null ? "Prioridad por acordar" : "Prioridad " + (ag.indexOf(p) + 1)}` : prog?.name || "Proyecto"
 
   const startEdit = () => { setDraft({ blocker: p.blocker || "", kpis: clone(p.kpis || []), savings: { ...(p.savings || {}), unit: s.unit } }); setEditing(true) }
   const save = async () => {
@@ -70,7 +70,7 @@ export function ProjectSheet() {
       <DialogContent title={title}>
         <div className="grid gap-3">
           <div className="flex flex-wrap gap-3.5 text-[13px] text-faint">
-            {isAg ? <><b className="font-semibold text-accent-ink">Prioridad {ag.indexOf(p) + 1}</b><span>Ola {p.wave}</span></> : <b className="font-semibold text-accent-ink">{prog?.name}</b>}
+            {isAg ? <><b className="font-semibold text-accent-ink">{p.priority == null ? "Prioridad por acordar" : "Prioridad " + (ag.indexOf(p) + 1)}</b>{p.wave != null && <span>Ola {p.wave}</span>}</> : <b className="font-semibold text-accent-ink">{prog?.name}</b>}
             <span>{p.bu}</span>
           </div>
           <h2 className="text-[clamp(30px,5vw,40px)] leading-[1.05] tracking-[-.04em]">{p.name}</h2>
