@@ -1,3 +1,4 @@
+import nexoAppsScreenshot from "@/assets/nexo-apps.jpg"
 import { ChevronRight } from "lucide-react"
 import { agentsOf, inProgram, LSTAT, NEXT_LEVEL, NEXT_STATUS, PROGRAMS, savings, STATUS, type Level } from "@/lib/domain"
 import { clone, isNum, nf, pct, today } from "@/lib/format"
@@ -144,6 +145,7 @@ export function Portfolio() {
             <h3 className="text-3xl font-medium tracking-tight">Tus apps y tus guías, en Nexo Apps.</h3>
             <p className="max-w-2xl text-base text-sub">Encuentra las apps del equipo, consulta buenas prácticas y publica tu proyecto con ayuda de tu asistente.</p>
             <p className="text-sm text-sub">Este portafolio ya completó el recorrido: GitHub → pruebas → Azure → catálogo de Nexo.</p>
+            <figure className="mt-3 overflow-hidden rounded-xl border border-line bg-white"><img src={nexoAppsScreenshot} alt="Nexo Apps: el Portafolio IA Nexo aparece en Espacios con visibilidad para Grupo PDC." loading="lazy" className="w-full h-auto" /><figcaption className="px-4 py-3 text-xs text-sub">Nexo Apps · Portafolio publicado para Grupo PDC · 12 oct 2026</figcaption></figure>
             <span className="text-sm font-semibold text-accent-ink">Explorar Nexo Apps ↗</span>
           </a>
           <PracticesMap />

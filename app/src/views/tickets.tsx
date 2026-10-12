@@ -1,3 +1,4 @@
+import { IntakeForm } from "@/components/intake-form"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { useState } from "react"
 import { ArrowRight, ChevronRight } from "lucide-react"
@@ -13,9 +14,6 @@ import { Empty, Footer, Section, SectionHead, SecP, Stat, StatsRow } from "@/com
 
 // Self-service roadmap (A largo plazo: autoservicio con guardrails). Hidden until the organization is ready for it.
 const SHOW_SELF_SERVICE = false
-// Intake guide (SharePoint), sent to each requester right after they submit.
-const GUIA_INTAKE = "https://codisaco.sharepoint.com/:w:/r/sites/05ServiciosCompartidos-PlaneacinyGestin/_layouts/15/Doc.aspx?sourcedoc=%7B0DB89966-6CF7-4F19-BCB1-921A69F2BBA2%7D&file=Guia%20de%20intake%20-%20Formato%20limpio.docx&action=default&mobileredirect=true&wdwpf=doclib-t"
-const EMAILS = false // Enable only after the hosted mail integration has been verified.
 const AREAS = ["Nexo", "PDC Brands", "Vikingo Distribución", "Vikingo AI", "Mostro", "Corporativo"]
 const TTYPES = ["Automatización o agente", "Portal o tablero", "Análisis de datos", "Licencia o acceso a Claude", "Quiero construirlo yo (autoservicio)", "Otro"]
 const URG = ["Baja", "Media", "Alta"]
@@ -91,7 +89,7 @@ export function Tickets() {
         <div className="group-box">
           {list.length ? list.map((t) => { const tr = triage[t.id] || {}; return (
             <button key={t.id} type="button" onClick={() => setOpen({ mode: "view", id: t.id })} className="row w-full cursor-pointer grid-cols-[minmax(0,1fr)_120px_110px_16px] border-0 bg-transparent text-left hover:bg-black/[.025] max-[700px]:grid-cols-[minmax(0,1fr)_auto_16px]">
-              <div className="min-w-0"><div className="text-base font-semibold tracking-[-.02em]"><span className="num mr-2 text-xs font-medium text-faint">{t.code}</span>{t.title}</div>
+              <div className="min-w-0"><div className="text-base font-semibold tracking-[-.02em]"><span className="num mr-2 text-xs font-medium text-faint">{t.code}</span>{t.title || "Solicitud sin título"}</div>
                 <div className="mt-0.5 text-[13px] text-sub">{[t.area, t.type, who(t.createdBy), fdate((t.createdAt || "").slice(0, 10))].filter(Boolean).join(" · ")}{tr.priority ? ` · Prioridad ${tr.priority}` : ""}</div></div>
               <span className="num text-right text-[15px] font-semibold max-[700px]:hidden">{isNum(t.hours) ? nf(t.hours) + " h" : "—"}<small className="block text-xs font-normal text-faint">al mes · {t.urgency}</small></span>
               <TStat s={st(t)} /><ChevronRight size={16} className="text-faint" aria-hidden />
@@ -109,30 +107,30 @@ export function Tickets() {
 
 function NewTicket({ onClose }: { onClose: () => void }) {
   const { db, me, toast } = useStore()
-  const [f, setF] = useState({ title: "", area: AREAS[0], type: TTYPES[0], urgency: "Media", problem: "", current: "", hours: "", people: "", impact: "", systems: "" })
+  const [f, setF] = useState({ title: "", area: "", type: "", urgency: "", problem: "", current: "", hours: "", people: "", impact: "", systems: "" })
   const [busy, setBusy] = useState(false)
-  const [sent, setSent] = useState<string | null>(null)
+  const [sent, setSent] = useState<{ id: string; code: string } | null>(null)
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent title="Nueva solicitud">
-        {sent ? <Sent code={sent} onClose={onClose} /> : <>
-        <div className="grid gap-2.5"><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Entre más concreto, más rápido se evalúa. Los números aproximados están bien.</p></div>
+      <DialogContent key={sent?.id || "new"} title={sent ? "Formulario de intake" : "Nueva solicitud"}>
+        {sent ? <div className="grid gap-5"><p role="status" className="text-accent-ink">Solicitud enviada · {sent.code}</p><IntakeForm id={sent.id} editable /><Button variant="ghost" onClick={onClose}>Cerrar</Button></div> : <>
+        <div className="grid gap-2.5"><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Todos los campos son opcionales. Comparte lo que sepas; completaremos el detalle juntos.</p></div>
         {!db || !me ? <p className="text-[17px] text-sub">Inicia sesión con tu cuenta de Grupo PDC para enviar una solicitud.</p> : (
           <form className="grid gap-3.5" onSubmit={async (e) => {
-            e.preventDefault(); if (!f.title.trim() || !f.problem.trim()) return; setBusy(true)
+            e.preventDefault(); if (busy) return; setBusy(true)
             const n = (v: string) => (v === "" ? null : Number(v))
-            const doc = { code: code(), title: f.title.trim(), area: f.area, type: f.type, urgency: f.urgency, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
-            try { await db.collection("tickets").add(doc); setSent(doc.code) }
+            const doc = { code: code(), title: f.title.trim(), area: f.area || null, type: f.type || null, urgency: f.urgency || null, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
+            try { const result = await db.collection("tickets").add(doc); setSent({ id: result.id, code: doc.code }) }
             catch (err: unknown) { setBusy(false); toast((err as { code?: string })?.code === "invalid_argument" ? "Tu acceso a esta página es de solo lectura. Pide acceso de colaborador para enviar solicitudes." : "No se pudo enviar. Intenta de nuevo.") }
           }}>
-            <Label>Título<Input required maxLength={120} value={f.title} onChange={set("title")} placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra" /></Label>
+            <Label>Título<Input maxLength={120} value={f.title} onChange={set("title")} placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra" /></Label>
             <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
-              <Label>Mundo<NativeSelect value={f.area} onChange={set("area")}>{AREAS.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
-              <Label>Tipo<NativeSelect value={f.type} onChange={set("type")}>{TTYPES.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
-              <Label>Urgencia<NativeSelect value={f.urgency} onChange={set("urgency")}>{URG.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Mundo<NativeSelect value={f.area} onChange={set("area")}><option value="">Por definir</option>{AREAS.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Tipo<NativeSelect value={f.type} onChange={set("type")}><option value="">Por definir</option>{TTYPES.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Urgencia<NativeSelect value={f.urgency} onChange={set("urgency")}><option value="">Por definir</option>{URG.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
             </div>
-            <Label>¿Qué problema quieres resolver?<Textarea required value={f.problem} onChange={set("problem")} placeholder="Qué duele hoy y a quién afecta." /></Label>
+            <Label>¿Qué problema quieres resolver?<Textarea maxLength={4000} value={f.problem} onChange={set("problem")} placeholder="Qué duele hoy y a quién afecta." /></Label>
             <Label>¿Cómo se hace hoy?<Textarea value={f.current} onChange={set("current")} placeholder="Pasos, herramientas y quién participa." /></Label>
             <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
               <Label>Horas manuales al mes<Input type="number" min={0} step="any" value={f.hours} onChange={set("hours")} placeholder="Ej. 20" /></Label>
@@ -152,7 +150,7 @@ function NewTicket({ onClose }: { onClose: () => void }) {
 }
 
 function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | null) => string; onClose: () => void }) {
-  const { tickets, triage, canWrite, db, write } = useStore()
+  const { tickets, triage, canWrite, db, write, me } = useStore()
   const t = tickets.find((x) => x.id === id), tr = triage[id] || {}
   const [status, setStatus] = useState(tr.status || "nuevo"), [prio, setPrio] = useState(tr.priority != null ? String(tr.priority) : ""), [note, setNote] = useState(tr.note || ""), [armed, setArmed] = useState(false)
   if (!t) return null
@@ -163,7 +161,7 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
       <DialogContent title={t.code || "Solicitud"}>
         <div className="grid gap-3">
           <div className="flex flex-wrap gap-3.5 text-[13px] text-faint"><TStat s={st} />{tr.priority ? <b className="font-semibold text-accent-ink">Prioridad {tr.priority}</b> : null}<span>{t.code}</span></div>
-          <h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">{t.title}</h2>
+          <h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">{t.title || "Solicitud sin título"}</h2>
           <p className="max-w-[36em] text-[17px] text-sub">{t.problem}</p>
         </div>
         <div><h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">Detalle</h5>
@@ -171,6 +169,7 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
             {F.filter(([, v]) => v).map(([k, v], i) => <div key={k} className="contents"><div className={cn("px-5 py-3 text-[13px] text-sub", i && "border-t border-line")}>{k}</div><div className={cn("whitespace-pre-wrap break-words px-5 py-3 text-sm", i && "border-t border-line max-sm:border-t-0")}>{v}</div></div>)}
           </div>
         </div>
+        <IntakeForm id={id} editable={canWrite || t.createdBy === me} />
         {tr.note && !canWrite && <div><h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">Comentario de IA Nexo</h5><div className="group-box px-5 py-4">{tr.note}</div></div>}
         {canWrite && (
           <form className="grid gap-3.5 card px-5 py-4" onSubmit={(e) => { e.preventDefault(); write(() => db.doc("triage/" + id).set({ status, priority: prio === "" ? null : Number(prio), note: note.trim(), updatedAt: new Date().toISOString() }), "Evaluación guardada") }}>
@@ -187,20 +186,5 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
         )}
       </DialogContent>
     </Dialog>
-  )
-}
-
-// Right after sending: the next step is the intake guide, which AI may help fill.
-function Sent({ code, onClose }: { code: string; onClose: () => void }) {
-  return (
-    <div className="grid gap-4">
-      <div className="grid gap-2.5"><span className="num text-[13px] font-medium text-faint">{code}</span><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Solicitud enviada.</h2>
-        <p className="text-[17px] text-sub">{EMAILS ? "Revisa tu correo: te enviamos la guía de intake. Complétala para que podamos evaluar el proceso contigo." : "El siguiente paso es completar la guía de intake, para que podamos evaluar el proceso contigo."}</p></div>
-      <p className="rounded-r-sm bg-group px-4 py-3 text-sm text-sub"><b className="font-semibold text-text">Puedes usar IA para llenarla.</b> Claude u otra herramienta de IA aprobada por la empresa puede ayudarte a redactar las respuestas a partir de tus notas o documentos del proceso. Revisa que todo sea correcto antes de enviarla.</p>
-      <div className="flex flex-wrap justify-end gap-2">
-        <Button variant="ghost" type="button" onClick={onClose}>Cerrar</Button>
-        <a href={GUIA_INTAKE} target="_blank" rel="noopener" className="inline-flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-medium text-white no-underline hover:brightness-105">Abrir la guía de intake<ArrowRight size={16} /></a>
-      </div>
-    </div>
   )
 }

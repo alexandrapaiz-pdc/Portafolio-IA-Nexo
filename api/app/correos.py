@@ -25,7 +25,7 @@ def encolar(cur, doc_id, datos, persona):
     cur.execute(
         """INSERT INTO correos_solicitudes (solicitud_id, destinatario, nombre, codigo, titulo)
            VALUES (%s, %s, %s, %s, %s) ON CONFLICT (solicitud_id) DO NOTHING""",
-        (doc_id, persona.correo, persona.nombre, datos['code'], datos['title']),
+        (doc_id, persona.correo, persona.nombre, datos['code'], (datos.get('title') or 'Solicitud sin título')),
     )
 
 

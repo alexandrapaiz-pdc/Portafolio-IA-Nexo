@@ -105,7 +105,7 @@ def test_cualquiera_envia_solicitud_y_el_servidor_sella(cliente):
 
 
 def test_solicitud_invalida_no_se_guarda(cliente):
-    for malo in ({"urgency": "Urgente"}, {"hours": -1}, {"title": ""}, {"area": "Marte"}, {"extra": "x"}):
+    for malo in ({"urgency": "Urgente"}, {"hours": -1}, {"title": "x" * 121}, {"area": "Marte"}, {"extra": "x"}):
         r = cliente.post("/api/c/tickets", json={**SOLICITUD, "code": "SOL-1007-ZZ", **malo}, headers=PERSONA)
         assert r.status_code == 422, (malo, r.text)
     assert sql("SELECT count(*) FROM solicitudes WHERE codigo = 'SOL-1007-ZZ'") == [(0,)]
@@ -250,3 +250,29 @@ def test_formulario_descargable_con_sesion(cliente):
     assert r.status_code == 200
     assert r.content.startswith(b'PK')
     assert 'Guia-workflow-IA.docx' in r.headers['content-disposition']
+
+
+def test_solicitud_campos_opcionales(cliente):
+    for codigo, campos in [("SOL-EMPTY-1", {}), ("SOL-EMPTY-2", {"title": "", "problem": "", "area": None, "type": None, "urgency": None})]:
+        r = cliente.post("/api/c/tickets", json={"code": codigo, **campos}, headers=PERSONA)
+        assert r.status_code == 200, r.text
+        doc = cliente.get(f"/api/c/tickets/{r.json()['id']}", headers=PERSONA).json()["datos"]
+        assert doc["title"] == "" and doc["problem"] == ""
+        assert doc["createdBy"] == "oid-persona"
+        assert sql("SELECT mundo, tipo, urgencia, horas_mes FROM solicitudes WHERE codigo = %s", codigo) == [(None, None, None, None)]
+
+
+def test_intake_pertenece_a_solicitud_y_se_puede_retomar(cliente):
+    tid = cliente.post("/api/c/tickets", json={"code": "SOL-INTAKE-1"}, headers=PERSONA).json()["id"]
+    ruta = f"/api/c/intakes/{tid}"
+    otro = principal("otra@grupopdc.com", "oid-otra", "Otra")
+    assert cliente.put(ruta, json={"answers": {}}, headers=otro).status_code == 403
+    assert cliente.put("/api/c/intakes/no-existe", json={"answers": {}}, headers=PERSONA).status_code == 404
+    assert cliente.put(ruta, json={"answers": {}}, headers=PERSONA).status_code == 200
+    assert cliente.put(ruta, json={"answers": {"process": "Proceso de prueba"}}, headers=PERSONA).status_code == 200
+    assert cliente.get(ruta, headers=PERSONA).json()["datos"]["answers"]["process"] == "Proceso de prueba"
+    assert cliente.patch(ruta, json={"answers": {"workflow": "Revisado"}}, headers=EDITORA).status_code == 200
+    assert cliente.put(ruta, json={"answers": {"unknown": "x"}}, headers=PERSONA).status_code == 422
+    assert cliente.put(ruta, json={"answers": {"process": "x" * 8001}}, headers=PERSONA).status_code == 422
+    assert cliente.delete(f"/api/c/tickets/{tid}", headers=EDITORA).status_code == 200
+    assert cliente.put(ruta, json={"answers": {}}, headers=PERSONA).status_code == 404

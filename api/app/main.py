@@ -154,14 +154,22 @@ def _escribir(c: Coleccion, doc_id: str, persona: Persona, nuevo, parcial: bool 
     try:
         with conexion.pool().connection() as con, con.cursor() as cur:
             recordar(cur, persona)
+            if c.nombre == "intakes":
+                ticket = COLECCIONES["tickets"].obtener(cur, doc_id, bloquear=True)
+                if ticket is None:
+                    raise HTTPException(404, "La solicitud no existe")
+                if not persona.editor and ticket["createdBy"] != persona.id:
+                    raise HTTPException(403, "Solo el solicitante o un editor puede completar el intake")
             antes = c.obtener(cur, doc_id, bloquear=True)
             if antes is None:
                 if parcial:
                     raise HTTPException(404, "No existe")
-                c.regla.exigir("crear", persona)
+                if c.nombre != "intakes":
+                    c.regla.exigir("crear", persona)
                 datos, accion = c.sellar(nuevo, persona), "crear"
             else:
-                c.regla.exigir("editar", persona)
+                if c.nombre != "intakes":
+                    c.regla.exigir("editar", persona)
                 datos = {**antes, **nuevo} if parcial else dict(nuevo)
                 datos.update({k: antes[k] for k in c.sellos if k in antes})  # lo sellado no cambia
                 accion = "actualizar" if parcial else "reemplazar"
