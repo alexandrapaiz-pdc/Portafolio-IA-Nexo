@@ -16,7 +16,7 @@ import { StackDiagram } from "@/components/stack-diagram"
 // Nexo AI Stack hidden: agents run on the Vikingo AI agent platform instead.
 const SHOW_STACK = false
 const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
-const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
+const SHOW_LOG = true // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
 function LevelRow({ x, pid, field, i }: { x: Level; pid: string; field: "levels" | "parts"; i: number }) {
@@ -64,7 +64,7 @@ export function Portfolio() {
       <div className="grid gap-10">
       <section className="grid gap-[18px] pb-6 pt-[88px]">
         <h1 className="h-display">Portafolio.</h1>
-        <p className="lead">Tres frentes: las buenas prácticas, el Company Brain y los proyectos de agentes, que corren en la plataforma de agentes de Vikingo AI.</p>
+        <p className="lead">Tres frentes: Nexo Apps y buenas prácticas, Company Brain y proyectos de agentes con su avance verificado.</p>
         <nav aria-label="Secciones del portafolio" className="mt-1.5 flex flex-wrap gap-2">
           {JUMP.map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
         </nav>
@@ -129,7 +129,7 @@ export function Portfolio() {
       )}
 
       <Section id="practicas">
-        <SectionHead title="AI Best Practices">
+        <SectionHead title="Nexo Apps · AI Best Practices">
           <SecP>Nexo Apps es el sitio de despliegue y la guía: las buenas prácticas por nivel viven ahí, y ahí se registra y publica cada app, con Entra.</SecP>
           <div className="flex flex-wrap items-center gap-2.5">
             <Button variant="ghost" onClick={() => openProject("protocolos")}>Ver detalle</Button>
@@ -139,6 +139,13 @@ export function Portfolio() {
           </div>
         </SectionHead>
         <div className="grid gap-[18px]">
+          <a href={pr?.site} target="_blank" rel="noopener" className="grid gap-3 rounded-2xl border border-line-2 bg-group p-7 text-inherit no-underline transition-shadow hover:shadow-[var(--shadow-hover)]">
+            <span className="text-xs font-medium text-accent-ink">YA DISPONIBLE · ACCESO CORPORATIVO</span>
+            <h3 className="text-3xl font-medium tracking-tight">Tus apps y tus guías, en Nexo Apps.</h3>
+            <p className="max-w-2xl text-base text-sub">Encuentra las apps del equipo, consulta buenas prácticas y publica tu proyecto con ayuda de tu asistente.</p>
+            <p className="text-sm text-sub">Este portafolio ya completó el recorrido: GitHub → pruebas → Azure → catálogo de Nexo.</p>
+            <span className="text-sm font-semibold text-accent-ink">Explorar Nexo Apps ↗</span>
+          </a>
           <PracticesMap />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver los {lv.length} niveles <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
@@ -149,7 +156,7 @@ export function Portfolio() {
 
       <Section id="brain">
         <SectionHead title="Company Brain">
-          <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
+          <SecP>SharePoint y Asana ya alimentan el piloto en Databricks. La carga documental sigue en curso y el acceso permanece limitado a la dueña.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
         <div className="grid gap-[18px]">
@@ -170,20 +177,20 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
+        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso. Regulatorio y Demografía se incorporan con prioridad por acordar.</SecP></SectionHead>
         <div className="grid gap-[18px]">
           <AiAgentPipeline />
           <AgentBoard />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
-            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
+            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={p.priority == null ? undefined : String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
           </details>
         </div>
       </Section>
 
       {SHOW_LOG && (
       <Section id="bitacora">
-        <SectionHead title="Bitácora" />
+        <SectionHead title="Últimas actualizaciones" />
         <div className="group-box">{updates.length ? updates.slice(0, 10).map((u) => <UpdateRow key={u.id} u={u} showProject />) : <Empty>Aún no hay actualizaciones. Abre un proyecto y publica la primera.</Empty>}</div>
       </Section>
       )}
