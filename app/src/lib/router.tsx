@@ -1,8 +1,8 @@
-/* Hash routing with bare tokens (#portafolio, #tareas, #agentes, #solicitudes) — the only
+/* Hash routing with bare tokens (#portafolio, #tareas, #solicitudes) — the only
    hash form an artifact link carries. A project id in the hash opens its detail sheet. */
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react"
 
-export const VIEWS = ["inicio", "portafolio", "agentes", "solicitudes"] as const // "tareas" hidden for now
+export const VIEWS = ["inicio", "portafolio", "solicitudes"] as const // "tareas" hidden for now
 export type View = (typeof VIEWS)[number]
 
 interface Router {

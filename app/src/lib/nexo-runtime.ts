@@ -5,7 +5,7 @@
    - db: colecciones y documentos; los cambios de otras personas llegan por consulta
      cada pocos segundos (solo pide datos si algo cambió, con el número de cambio "seq").
    - user: identidad de Entra (la pone Container Apps) y permiso de edición.
-   - mcp: solo la lectura de tareas de Asana, que hace el servidor con su propio token. */
+ */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Any = any
@@ -106,11 +106,4 @@ const user = {
   profiles: (ids: string[]) => api("POST", "/api/personas", { ids }),
 }
 
-const mcp = {
-  callTool: async (servidor: string, herramienta: string, args: Any) => {
-    if (servidor !== "Asana" || herramienta !== "asana_get_task") throw { code: "not_in_manifest" }
-    return api("POST", "/api/asana/tarea", { task_id: String(args.task_id), opt_fields: args.opt_fields || "" })
-  },
-}
-
-export const nexoRuntime = { use: async (nombre: string) => ({ db, user, mcp } as Record<string, Any>)[nombre] ?? null }
+export const nexoRuntime = { use: async (nombre: string) => ({ db, user } as Record<string, Any>)[nombre] ?? null }

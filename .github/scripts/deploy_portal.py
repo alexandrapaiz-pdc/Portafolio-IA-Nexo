@@ -57,7 +57,12 @@ def deploy():
         props = revision['properties']
         print(f"{revision_name}: {props.get('provisioningState')} / {props.get('healthState')} / {props.get('runningState')}", flush=True)
         if ready(revision):
-            break
+            current = az('containerapp', 'show', '-g', group, '-n', app_name)
+            current_props = current['properties']
+            if (current_props.get('latestRevisionName') == revision_name
+                    and current_props.get('latestReadyRevisionName') == revision_name
+                    and current_props['template']['containers'][0]['image'] == image):
+                break
         if props.get('provisioningState') == 'Failed':
             raise RuntimeError('Revision failed; do not retire the previous healthy revision')
         time.sleep(10)
