@@ -13,12 +13,14 @@ import AiAgentPipeline from "@/components/ui/ai-agent-pipeline"
 import { BrainDiagram } from "@/components/brain-diagram"
 import { StackDiagram } from "@/components/stack-diagram"
 
-const JUMP = [["stack-sec", "Stack"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
+// Nexo AI Stack hidden: agents run on the Vikingo AI agent platform instead.
+const SHOW_STACK = false
+const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
 const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
 function LevelRow({ x, pid, field, i }: { x: Level; pid: string; field: "levels" | "parts"; i: number }) {
-  const { canWrite, projects, db, write } = useStore()
+  const { canEdit, projects, db, write } = useStore()
   const [cls, label] = LSTAT[x.status] || LSTAT.pendiente
   const cycle = () => {
     const pp = projects.find((p) => p.id === pid); if (!pp) return
@@ -29,13 +31,14 @@ function LevelRow({ x, pid, field, i }: { x: Level; pid: string; field: "levels"
   return (
     <div className="row grid-cols-[minmax(0,1fr)_auto]">
       <div className="min-w-0"><div className="font-medium">{x.name}</div><div className="mt-0.5 text-[13px] text-sub">{x.who || x.desc}</div></div>
-      <StatusPill status={cls} label={label} onClick={canWrite ? cycle : undefined} />
+      <StatusPill status={cls} label={label} onClick={canEdit ? cycle : undefined} />
     </div>
   )
 }
 
 export function Portfolio() {
-  const { projects, components, updates, loaded, noDb, canWrite, db, write } = useStore()
+  const { projects, components, updates, tickets, triage, loaded, canEdit, db, write } = useStore()
+  const openTickets = tickets.filter((t) => !["proyecto", "descartado"].includes(triage[t.id]?.status || "nuevo")).length
   const { openProject } = useRouter()
   const byId = (id: string) => projects.find((p) => p.id === id)
   const ag = agentsOf(projects)
@@ -60,26 +63,24 @@ export function Portfolio() {
     <main className="wrap">
       <div className="grid gap-10">
       <section className="grid gap-[18px] pb-6 pt-[88px]">
-        <div className="eyebrow">Portafolio · Q4 2026</div>
         <h1 className="h-display">Portafolio.</h1>
-        <p className="lead">Cuatro frentes: el stack de IA de Nexo, las buenas prácticas, el Company Brain y los proyectos de agentes.</p>
+        <p className="lead">Tres frentes: las buenas prácticas, el Company Brain y los proyectos de agentes, que corren en la plataforma de agentes de Vikingo AI.</p>
         <nav aria-label="Secciones del portafolio" className="mt-1.5 flex flex-wrap gap-2">
           {JUMP.map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
         </nav>
       </section>
 
-      {noDb && <p className="mb-6 rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Inicia sesión en claude.ai para ver los datos del portafolio.</p>}
-
+      
       <StatsRow>
-        <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} />
+        {SHOW_STACK ? <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} /> : <Stat k="Solicitudes abiertas" v={openTickets} sub="Procesos por evaluar" />}
         <Stat k="Proyectos de agentes" v={ag.length} sub={`Prioridad 1: ${ag[0]?.name || "—"}`} />
         <Stat k="Agentes en producción" v={ag.filter((p) => p.phase === "produccion").length} sub="Los KPIs se miden al desplegar" />
         <Stat k="Trabajo manual en alcance" accent v={units.length ? nf(units[0][1]) : "—"} unit={units[0]?.[0]} sub={units.length > 1 ? units.slice(1).map(([u, v]) => `${nf(v)} ${u}`).join(" · ") : "Horas medidas a la fecha"} />
       </StatsRow>
       </div>
 
-      <section className="grid grid-cols-2 gap-3.5 pt-10 max-[720px]:grid-cols-1">
-        {PROGRAMS.map((g) => {
+      <section className="grid grid-cols-3 gap-3.5 pt-10 max-[900px]:grid-cols-1">
+        {PROGRAMS.filter((g) => SHOW_STACK || !g.hidden).map((g) => {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
             <GlowCard key={g.id} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
@@ -95,8 +96,9 @@ export function Portfolio() {
         })}
       </section>
 
+      {SHOW_STACK && (
       <Section id="stack-sec">
-        <SectionHead eyebrow="Frente 1 · Infraestructura" title="Nexo AI Stack">
+        <SectionHead title="Nexo AI Stack">
           <SecP>Lo que desbloquea todo lo demás: cada componente listo desbloquea proyectos.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("infra")}>Ver detalle del stack</Button></div>
         </SectionHead>
@@ -115,7 +117,7 @@ export function Portfolio() {
                     <div key={c.id} className="row grid-cols-[minmax(0,1fr)_auto_auto] max-sm:grid-cols-[minmax(0,1fr)_auto]">
                       <div className="min-w-0"><div className="font-medium">{c.name}{c.key && <span className="ml-2 text-xs font-semibold text-accent-ink">Bloqueador principal</span>}</div><div className="mt-0.5 text-[13px] text-sub">{[c.owner, c.note].filter(Boolean).join(" · ")}</div></div>
                       <span className="num min-w-[92px] text-right text-[13px] text-faint max-sm:hidden">{u ? `${u} ${u === 1 ? "proyecto" : "proyectos"}` : "Base"}</span>
-                      <StatusPill status={c.status} label={STATUS[c.status]} onClick={canWrite ? () => { const ns = NEXT_STATUS[c.status] || "en_curso"; write(() => db.doc("components/" + c.id).update({ status: ns, updated: today() }), `${c.name}: ${STATUS[ns]}`) } : undefined} />
+                      <StatusPill status={c.status} label={STATUS[c.status]} onClick={canEdit ? () => { const ns = NEXT_STATUS[c.status] || "en_curso"; write(() => db.doc("components/" + c.id).update({ status: ns, updated: today() }), `${c.name}: ${STATUS[ns]}`) } : undefined} />
                     </div>
                   )
                 })}
@@ -124,9 +126,10 @@ export function Portfolio() {
           </div>
         </div>
       </Section>
+      )}
 
       <Section id="practicas">
-        <SectionHead eyebrow="Frente 2 · Estándares" title="AI Best Practices">
+        <SectionHead title="AI Best Practices">
           <SecP>Estándares para usar y construir con IA: guías por nivel, en GitHub, abiertas a mejoras de cualquiera.</SecP>
           <div className="flex flex-wrap items-center gap-2.5">
             <Button variant="ghost" onClick={() => openProject("protocolos")}>Ver detalle</Button>
@@ -144,7 +147,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="brain">
-        <SectionHead eyebrow="Frente 3 · Conocimiento" title="Company Brain">
+        <SectionHead title="Company Brain">
           <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
@@ -156,7 +159,7 @@ export function Portfolio() {
           </details>
         </div>
         <div>
-          <div className="flex flex-wrap items-baseline gap-2.5 px-1 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Portales</b><span>El frente interactivo del Company Brain</span></div>
+          <div className="flex flex-wrap items-baseline gap-2.5 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Portales</b><span>El frente interactivo del Company Brain</span></div>
           <figure className="m-0 mb-3.5 overflow-hidden card p-0">
             <img src={portalMundos} alt="Portal de Mundos: los seis mundos de Grupo PDC como planetas alrededor del logo; PDC Brands al centro con el botón Entrar a PDC Brands." className="block h-auto w-full" loading="lazy" />
             <figcaption className="flex flex-wrap justify-between gap-2 px-5 py-3 text-[13px] text-sub"><span><b className="font-semibold text-text">Portal de Mundos</b> · un tablero por cada uno de los 6 mundos</span><span className="text-faint">Piloto: PDC Brands</span></figcaption>
@@ -166,7 +169,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead eyebrow="Frente 4 · Automatización" title="AI Agent Projects"><SecP>Los agentes, en orden de prioridad.</SecP></SectionHead>
+        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
         <div className="grid gap-[18px]">
           <AiAgentPipeline />
           <AgentBoard />
@@ -179,13 +182,13 @@ export function Portfolio() {
 
       {SHOW_LOG && (
       <Section id="bitacora">
-        <SectionHead eyebrow="Avances recientes" title="Bitácora" />
+        <SectionHead title="Bitácora" />
         <div className="group-box">{updates.length ? updates.slice(0, 10).map((u) => <UpdateRow key={u.id} u={u} showProject />) : <Empty>Aún no hay actualizaciones. Abre un proyecto y publica la primera.</Empty>}</div>
       </Section>
       )}
 
       <RequestCta />
-      <Footer right="Fuentes: reuniones en Granola y backlog en Asana. “Pendiente” indica una línea base aún no medida." />
+      <Footer right="Fuentes: reuniones en Granola y repositorios en GitHub. “Pendiente” indica una línea base aún no medida." />
     </main>
   )
 }

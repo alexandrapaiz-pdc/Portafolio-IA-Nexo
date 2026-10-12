@@ -1,0 +1,1487 @@
+{
+ "projects": [
+  {
+   "id": "avon",
+   "blocker": "Fecha dura: APT se apaga a mediados de octubre. Falta un machote real (.xlsb) de C17'26 para construir el lector.",
+   "bu": "Avon",
+   "discovery": [
+    {
+     "done": false,
+     "due": "2026-09-30",
+     "label": "Feedback crítico de la nueva herramienta"
+    },
+    {
+     "done": false,
+     "due": "2026-09-30",
+     "label": "Presentación kickoff C7 y acceso a carpetas de categoría"
+    },
+    {
+     "done": false,
+     "due": "2026-10-05",
+     "label": "Confirmar Vikingo Planeación como fuente To-Be"
+    },
+    {
+     "done": false,
+     "due": "2026-10-06",
+     "label": "Base histórica de campañas"
+    },
+    {
+     "done": false,
+     "due": "2026-10-07",
+     "label": "Mapa del proceso de planeación de 15 pasos"
+    },
+    {
+     "done": false,
+     "due": "2026-10-08",
+     "label": "Alcance de automatización Excel → KPIs (sprint de 7 semanas)"
+    },
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Diseño To-Be de la reingeniería"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": 20,
+     "current": null,
+     "id": "cycle",
+     "name": "Ciclo de planeación por campaña",
+     "note": "Hoy 15–20 días; meta por definir.",
+     "target": null,
+     "unit": "días",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": 2,
+     "current": 2,
+     "id": "excel_kpi",
+     "name": "Base Excel → tablas de KPIs",
+     "note": "Hoy “un par de horas” por corrida; meta en minutos.",
+     "target": 0.1,
+     "unit": "h",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": null,
+     "current": 96,
+     "id": "leader_acc",
+     "name": "Precisión de Leader List automatizada",
+     "note": "PoC: 95–98%. No es medida final de producción.",
+     "target": 100,
+     "unit": "%",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": 74.7,
+     "current": 74.7,
+     "id": "golden",
+     "name": "Acierto del motor vs. corrida de referencia",
+     "note": "Mínimo exigido por la suite dorada: 1,463 pares campo por campo, 16 pruebas en verde (20 sep).",
+     "target": null,
+     "unit": "%",
+     "updated": "2026-09-20"
+    }
+   ],
+   "name": "Avon · Kickoff a campaña",
+   "needs": [
+    "stack",
+    "azure",
+    "github",
+    "datos"
+   ],
+   "next": "Fundación del camino interino antes del apagado: lector del machote, salida para facturación y macro MOSTRO.",
+   "pains": [
+    "APT se apaga a mediados de octubre de 2026 (fin del TSA con Natura); el script actual muere con él.",
+    "El kickoff de cada campaña toma 15 h de trabajo manual.",
+    "Los datos de ventas se descargan por campaña y país y se consolidan a mano en Excel.",
+    "APT perdió funciones de paginación y depende de macros externas.",
+    "Children no tiene clasificación propia; se separa a mano.",
+    "La planeación de una campaña toma 15–20 días."
+   ],
+   "paused": false,
+   "phase": "construccion",
+   "priority": 1,
+   "program": "agentes",
+   "savings": {
+    "baseline": 15,
+    "current": 15,
+    "note": "Acordado con Lisa: el kickoff toma 15 h de trabajo manual por campaña. Meta por definir.",
+    "target": null,
+    "unit": "h/campaña"
+   },
+   "sponsor": "Planeación Avon",
+   "summary": "Automatizar el kickoff de campaña: de la base de ventas a las tablas de KPIs sin extracción manual. Elimina 15 h de trabajo manual por campaña. Incluye el reemplazo de APT (Macro Revista y Leader List). Sustituto agéntico en construcción (Python, LangGraph, MCP, Postgres): motor portado y validado contra la corrida de referencia de Denis Martínez.",
+   "tagline": "Prioridad 1, acordada con Lisa",
+   "vsm": {
+    "asis": [
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Descargar ventas por campaña y país (Maps)",
+      "pt": null,
+      "wait": null,
+      "who": "Planeación Avon"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Limpiar y consolidar la base en Excel",
+      "pt": null,
+      "wait": null,
+      "who": "Planeación Avon"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Agregar pedidos cerrados del año anterior",
+      "pt": null,
+      "wait": null,
+      "who": "Planeación Avon"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Separar subcategorías (Children a mano)",
+      "pt": null,
+      "wait": null,
+      "who": "Planeación Avon"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Poblar tablas de KPIs",
+      "pt": 2,
+      "wait": null,
+      "who": "Planeación Avon"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Top 10 y bottom 10 de ofertas y presentar",
+      "pt": null,
+      "wait": null,
+      "who": "Planeación Avon"
+     }
+    ],
+    "asisNote": "Kickoff de campaña: 15 h de trabajo manual por campaña en total (acordado con Lisa). Poblar KPIs toma “un par de horas”; el resto de tiempos está por medir.",
+    "tobe": [
+     {
+      "ca": null,
+      "mode": "agente",
+      "name": "Base de ventas desde Vikingo Planeación",
+      "pt": null,
+      "wait": null,
+      "who": "Automático"
+     },
+     {
+      "ca": null,
+      "mode": "agente",
+      "name": "Generar tablas de KPIs y top / bottom 10",
+      "pt": null,
+      "wait": null,
+      "who": "Agente de kickoff"
+     },
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Revisar, ajustar Children y presentar",
+      "pt": null,
+      "wait": null,
+      "who": "Planeación Avon"
+     }
+    ],
+    "tobeNote": "Propuesta: de la base de ventas a KPIs sin extracción manual. Depende de confirmar Vikingo Planeación como fuente To-Be.",
+    "updated": "2026-10-01"
+   },
+   "wave": 1
+  },
+  {
+   "id": "cerebro",
+   "blocker": "Definición del stack.",
+   "bu": "Nexo",
+   "discovery": [
+    {
+     "done": false,
+     "due": null,
+     "label": "Sesión de alcance con Sebas Xoy"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Ficha del proyecto"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": 44,
+     "current": 44,
+     "id": "ontime",
+     "name": "Proyectos a tiempo",
+     "note": "",
+     "target": null,
+     "unit": "%",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "pmo_hours",
+     "name": "Horas de reporte PMO por mes",
+     "note": "",
+     "target": null,
+     "unit": "h",
+     "updated": ""
+    }
+   ],
+   "name": "Cerebro PMO",
+   "needs": [
+    "stack",
+    "azure",
+    "orquestacion",
+    "licencias"
+   ],
+   "next": "Sesión de alcance con Sebas Xoy.",
+   "pains": [
+    "Solo 44% de los proyectos va a tiempo; la PMO está en rojo.",
+    "Se mezclan entregables de sprint, tareas del MVP y backlog.",
+    "Metodología y hoja de ruta macro por alinear."
+   ],
+   "paused": false,
+   "phase": "descubrimiento",
+   "priority": 6,
+   "program": "agentes",
+   "savings": {
+    "note": "Horas de reporte PMO: línea base pendiente."
+   },
+   "sponsor": "Sebas Xoy",
+   "summary": "Agentes de apoyo a la PMO. Se define el alcance con Sebas Xoy cuando la infraestructura y MegaMás estén en marcha.",
+   "tagline": "Agentes para la gestión de proyectos",
+   "wave": 2
+  },
+  {
+   "id": "companybrain",
+   "blocker": "Unity Catalog necesita al administrador de la cuenta de Databricks.",
+   "bu": "Nexo",
+   "discovery": [
+    {
+     "done": true,
+     "due": null,
+     "label": "Glosario y mapa organizacional en GitHub"
+    },
+    {
+     "done": true,
+     "due": "2026-09-30",
+     "label": "Plan de datos en Databricks (borrador)"
+    },
+    {
+     "done": true,
+     "due": "2026-10-05",
+     "label": "Workspace de Databricks y lago ADLS creados"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Revisión del plan con IT y ciberseguridad"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Cargar el esquema semantic desde el repositorio"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Primeros productos gold: Kickoff Avon, Portal de Mundos, Contraloría y STEP"
+    }
+   ],
+   "enabler": true,
+   "impactLabel": "Datos y vocabulario para 4 proyectos",
+   "kpis": [
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "sources",
+     "name": "Fuentes del inventario cargadas en Databricks",
+     "note": "Ver inventario_fuentes.yaml en el repositorio.",
+     "target": null,
+     "unit": "",
+     "updated": "2026-10-01"
+    }
+   ],
+   "name": "Company Brain",
+   "needs": [
+    "azure",
+    "datos",
+    "controles",
+    "github"
+   ],
+   "next": "Unity Catalog (brain_dev y brain_prod) en cuanto haya administrador de cuenta.",
+   "noAzure": false,
+   "pains": [
+    "Los agentes no entienden el vocabulario de la empresa ni quién es quién.",
+    "Los datos operativos viven dispersos y se descargan a mano en Excel.",
+    "Cada KPI se calcula en varios lugares y no da el mismo número."
+   ],
+   "parts": [
+    {
+     "desc": "Glosario, alias y mapa organizacional en GitHub; base del esquema semantic",
+     "name": "Vocabulario y ontología",
+     "status": "en_curso"
+    },
+    {
+     "desc": "SIGO, políticas y SOPs en SharePoint, consultados en vivo vía Microsoft Graph",
+     "name": "Conocimiento documental",
+     "status": "pendiente"
+    },
+    {
+     "desc": "JD Edwards, STEP, ventas de Avon, Asana y Jira en Databricks",
+     "name": "Datos operativos",
+     "status": "pendiente"
+    },
+    {
+     "desc": "KPIs y líneas base por proyecto y por mundo, para tableros y agentes",
+     "name": "Productos de datos",
+     "status": "pendiente"
+    }
+   ],
+   "paused": false,
+   "phase": "construccion",
+   "priority": 0.7,
+   "program": "brain",
+   "savings": {},
+   "sponsor": "Alexandra Paiz",
+   "summary": "La capa de conocimiento de Grupo PDC: 1) vocabulario y ontología (glosario y mapa organizacional en GitHub), 2) documentos en SharePoint consultados en vivo, 3) datos operativos (JD Edwards, STEP, ventas de Avon, Asana, Jira) y 4) productos de datos (KPIs y líneas base) en Databricks.",
+   "tagline": "Capa de conocimiento para agentes y personas",
+   "wave": 0
+  },
+  {
+   "id": "contraloria",
+   "blocker": "Acceso a la vista de liquidaciones pendientes y a la carpeta compartida de Tráfico.",
+   "bu": "MegaMás",
+   "discovery": [
+    {
+     "done": false,
+     "due": "2026-10-02",
+     "label": "Acceso a vista de liquidaciones y carpeta de Tráfico"
+    },
+    {
+     "done": false,
+     "due": "2026-10-06",
+     "label": "Mapa del flujo documental y alcance del agente"
+    },
+    {
+     "done": false,
+     "due": "2026-10-07",
+     "label": "Línea base: IVA no deducible, pagos vencidos, documentos faltantes"
+    },
+    {
+     "done": false,
+     "due": "2026-10-08",
+     "label": "Canal único de recepción de documentos (quick win)"
+    },
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Ficha del proyecto"
+    },
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Especificación del agente de conciliación + ERP"
+    },
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Mini-curso de Claude (30 min) para el equipo"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": null,
+     "current": null,
+     "id": "iva",
+     "name": "IVA no deducible",
+     "note": "Monto no disponible en la reunión; se mide en la línea base.",
+     "target": null,
+     "unit": "Q",
+     "updated": ""
+    },
+    {
+     "baseline": 40,
+     "current": 40,
+     "id": "docs_missing",
+     "name": "Documentos de Tráfico sin ubicar",
+     "note": "130–140 ya reubicados al 29 sep.",
+     "target": 0,
+     "unit": "",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "aged_invoices",
+     "name": "Facturas en prepasivo > 30 días",
+     "note": "Algunas con hasta un año de antigüedad.",
+     "target": null,
+     "unit": "",
+     "updated": ""
+    },
+    {
+     "baseline": 2,
+     "current": 2,
+     "id": "agents_suspended",
+     "name": "Agentes nacionales con servicio suspendido",
+     "note": "2 de 3 suspendieron por falta de pago.",
+     "target": 0,
+     "unit": "",
+     "updated": "2026-09-30"
+    }
+   ],
+   "name": "MegaMás · Contraloría",
+   "needs": [
+    "stack",
+    "azure",
+    "github",
+    "controles",
+    "jde",
+    "orquestacion",
+    "licencias"
+   ],
+   "next": "Línea base de IVA, pagos vencidos y documentos — 7 oct.",
+   "pains": [
+    "Contratos vencen por falta de ejecución.",
+    "Facturas antiguas vuelven gastos no deducibles y se pierde crédito de IVA.",
+    "Facturas de hasta un año quedan en prepasivo sin registrarse como cuenta por pagar.",
+    "2 de 3 agentes nacionales suspendieron servicio por falta de pago.",
+    "Documentos de Tráfico se extravían: 130–140 reubicados, 40 aún sin ubicar; llegan en lotes de 200–400.",
+    "Un proyecto previo de RPA con Becker se canceló."
+   ],
+   "paused": false,
+   "phase": "descubrimiento",
+   "priority": 2,
+   "program": "agentes",
+   "savings": {
+    "note": "Horas de conciliación y registro manual: línea base pendiente."
+   },
+   "sponsor": "César Paz",
+   "summary": "Agente de conciliación documental y registro en ERP (incluye retenciones) para el flujo de compras de inventario Tráfico → Contraloría → ERP.",
+   "tagline": "Documentos, IVA y cuentas por pagar",
+   "vsm": {
+    "asis": [
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Tráfico recibe documentos de importación",
+      "pt": null,
+      "wait": null,
+      "who": "Tráfico"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Colocar documentos en la carpeta compartida",
+      "pt": null,
+      "wait": null,
+      "who": "Tráfico"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Revisar factura contra orden de compra",
+      "pt": null,
+      "wait": null,
+      "who": "Contraloría"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Liquidar costos al recibir inventario",
+      "pt": null,
+      "wait": null,
+      "who": "Contraloría"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Registrar cuenta por pagar en el ERP",
+      "pt": null,
+      "wait": null,
+      "who": "Contraloría"
+     }
+    ],
+    "asisNote": "Hoy los documentos se extravían (40 sin ubicar al 29 sep) y llegan en lotes de 200–400; facturas de hasta un año quedan en prepasivo. Tiempos por medir en la línea base del 7 oct.",
+    "tobe": [
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Tráfico sube documentos a un canal único",
+      "pt": null,
+      "wait": null,
+      "who": "Tráfico"
+     },
+     {
+      "ca": null,
+      "mode": "agente",
+      "name": "Validar y conciliar factura contra OC",
+      "pt": null,
+      "wait": null,
+      "who": "Agente de conciliación"
+     },
+     {
+      "ca": null,
+      "mode": "agente",
+      "name": "Preparar liquidación y retenciones",
+      "pt": null,
+      "wait": null,
+      "who": "Agente de conciliación"
+     },
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Revisar y aprobar",
+      "pt": null,
+      "wait": null,
+      "who": "Contraloría"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Registrar en el ERP",
+      "pt": null,
+      "wait": null,
+      "who": "Contraloría"
+     }
+    ],
+    "tobeNote": "Propuesta: el agente lee JD Edwards en solo lectura; el registro en el ERP lo hace una persona tras aprobar.",
+    "updated": "2026-10-01"
+   },
+   "wave": 1
+  },
+  {
+   "id": "gh",
+   "blocker": "Recibir insumos: SharePoint, Excel de vacaciones y línea base de liquidaciones 2026.",
+   "bu": "MegaMás",
+   "discovery": [
+    {
+     "done": false,
+     "due": "2026-10-01",
+     "label": "Insumos: SharePoint, Excel de vacaciones, videos, liquidaciones 2026"
+    },
+    {
+     "done": false,
+     "due": "2026-10-07",
+     "label": "Análisis: casos críticos por país y dinero en riesgo"
+    },
+    {
+     "done": false,
+     "due": "2026-10-08",
+     "label": "Ficha del proyecto (costo evitado, 3 hipótesis Q4)"
+    },
+    {
+     "done": false,
+     "due": "2026-10-12",
+     "label": "Acceso al portal sin correo corporativo"
+    },
+    {
+     "done": false,
+     "due": "2026-10-19",
+     "label": "Diseño del agente de alertas y reportes a líderes y CAM"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": null,
+     "current": null,
+     "id": "critical",
+     "name": "Casos críticos (> 2 periodos acumulados)",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": ""
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "payout",
+     "name": "Vacaciones pagadas en liquidaciones 2026",
+     "note": "Luis Fernando obtiene la línea base de planilla.",
+     "target": null,
+     "unit": "Q",
+     "updated": ""
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "days",
+     "name": "Días de vacaciones acumulados",
+     "note": "",
+     "target": null,
+     "unit": "días",
+     "updated": ""
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "coverage",
+     "name": "Personal con acceso al portal",
+     "note": "",
+     "target": 100,
+     "unit": "%",
+     "updated": ""
+    }
+   ],
+   "name": "MegaMás · Portal Gestión Humana",
+   "needs": [
+    "stack",
+    "azure",
+    "datos",
+    "orquestacion",
+    "dominio",
+    "controles"
+   ],
+   "next": "Análisis de casos críticos — 7 oct.",
+   "pains": [
+    "Los días de vacaciones se acumulan sin controles ni alertas y solo se ven en la liquidación.",
+    "Hay vacaciones tomadas sin reportar; los registros no cuadran con lo real.",
+    "El portal debe llegar al 100% del personal, incluido quien no tiene correo corporativo.",
+    "El manejo de vacaciones y el reporte de costo de personal son manuales y no estandarizados entre países."
+   ],
+   "paused": false,
+   "phase": "descubrimiento",
+   "priority": 4,
+   "program": "agentes",
+   "savings": {
+    "note": "Horas de reporte manual de vacaciones y costo de personal: línea base pendiente."
+   },
+   "sponsor": "Luis Fernando Chang",
+   "summary": "Portal y agente de alertas para que las vacaciones acumuladas no aparezcan hasta la liquidación. Caso de costo evitado.",
+   "tagline": "Alertas de vacaciones acumuladas",
+   "wave": 2
+  },
+  {
+   "id": "infra",
+   "blocker": "Cuota de Claude en Foundry (0 TPM) y consentimiento de administrador de Entra para SharePoint.",
+   "bu": "Nexo",
+   "discovery": [
+    {
+     "done": true,
+     "due": "2026-10-02",
+     "label": "Definir componentes del stack"
+    },
+    {
+     "done": false,
+     "due": "2026-10-02",
+     "label": "Ticket(s) idea-to-launch con Vikingo: JDE, data warehouse, dominio"
+    },
+    {
+     "done": false,
+     "due": "2026-10-02",
+     "label": "Solicitud final de licencias Claude a Luisca"
+    },
+    {
+     "done": false,
+     "due": "2026-10-06",
+     "label": "Responsable y calendario de Databricks"
+    },
+    {
+     "done": false,
+     "due": "2026-10-07",
+     "label": "Plantilla del portal de agentes"
+    },
+    {
+     "done": false,
+     "due": "2026-10-08",
+     "label": "Vista consolidada de los proyectos para Óscar"
+    },
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Modelo de controles y permisos"
+    }
+   ],
+   "enabler": true,
+   "impactLabel": "Habilita los 7 proyectos",
+   "kpis": [
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "stack_projects",
+     "name": "Proyectos corriendo en el stack Nexo",
+     "note": "",
+     "target": 10,
+     "unit": "",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "licenses",
+     "name": "Licencias Claude asignadas",
+     "note": "Lista de solicitantes en consolidación.",
+     "target": null,
+     "unit": "",
+     "updated": ""
+    },
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "prod_checklist",
+     "name": "Checklist de producción completado",
+     "note": "",
+     "target": 100,
+     "unit": "%",
+     "updated": "2026-09-30"
+    }
+   ],
+   "name": "Nexo AI Stack",
+   "needs": [
+    "stack",
+    "azure",
+    "github",
+    "licencias",
+    "controles",
+    "jde",
+    "datos",
+    "orquestacion",
+    "dominio"
+   ],
+   "next": "Abrir el portal de agentes a más usuarios, Langfuse y la app de SharePoint.",
+   "pains": [
+    "Cada equipo usa herramientas y licencias distintas, sin estándar.",
+    "Se crean soluciones con Claude sin documentación ni controles antes de producción.",
+    "El acceso a JD Edwards requiere VPN y debe ser solo lectura."
+   ],
+   "paused": false,
+   "phase": "habilitacion",
+   "priority": 0,
+   "program": "stack",
+   "savings": {},
+   "sponsor": "Alexandra Paiz",
+   "summary": "Stack propio de Nexo, independiente de Vikingo AI, para estandarizar el despliegue de unos 10 proyectos de automatización. Soporte de Vikingo vía tickets idea-to-launch.",
+   "tagline": "Habilitador de todo el portafolio",
+   "wave": 0
+  },
+  {
+   "id": "lexy",
+   "blocker": "Capa de datos del stack.",
+   "bu": "MegaMás",
+   "discovery": [
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Inventario de contenido: SharePoint + exportación de OTRS"
+    },
+    {
+     "done": false,
+     "due": "2026-10-12",
+     "label": "Alcance de la base de conocimiento"
+    },
+    {
+     "done": false,
+     "due": "2026-10-19",
+     "label": "Alcance del agente de validación Item Data de Avon"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": null,
+     "current": null,
+     "id": "dup_tickets",
+     "name": "Tickets duplicados o sin título por mes",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": ""
+    },
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "kb_resolved",
+     "name": "Tickets resueltos con la base de conocimiento",
+     "note": "",
+     "target": null,
+     "unit": "%",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "item_data",
+     "name": "Validación de Item Data Avon",
+     "note": "Hoy toma días; meta: minutos.",
+     "target": null,
+     "unit": "días",
+     "updated": ""
+    }
+   ],
+   "name": "MegaMás · Lexy / Soporte IT",
+   "needs": [
+    "stack",
+    "azure",
+    "datos",
+    "orquestacion",
+    "licencias"
+   ],
+   "next": "Inventario de contenido — 9 oct.",
+   "pains": [
+    "Los tickets llegan por correo a OTRS: correos sin asunto crean tickets sin título y las respuestas generan duplicados.",
+    "Se perdió el repositorio compartido anterior.",
+    "SharePoint es difícil de buscar (“mil documentos”).",
+    "La validación de Item Data de Avon (folleto vs. IDF) es 100% manual y toma días."
+   ],
+   "paused": false,
+   "phase": "descubrimiento",
+   "priority": 5,
+   "program": "agentes",
+   "savings": {
+    "note": "Tiempo de búsqueda de los agentes de soporte: línea base pendiente."
+   },
+   "sponsor": "Jackeline Luna",
+   "summary": "Base de conocimiento de soporte IT para que los agentes resuelvan tickets sin buscar entre documentos. El más fácil de arrancar cuando exista la capa de datos.",
+   "tagline": "Menos urgente según prioridad del 30 sep",
+   "wave": 2
+  },
+  {
+   "id": "mundos",
+   "blocker": "",
+   "bu": "Grupo PDC",
+   "discovery": [
+    {
+     "done": false,
+     "due": null,
+     "label": "Acceso de Alexandra al hosting"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Dominio propio con IT"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Arquitectura de largo plazo con Edgar"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": 1,
+     "current": 1,
+     "id": "worlds",
+     "name": "Mundos publicados en el portal",
+     "note": "Piloto PDC Brands. Total de mundos por confirmar.",
+     "target": null,
+     "unit": "",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "reviews",
+     "name": "Revisiones del comité hechas desde el portal",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "flows_owned",
+     "name": "Flujos del portal en stack propio",
+     "note": "",
+     "target": 100,
+     "unit": "%",
+     "updated": "2026-09-30"
+    }
+   ],
+   "name": "Portal de Mundos",
+   "needs": [
+    "stack",
+    "azure",
+    "github",
+    "dominio",
+    "controles"
+   ],
+   "next": "Dominio propio con IT y arquitectura de largo plazo con Edgar.",
+   "noAzure": true,
+   "pains": [
+    "El comité ejecutivo revisa el desempeño con presentaciones armadas a mano.",
+    "Excel es una fuente de datos frágil (se mantiene por gestión del cambio).",
+    "Cada portal tiene su propio enlace; la privacidad por creador limita la vista de portal de portales."
+   ],
+   "paused": false,
+   "phase": "piloto",
+   "priority": 2,
+   "program": "brain",
+   "savings": {
+    "note": "Horas de preparación de presentaciones por revisión: línea base pendiente."
+   },
+   "sponsor": "Sergio",
+   "summary": "Un tablero por mundo para reemplazar las presentaciones del comité. Plantilla SIGO IA: un HTML autocontenido con 7 bloques (Métricos, Planeadores, Cadenas de Valor, Proyectos clave, Estructura, Metas y Bonos, Proyecciones Financieras), todos funcionales salvo dos sub-pestañas de Estructura. Hoy lee Excel vía Microsoft Graph. Piloto: PDC Brands.",
+   "tagline": "Tablero de gestión por mundo para el comité ejecutivo",
+   "wave": 1
+  },
+  {
+   "id": "protocolos",
+   "blocker": "Revisión de ciberseguridad con Benji: reglas de datos sensibles y retención de los complementos de Office.",
+   "bu": "Nexo",
+   "discovery": [
+    {
+     "done": false,
+     "due": null,
+     "label": "Definir protocolos de ciberseguridad con Benji"
+    },
+    {
+     "done": true,
+     "due": null,
+     "label": "Estándares Tier 1: seguridad, settings recomendados, conectores y plugins"
+    },
+    {
+     "done": true,
+     "due": null,
+     "label": "Estándares Tier 2: portal de Diego Villatoro, GitHub privado, inner source"
+    },
+    {
+     "done": true,
+     "due": null,
+     "label": "Publicar protocolos en GitHub personal y migrar al empresarial"
+    },
+    {
+     "done": false,
+     "due": null,
+     "label": "Modelo escalable de despliegue de agentes: sandbox, portal y guía"
+    }
+   ],
+   "enabler": true,
+   "impactLabel": "Uso seguro para todos los usuarios",
+   "kpis": [
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "tier1",
+     "name": "Usuarios Tier 1 con protocolo aplicado",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "tier2",
+     "name": "Portales Tier 2 en el portal corporativo",
+     "note": "Requiere Entra ID.",
+     "target": null,
+     "unit": "",
+     "updated": "2026-09-30"
+    }
+   ],
+   "levels": [
+    {
+     "name": "Nivel 1 · Usuario de Claude",
+     "status": "activo",
+     "who": "Cualquier persona con licencia de Claude"
+    },
+    {
+     "name": "Nivel 2 · Constructor de apps",
+     "status": "activo",
+     "who": "Quien crea portales, tableros o páginas"
+    },
+    {
+     "name": "Nivel 2.5 · Backends",
+     "status": "en_construccion",
+     "who": "Apps que leen y guardan sus propios datos"
+    },
+    {
+     "name": "Nivel 3 · Agentes",
+     "status": "en_construccion",
+     "who": "Agentes y automatizaciones sobre el stack de Nexo"
+    }
+   ],
+   "name": "AI Best Practices",
+   "needs": [
+    "github",
+    "controles"
+   ],
+   "next": "Cerrar las decisiones pendientes de Nivel 1 y 2 y la revisión de ciberseguridad.",
+   "noAzure": true,
+   "pains": [
+    "Usuarios ya crean soluciones con Claude sin documentación ni estándar.",
+    "Riesgo con API keys, secrets y archivos .env.",
+    "El código no debe quedar en repositorios públicos.",
+    "Todo el despliegue no puede centralizarse en el líder de IA."
+   ],
+   "paused": false,
+   "pendingDecisions": 32,
+   "phase": "construccion",
+   "priority": 0.5,
+   "program": "practicas",
+   "repo": "https://github.com/alexandrapaiz-pdc/BestPracticesAI",
+   "savings": {},
+   "sponsor": "Benji (ciberseguridad) · Óscar",
+   "summary": "Repositorio BestPracticesAI con estándares por nivel: 1 · Usuario de Claude (activo), 2 · Constructor de apps (activo), 2.5 · Backends (en construcción), 3 · Agentes (en construcción). Incluye biblioteca de skills de Nexo y reglas base: agentes solo lectura, repos nunca públicos, sin secretos en código.",
+   "tagline": "Estándares por tier de usuario",
+   "wave": 0
+  },
+  {
+   "id": "step",
+   "blocker": "Decisión de Databricks.",
+   "bu": "Nexo",
+   "discovery": [
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Revisar documentación y PoC de Rodny"
+    },
+    {
+     "done": false,
+     "due": "2026-10-09",
+     "label": "Flujo de validación por área"
+    }
+   ],
+   "kpis": [
+    {
+     "baseline": null,
+     "current": null,
+     "id": "errors",
+     "name": "Códigos con errores de configuración por mes",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": ""
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "blocked",
+     "name": "Artículos bloqueados para facturar",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": ""
+    },
+    {
+     "baseline": 33000,
+     "current": 33000,
+     "id": "impact",
+     "name": "Impacto económico por errores",
+     "note": "Estimación muy preliminar del caso Ayudín 3X.",
+     "target": 0,
+     "unit": "US$",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": null,
+     "current": null,
+     "id": "time",
+     "name": "Tiempo de creación de un código",
+     "note": "",
+     "target": null,
+     "unit": "días",
+     "updated": ""
+    }
+   ],
+   "name": "Generación de Códigos STEP",
+   "needs": [
+    "stack",
+    "azure",
+    "datos",
+    "jde"
+   ],
+   "next": "Flujo de validación por área — 9 oct.",
+   "noAzure": true,
+   "pains": [
+    "Artículos listos en bodega no se pueden facturar por atributos mal configurados en JD Edwards.",
+    "El gerente de marca copia un Excel anterior porque no domina los campos técnicos.",
+    "Catálogos vuelve a ingresar los datos en el sistema.",
+    "Errores como costeo incorrecto o producto manufacturado registrado como comprado."
+   ],
+   "paused": false,
+   "phase": "descubrimiento",
+   "priority": 3,
+   "program": "agentes",
+   "savings": {
+    "note": "Horas de redigitación y reproceso: línea base pendiente."
+   },
+   "sponsor": "Rodny",
+   "summary": "Flujo de validación por etapas (Marca → Soporte de marcas → Inventarios → Ingeniería → Manufactura → Catálogos) para crear códigos en STEP sin redigitar.",
+   "tagline": "Creación y validación de códigos por área",
+   "vsm": {
+    "asis": [
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Llenar Excel del código (copiando uno anterior)",
+      "pt": null,
+      "wait": null,
+      "who": "Gerente de marca"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Validar ciertos datos",
+      "pt": null,
+      "wait": null,
+      "who": "Soporte de marcas"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Redigitar en el sistema",
+      "pt": null,
+      "wait": null,
+      "who": "Catálogos"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Detectar errores al facturar",
+      "pt": null,
+      "wait": null,
+      "who": "Manufactura · Ventas"
+     }
+    ],
+    "asisNote": "Atributos mal configurados en JD Edwards bloquean la facturación (caso Ayudín 3X, ~US$33k preliminar). Tiempos por medir.",
+    "tobe": [
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Iniciar solicitud en STEP",
+      "pt": null,
+      "wait": null,
+      "who": "Marca"
+     },
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Validar campos de marca",
+      "pt": null,
+      "wait": null,
+      "who": "Soporte de marcas"
+     },
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Agregar variables logísticas",
+      "pt": null,
+      "wait": null,
+      "who": "Inventarios"
+     },
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Agregar pesos y dimensiones",
+      "pt": null,
+      "wait": null,
+      "who": "Ingeniería"
+     },
+     {
+      "ca": null,
+      "mode": "mixto",
+      "name": "Configurar producción",
+      "pt": null,
+      "wait": null,
+      "who": "Manufactura"
+     },
+     {
+      "ca": null,
+      "mode": "manual",
+      "name": "Check final sin redigitar",
+      "pt": null,
+      "wait": null,
+      "who": "Catálogos"
+     }
+    ],
+    "tobeNote": "Flujo de validación por etapas propuesto con Rodny. Dónde entra el agente en cada etapa está por definir.",
+    "updated": "2026-10-01"
+   },
+   "wave": 1
+  }
+ ],
+ "components": [
+  {
+   "id": "azure",
+   "key": true,
+   "name": "Cuenta admin de Azure",
+   "note": "Suscripción NEXO (East US) con rol Owner condicionado otorgado por IT el 5 oct. Presupuesto de 200 USD/mes con alertas.",
+   "order": 2,
+   "owner": "IT · Diego Villatoro",
+   "status": "listo",
+   "updated": "2026-10-05"
+  },
+  {
+   "id": "containerapps",
+   "name": "Azure Container Apps: LiteLLM, Langfuse, Presidio y servidores MCP",
+   "note": "Entorno de Container Apps arriba. LiteLLM corriendo con tres niveles de modelo. Portal de agentes en piloto (solo la dueña, con inicio de sesión Entra y datos en PostgreSQL). Faltan Langfuse, Presidio y los servidores MCP.",
+   "order": 12,
+   "owner": "Alexandra",
+   "status": "en_curso",
+   "updated": "2026-10-08"
+  },
+  {
+   "id": "controles",
+   "name": "Permisos Entra ID y controles de producción",
+   "note": "Key Vault privado e identidades propias por app. Inicio de sesión con Entra en PostgreSQL y en el portal de agentes (acceso solo para usuarios asignados). Bitácora con traza de decisiones y auditoría. Presidio y Content Safety pendientes.",
+   "order": 6,
+   "owner": "Alexandra · Benji",
+   "status": "en_curso",
+   "updated": "2026-10-08"
+  },
+  {
+   "id": "datos",
+   "name": "Capa de datos: Databricks (Unity Catalog, Lakeflow) · Postgres + pgvector",
+   "note": "Databricks, lago ADLS y PostgreSQL con pgvector arriba; PostgreSQL ya acepta inicio de sesión con Entra y tiene la base apps. Catálogo provisional cargado desde CompanyBrainPDC. Unity Catalog espera al administrador de la cuenta de Databricks.",
+   "order": 8,
+   "owner": "Alexandra",
+   "status": "en_curso",
+   "updated": "2026-10-07"
+  },
+  {
+   "id": "dominio",
+   "name": "Dominio del portal",
+   "note": "Dominio común para el portal de agentes y portales de mundos.",
+   "order": 10,
+   "owner": "Luis Carlos · IT",
+   "status": "pendiente",
+   "updated": "2026-09-30"
+  },
+  {
+   "id": "foundry",
+   "name": "Microsoft Foundry (modelos)",
+   "note": "Foundry privado con embeddings, GPT y Kimi K2.6 detrás del ruteador. Claude sigue sin cuota (0); al aprobarse, los niveles cambian a Claude.",
+   "order": 11,
+   "owner": "IT · Alexandra",
+   "status": "en_curso",
+   "updated": "2026-10-07"
+  },
+  {
+   "id": "github",
+   "name": "GitHub empresarial",
+   "note": "Código en repositorios privados. El portal de agentes se publica solo desde main con GitHub Actions e identidad federada (sin llaves guardadas). GitHub empresarial sigue pendiente; luego se migra.",
+   "order": 3,
+   "owner": "Alexandra",
+   "status": "pendiente",
+   "updated": "2026-10-08"
+  },
+  {
+   "id": "jde",
+   "name": "Conector JD Edwards solo lectura (VPN)",
+   "note": "Lado Azure de la VPN listo (gateway Basic). Falta la conexión con PDC: IP pública y rangos de su red. Después, la réplica en Databricks.",
+   "order": 7,
+   "owner": "Vikingo · IT",
+   "status": "en_curso",
+   "updated": "2026-10-05"
+  },
+  {
+   "id": "licencias",
+   "name": "Licencias Claude",
+   "note": "Lista de solicitantes y alcance por definir; solicitud final 2 oct.",
+   "order": 4,
+   "owner": "Luisca",
+   "status": "en_curso",
+   "updated": "2026-09-30"
+  },
+  {
+   "id": "orquestacion",
+   "name": "Orquestación y agentes: Temporal + LangGraph",
+   "note": "Bus de eventos aplicado y probado (temas datos, agentes, acciones y portal). Primer agente desplegado: vigia-metricos. Bitácora de decisiones (ledger) funcionando de punta a punta.",
+   "order": 9,
+   "owner": "Alexandra",
+   "status": "en_curso",
+   "updated": "2026-10-07"
+  },
+  {
+   "id": "stack",
+   "name": "Definición del stack (Azure como base)",
+   "note": "Infraestructura como código en Terraform (repositorio nexo-stack), sobre la red VNET-NEXO de IT.",
+   "order": 1,
+   "owner": "Alexandra",
+   "status": "listo",
+   "updated": "2026-10-05"
+  }
+ ],
+ "updates": [
+  {
+   "id": "u-0920-avon",
+   "createdAt": "2026-09-20T18:00:00Z",
+   "date": "2026-09-20",
+   "kpiId": null,
+   "projectId": "avon",
+   "tag": "Hito",
+   "text": "Motor de APT portado y suite dorada en verde: 16 pruebas contra la corrida de referencia de Denis Martínez (1,463 pares). Validaciones V01–V15 con 35 pruebas en verde.",
+   "value": null
+  },
+  {
+   "id": "u-0924-step",
+   "createdAt": "2026-09-24T12:00:00Z",
+   "date": "2026-09-24",
+   "kpiId": null,
+   "projectId": "step",
+   "tag": "Avance",
+   "text": "Reunión con Rodny: el caso Ayudín 3X se estima en ~US$33k (preliminar) por atributos mal configurados en JD Edwards.",
+   "value": null
+  },
+  {
+   "id": "u-0928-lexy",
+   "createdAt": "2026-09-28T12:00:00Z",
+   "date": "2026-09-28",
+   "kpiId": null,
+   "projectId": "lexy",
+   "tag": "Avance",
+   "text": "Reunión con Jackeline Luna: los correos a OTRS generan tickets duplicados o sin título, y se perdió el repositorio de conocimiento anterior.",
+   "value": null
+  },
+  {
+   "id": "u-0929-contra",
+   "createdAt": "2026-09-29T12:00:00Z",
+   "date": "2026-09-29",
+   "kpiId": null,
+   "projectId": "contraloria",
+   "tag": "Avance",
+   "text": "Kickoff con César Paz. 130–140 documentos de Tráfico reubicados; 40 siguen sin ubicar. 2 de 3 agentes nacionales suspendieron servicio por falta de pago.",
+   "value": null
+  },
+  {
+   "id": "u-0929-infra",
+   "createdAt": "2026-09-29T12:00:00Z",
+   "date": "2026-09-29",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Decisión",
+   "text": "Se acordó arrancar el stack en Azure por su integración con Microsoft, SharePoint y Entra ID.",
+   "value": null
+  },
+  {
+   "id": "u-0929-mundos",
+   "createdAt": "2026-09-29T12:00:00Z",
+   "date": "2026-09-29",
+   "kpiId": null,
+   "projectId": "mundos",
+   "tag": "Avance",
+   "text": "Reunión de Portal de Mundos: el piloto PDC Brands se afina antes de replicar a otros mundos.",
+   "value": null
+  },
+  {
+   "id": "u-0930-avon",
+   "createdAt": "2026-09-30T18:31:00Z",
+   "date": "2026-09-30",
+   "kpiId": null,
+   "projectId": "avon",
+   "tag": "Hito",
+   "text": "Prioridad 1 acordada con Lisa: automatizar el kickoff elimina 15 h de trabajo manual por campaña.",
+   "value": null
+  },
+  {
+   "id": "u-0930-brain",
+   "createdAt": "2026-09-30T18:00:00Z",
+   "date": "2026-09-30",
+   "kpiId": null,
+   "projectId": "companybrain",
+   "tag": "Avance",
+   "text": "Borrador del plan de datos de Company Brain en Databricks: Unity Catalog con catálogos dev y prod. Lo justifican Kickoff Avon, Portal de Mundos, Contraloría y STEP.",
+   "value": null
+  },
+  {
+   "id": "u-0930-prio",
+   "createdAt": "2026-09-30T18:30:00Z",
+   "date": "2026-09-30",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Decisión",
+   "text": "Con Benji y Óscar se fijó el orden: 1) kickoff de Avon, 2) Portal de Mundos, 3) Contraloría, 4) STEP, 5) MegaMás vacaciones, 6) MegaMás Soporte IT. La cuenta admin de Azure es el bloqueador principal.",
+   "value": null
+  },
+  {
+   "id": "u-0930-proto",
+   "createdAt": "2026-09-30T18:32:00Z",
+   "date": "2026-09-30",
+   "kpiId": null,
+   "projectId": "protocolos",
+   "tag": "Decisión",
+   "text": "Se definieron tres tiers de usuarios de IA. Se avanza sin Azure: protocolos Tier 1 y Tier 2 en GitHub personal, luego se migran al empresarial.",
+   "value": null
+  },
+  {
+   "id": "u-1001-proto",
+   "createdAt": "2026-10-01T18:00:00Z",
+   "date": "2026-10-01",
+   "kpiId": null,
+   "projectId": "protocolos",
+   "tag": "Avance",
+   "text": "BestPracticesAI con guías Nivel 1 y 2 activas; Nivel 2.5 (backends) y 3 (agentes) en construcción.",
+   "value": null
+  },
+  {
+   "id": "u-1005-brain",
+   "createdAt": "2026-10-05T18:00:00Z",
+   "date": "2026-10-05",
+   "kpiId": null,
+   "projectId": "companybrain",
+   "tag": "Hito",
+   "text": "Workspace de Databricks (dbw-nexo-brain) y lago ADLS Gen2 creados en la red privada. Sigue Unity Catalog.",
+   "value": null
+  },
+  {
+   "id": "u-1005-infra-bus",
+   "createdAt": "2026-10-05T23:55:00Z",
+   "date": "2026-10-05",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Decisión",
+   "text": "Los agentes se coordinan por coreografía: publican y escuchan eventos en Service Bus (datos, agentes, portal) con Event Grid desde el lago; las aprobaciones también son eventos. Temporal pasa a opcional. Bus escrito en Terraform, falta aplicarlo.",
+   "value": null
+  },
+  {
+   "id": "u-1005-infra",
+   "createdAt": "2026-10-05T18:00:00Z",
+   "date": "2026-10-05",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Avance",
+   "text": "Pasos 1 a 3 del stack aplicados en la suscripción NEXO: red, Key Vault, monitoreo, Foundry, PostgreSQL con pgvector, Databricks y el lado Azure de la VPN. Bloqueado: cuota de Claude en Foundry.",
+   "value": null
+  },
+  {
+   "id": "u-1007-infra",
+   "createdAt": "2026-10-07T23:55:00Z",
+   "date": "2026-10-07",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Hito",
+   "text": "Bus de eventos aplicado y probado, primer agente (vigia-metricos) desplegado y bitácora de decisiones funcionando. LiteLLM corre con tres niveles de modelo; PostgreSQL acepta inicio de sesión con Entra. Siguen pendientes la cuota de Claude y Unity Catalog.",
+   "value": null
+  },
+  {
+   "id": "u-1008-infra",
+   "createdAt": "2026-10-08T23:55:00Z",
+   "date": "2026-10-08",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Hito",
+   "text": "Portal de agentes en piloto en Azure: inicio de sesión con Entra (solo la dueña por ahora), datos en PostgreSQL y publicación automática desde GitHub. Permite crear borradores de agentes, revisar su especificación y ver el avance de construcción; todavía no ejecuta agentes.",
+   "value": null
+  },
+  {
+   "id": "u-1012-brain",
+   "createdAt": "2026-10-12T16:35:00Z",
+   "date": "2026-10-12",
+   "kpiId": null,
+   "projectId": "companybrain",
+   "tag": "Avance",
+   "text": "Primer consumidor en vivo: el portal de agentes ya navega la estructura organizacional del Company Brain para dar contexto a cada agente.",
+   "value": null
+  },
+  {
+   "id": "u-1012-infra",
+   "createdAt": "2026-10-12T16:35:00Z",
+   "date": "2026-10-12",
+   "kpiId": null,
+   "projectId": "infra",
+   "tag": "Avance",
+   "text": "Portal de agentes: los agentes se agrupan por gemelo de Edge, el portal ya navega en vivo la estructura organizacional del Company Brain y quedó documentado cómo continuar su construcción. Sigue en piloto, solo para la dueña.",
+   "value": null
+  }
+ ],
+ "snapshotAt": "2026-10-12"
+}

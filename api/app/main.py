@@ -10,12 +10,11 @@ Rutas:
   POST   /api/personas                nombres a partir de ids
   GET    /api/c/{col}                 lista (orden, sentido, limite, desde)
   GET    /api/c/{col}/{id}            un documento (desde)
-  POST   /api/c/{col}                 crear con id nuevo
+  POST   /api/c/{col}                 crear con id nuevo (solicitudes: correo con la guía de intake)
   PUT    /api/c/{col}/{id}            crear o reemplazar
   PATCH  /api/c/{col}/{id}            cambiar algunos campos
   DELETE /api/c/{col}/{id}            borrado lógico
   POST   /api/importar                carga inicial (solo editores)
-  POST   /api/asana/tarea             lee una tarea de Asana (solo editores, solo lectura)
 """
 import hashlib
 import os
@@ -26,11 +25,11 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 import httpx
-from fastapi import Body, Depends, FastAPI, HTTPException, Query
+from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, HTMLResponse
 from psycopg import errors
 
-from . import conexion
+from . import conexion, correo
 from .almacen import Coleccion
 from .colecciones import COLECCIONES
 from .identidad import Persona, persona_actual
@@ -170,8 +169,11 @@ def _escribir(c: Coleccion, doc_id: str, persona: Persona, nuevo, parcial: bool 
 
 
 @app.post("/api/c/{col}")
-def crear(col: str, persona: Yo, datos: Annotated[dict, Body()]):
-    return _escribir(coleccion(col), secrets.token_hex(10), persona, datos)
+def crear(col: str, persona: Yo, datos: Annotated[dict, Body()], tareas: BackgroundTasks):
+    hecho = _escribir(coleccion(col), secrets.token_hex(10), persona, datos)
+    if col == "tickets":  # al solicitante le llega la guía de intake, después de responder
+        tareas.add_task(correo.enviar_intake, persona.correo, persona.nombre, str(datos.get("code", "")), str(datos.get("title", "")))
+    return hecho
 
 
 @app.put("/api/c/{col}/{doc_id}")
@@ -211,29 +213,6 @@ def importar(persona: Yo, colecciones: Annotated[dict[str, dict[str, dict]], Bod
                 c.guardar(cur, validar_id(doc_id), datos, persona, "importar", c.obtener(cur, doc_id, bloquear=True))
             cuenta[col] = len(docs)
     return {"importados": cuenta}
-
-
-ASANA = "https://app.asana.com/api/1.0/tasks/"
-
-
-@app.post("/api/asana/tarea")
-def asana_tarea(persona: Yo, task_id: Annotated[str, Body(pattern=r"^\d{1,30}$")], opt_fields: Annotated[str, Body(max_length=500)] = ""):
-    """Lee una tarea de Asana con el token de la app (Key Vault). Solo lectura, solo editores."""
-    if not persona.editor:
-        raise HTTPException(403, "Solo los editores pueden sincronizar Asana")
-    token = os.environ.get("ASANA_TOKEN")
-    if not token:
-        raise HTTPException(503, {"codigo": "no_configurado"})
-    try:
-        r = httpx.get(ASANA + task_id, params={"opt_fields": opt_fields} if opt_fields else None,
-                      headers={"Authorization": f"Bearer {token}"}, timeout=20)
-    except httpx.HTTPError as e:
-        raise HTTPException(503, {"codigo": "server_unavailable"}) from e
-    if r.status_code in (401, 403):
-        raise HTTPException(502, {"codigo": "asana_rechazo"})
-    if r.status_code >= 400:
-        raise HTTPException(502, {"codigo": "tool_error", "mensaje": f"Asana respondió {r.status_code}"})
-    return {"payload": r.json()}
 
 
 IMPORTAR = """<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

@@ -1,6 +1,6 @@
 # Portafolio IA Nexo
 
-Portafolio de IA de Nexo (Grupo PDC): stack de IA, AI Best Practices, Company Brain, proyectos de agentes, tareas de Asana, solicitudes y portal de agentes.
+Portafolio de IA de Nexo (Grupo PDC): stack de IA, AI Best Practices, Company Brain, proyectos de agentes, solicitudes y portal de agentes.
 
 - **En vivo:** https://claude.ai/artifact/VPQ8uLmDh6hqiQdsdHFfQy (artifact de Claude con base de datos; solo editores escriben).
 - **En Azure (en preparación):** contenedor `nexo-portafolio-ia` con API propia y PostgreSQL. Ver *Versión Azure*.
@@ -35,13 +35,16 @@ Primer caso real del estándar de Nexo para apps con datos: la página y su API 
 | Pieza | Qué hace |
 |---|---|
 | `app/src/lib/nexo-runtime.ts` | La misma forma que `window.claude` (`db`, `user`, `mcp`) pero contra `/api`. `npm run build:nexo` compila la página con este runtime; `npm run build` sigue generando el artifact igual que antes |
-| `api/app/main.py` | FastAPI: entrega la página y la API de datos (colecciones, documentos, personas, importación, lectura de Asana) |
+| `api/app/main.py` | FastAPI: entrega la página y la API de datos (colecciones, documentos, personas, importación, correo de intake) |
 | `api/app/colecciones.py` | Cómo se guarda cada colección. `projects`, `components`, `updates`, `asana`, `asanaMeta` y `triage` como **documentos**; `tickets` (solicitudes) como **tabla con columnas** (`solicitudes`), validada y lista para reportes |
+| `api/app/correo.py` | Correo al solicitante con la guía de intake, por Microsoft Graph con la identidad de la app |
 | `api/app/almacen.py` | Documentos y tablas con las mismas reglas: versión por fila, historial de cada cambio, borrado lógico y número de cambio para que la página se actualice sola |
 | `api/migraciones/` | SQL versionado que la app aplica al arrancar |
 | `api/tests/` | Pruebas contra un PostgreSQL real |
 
-Reglas: leer exige sesión de Entra; cualquier persona de PDC envía solicitudes (quién y cuándo los pone el servidor); solo los editores (`NEXO_EDITORES`) cambian el portafolio, evalúan o borran. La sincronización con Asana la hace el servidor con un token guardado en Key Vault, solo lectura.
+Reglas: leer exige sesión de Entra; cualquier persona de PDC envía solicitudes (quién y cuándo los pone el servidor); solo los editores (`NEXO_EDITORES`) cambian el portafolio, evalúan o borran.
+
+Correo de intake: al enviar una solicitud, al solicitante le llega la guía de intake desde el buzón de Alexandra (cambiable con `NEXO_CORREO_REMITENTE`; enlace en `NEXO_GUIA_INTAKE`). Requiere el permiso de aplicación `Mail.Send` de Graph para la identidad de la app, con consentimiento de administrador y limitado a ese buzón (política de acceso de Exchange). Si Graph rechaza el envío, la solicitud se guarda igual.
 
 ```bash
 # Pruebas (PostgreSQL local)

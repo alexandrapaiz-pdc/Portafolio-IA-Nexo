@@ -13,12 +13,15 @@ import { Empty, Footer, Section, SectionHead, SecP, Stat, StatsRow } from "@/com
 
 // Self-service roadmap (A largo plazo: autoservicio con guardrails). Hidden until the organization is ready for it.
 const SHOW_SELF_SERVICE = false
+// Intake guide (SharePoint), sent to each requester right after they submit.
+const GUIA_INTAKE = "https://codisaco.sharepoint.com/:w:/r/sites/05ServiciosCompartidos-PlaneacinyGestin/_layouts/15/Doc.aspx?sourcedoc=%7B0DB89966-6CF7-4F19-BCB1-921A69F2BBA2%7D&file=Guia%20de%20intake%20-%20Formato%20limpio.docx&action=default&mobileredirect=true&wdwpf=doclib-t"
+const EMAILS = import.meta.env.MODE === "nexo" // the Azure API emails the guide; the artifact cannot send email
 const AREAS = ["Nexo", "PDC Brands", "Vikingo Distribución", "Vikingo AI", "Mostro", "Corporativo"]
 const TTYPES = ["Automatización o agente", "Portal o tablero", "Análisis de datos", "Licencia o acceso a Claude", "Quiero construirlo yo (autoservicio)", "Otro"]
 const URG = ["Baja", "Media", "Alta"]
 const TSTATUS: [string, string][] = [["nuevo", "Nueva"], ["evaluacion", "En evaluación"], ["aprobado", "Aprobada"], ["proyecto", "En portafolio"], ["descartado", "Descartada"]]
 const tLabel = (s: string) => (TSTATUS.find((x) => x[0] === s) || TSTATUS[0])[1]
-const STEPS = [["Envías", "Describes el problema y cuánto tiempo toma hoy."], ["Evaluamos", "IA Nexo revisa impacto, datos y factibilidad."], ["Priorizamos", "Entra al backlog con una prioridad visible."], ["Construimos", "Las aprobadas se convierten en proyecto del portafolio."]]
+const STEPS = [["Envías", "Describes el problema y cuánto tiempo toma hoy."], ["Lo vemos juntos", "Reviso el proceso contigo: impacto, datos y factibilidad."], ["Priorizamos", "Entra al backlog con una prioridad visible."], ["Construimos contigo", "Las aprobadas se construyen dentro de tu flujo y se miden contra su línea base."]]
 const GATES = [["El stack de Nexo está en producción con sus controles", "Entra ID, Key Vault, kill switch y bitácoras de auditoría"], ["Los primeros agentes demuestran resultados medidos", "Kickoff de Avon y Contraloría con KPIs contra su línea base"], ["Las guías de Nivel 3 pasan la revisión de ciberseguridad", "Arquitectura, sandbox, contenedores, orquestación y seguridad"], ["La ruta de sandbox a producción está probada", "Lista de verificación y aprobación de Nexo para cada agente"]]
 
 function TStat({ s }: { s: string }) {
@@ -44,7 +47,6 @@ export function Tickets() {
     <main className="wrap">
       <div className="grid gap-12">
       <section className="grid gap-[18px] pb-6 pt-[88px]">
-        <div className="eyebrow">Abierto a toda la empresa</div>
         <h1 className="h-display">Envía tu solicitud.<span className="sub">¿Qué proceso deberíamos automatizar?</span></h1>
         <p className="lead">Si una tarea manual te quita horas cada semana, cuéntanos. Toma dos minutos.</p>
         <div className="mt-2"><button type="button" onClick={() => setOpen({ mode: "new" })} className="group inline-flex h-[52px] items-center gap-2 rounded-full bg-accent px-7 text-base font-medium text-white shadow-[0_8px_24px_-10px_rgba(255,81,0,.7)] transition hover:brightness-105">Enviar una solicitud<ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" /></button></div>
@@ -57,8 +59,8 @@ export function Tickets() {
 
       {SHOW_SELF_SERVICE && (
       <Section className="pt-[72px]">
-        <SectionHead eyebrow="Hacia dónde vamos" title="Descentralizar la IA, con guardrails.">
-          <SecP>Hoy Nexo construye los agentes. Más adelante, y por confirmar, cada área podría construir los suyos sobre el mismo stack y con las mismas reglas.</SecP>
+        <SectionHead title="Descentralizar la IA, con guardrails.">
+          <SecP>Hoy construyo los agentes junto a cada área. Más adelante, y por confirmar, cada área podría construir los suyos sobre el mismo stack y con las mismas reglas.</SecP>
         </SectionHead>
         <div className="grid grid-cols-2 gap-3.5 max-[720px]:grid-cols-1">
           {[{ k: "Hoy", s: "nuevo", sl: "Activo", h: "Solicitud a Nexo", p: "Describes el problema; Nexo evalúa, prioriza y construye.", li: ["Nexo diseña, construye y opera el agente", "Prioridad según horas manuales, impacto y factibilidad", "Cada proyecto con línea base y KPI antes de construir"] },
@@ -71,14 +73,14 @@ export function Tickets() {
           ))}
         </div>
         <div>
-          <div className="flex flex-wrap items-baseline gap-2.5 px-1 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Se habilita cuando</b><span>El marco se prueba primero con los proyectos de Nexo</span></div>
+          <div className="flex flex-wrap items-baseline gap-2.5 pb-2 text-[13px] text-sub"><b className="font-semibold text-text">Se habilita cuando</b><span>El marco se prueba primero con los proyectos de Nexo</span></div>
           <div className="group-box">{GATES.map(([h, n], i) => <div key={h} className="row grid-cols-[28px_minmax(0,1fr)]"><b className="text-[13px] font-semibold text-accent">{i + 1}</b><div><div>{h}</div><div className="mt-0.5 text-[13px] text-sub">{n}</div></div></div>)}</div>
         </div>
       </Section>
       )}
 
       <Section className="pt-[72px]">
-        <SectionHead eyebrow="Backlog" title="Solicitudes recibidas." />
+        <SectionHead title="Solicitudes recibidas." />
         <StatsRow>
           <Stat k="Solicitudes abiertas" v={openL.length} sub={`${all.length} en total`} />
           <Stat k="Nuevas" v={all.filter((t) => st(t) === "nuevo").length} accent={all.some((t) => st(t) === "nuevo")} sub="Sin revisar" />
@@ -97,7 +99,7 @@ export function Tickets() {
         </div>
         {import.meta.env.MODE !== "nexo" && <p className="rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Por ahora las solicitudes se guardan aquí; pasarán a Azure cuando esté listo.</p>}
       </Section>
-      <Footer right="Dudas: Alexandra Paiz, Líder de IA y Herramientas" />
+      <Footer right="Dudas: Alexandra Paiz, Forward Deployed Engineer de IA" />
 
       {open?.mode === "new" && <NewTicket onClose={() => setOpen(null)} />}
       {open?.mode === "view" && <TicketDetail id={open.id} who={who} onClose={() => setOpen(null)} />}
@@ -109,17 +111,19 @@ function NewTicket({ onClose }: { onClose: () => void }) {
   const { db, me, toast } = useStore()
   const [f, setF] = useState({ title: "", area: AREAS[0], type: TTYPES[0], urgency: "Media", problem: "", current: "", hours: "", people: "", impact: "", systems: "" })
   const [busy, setBusy] = useState(false)
+  const [sent, setSent] = useState<string | null>(null)
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent title="Nueva solicitud">
+        {sent ? <Sent code={sent} onClose={onClose} /> : <>
         <div className="grid gap-2.5"><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Entre más concreto, más rápido se evalúa. Los números aproximados están bien.</p></div>
         {!db || !me ? <p className="text-[17px] text-sub">Inicia sesión en claude.ai con tu cuenta de Grupo PDC para enviar una solicitud.</p> : (
           <form className="grid gap-3.5" onSubmit={async (e) => {
             e.preventDefault(); if (!f.title.trim() || !f.problem.trim()) return; setBusy(true)
             const n = (v: string) => (v === "" ? null : Number(v))
             const doc = { code: code(), title: f.title.trim(), area: f.area, type: f.type, urgency: f.urgency, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
-            try { await db.collection("tickets").add(doc); onClose(); toast("Solicitud enviada: " + doc.code) }
+            try { await db.collection("tickets").add(doc); setSent(doc.code) }
             catch (err: unknown) { setBusy(false); toast((err as { code?: string })?.code === "invalid_argument" ? "Tu acceso a esta página es de solo lectura. Pide acceso de colaborador para enviar solicitudes." : "No se pudo enviar. Intenta de nuevo.") }
           }}>
             <Label>Título<Input required maxLength={120} value={f.title} onChange={set("title")} placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra" /></Label>
@@ -136,10 +140,11 @@ function NewTicket({ onClose }: { onClose: () => void }) {
             </div>
             <Label>¿Cómo sabremos que funcionó?<Input value={f.impact} onChange={set("impact")} placeholder="Ej. Cerrar el mes 3 días antes; 0 facturas vencidas" /></Label>
             <Label>Sistemas y datos<Input value={f.systems} onChange={set("systems")} placeholder="Ej. Excel, JD Edwards, SharePoint, correo" /></Label>
-            <p className="text-xs text-faint">Cada solicitud llega por correo a Alexandra Paiz (IA Nexo) y queda visible para quienes tienen acceso a esta página.</p>
+            <p className="text-xs text-faint">Al enviarla te llegará un correo con la guía de intake para completar el detalle del proceso. La solicitud queda visible para quienes tienen acceso a esta página.</p>
             <div className="flex justify-end gap-2"><Button variant="ghost" type="button" onClick={onClose}>Cancelar</Button><Button variant="accent" type="submit" disabled={busy}>Enviar solicitud</Button></div>
           </form>
         )}
+        </>}
       </DialogContent>
     </Dialog>
   )
@@ -181,5 +186,20 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
         )}
       </DialogContent>
     </Dialog>
+  )
+}
+
+// Right after sending: the next step is the intake guide, which AI may help fill.
+function Sent({ code, onClose }: { code: string; onClose: () => void }) {
+  return (
+    <div className="grid gap-4">
+      <div className="grid gap-2.5"><span className="num text-[13px] font-medium text-faint">{code}</span><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Solicitud enviada.</h2>
+        <p className="text-[17px] text-sub">{EMAILS ? "Revisa tu correo: te enviamos la guía de intake. Complétala para que podamos evaluar el proceso contigo." : "El siguiente paso es completar la guía de intake, para que podamos evaluar el proceso contigo."}</p></div>
+      <p className="rounded-r-sm bg-group px-4 py-3 text-sm text-sub"><b className="font-semibold text-text">Puedes usar IA para llenarla.</b> Claude u otra herramienta de IA aprobada por la empresa puede ayudarte a redactar las respuestas a partir de tus notas o documentos del proceso. Revisa que todo sea correcto antes de enviarla.</p>
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button variant="ghost" type="button" onClick={onClose}>Cerrar</Button>
+        <a href={GUIA_INTAKE} target="_blank" rel="noopener" className="inline-flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-medium text-white no-underline hover:brightness-105">Abrir la guía de intake<ArrowRight size={16} /></a>
+      </div>
+    </div>
   )
 }

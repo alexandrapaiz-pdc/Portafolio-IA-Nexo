@@ -61,7 +61,7 @@ function VStat({ k, v, tone }: { k: string; v: string; tone?: "acc" | "pend" }) 
 }
 
 export function VsmSection({ p, onEditingChange }: { p: Project; onEditingChange?: (b: boolean) => void }) {
-  const { canWrite, db, write } = useStore()
+  const { canEdit, db, write } = useStore()
   const [tab, setTab] = useState<"asis" | "tobe">("asis")
   const [draft, setDraft] = useState<VsmStep[] | null>(null)
   const [note, setNote] = useState("")
@@ -77,7 +77,7 @@ export function VsmSection({ p, onEditingChange }: { p: Project; onEditingChange
       <div className="seg" role="group" aria-label="Vista del mapa">
         {(["asis", "tobe"] as const).map((t) => <button key={t} type="button" aria-pressed={tab === t} disabled={!!draft} onClick={() => setTab(t)}>{t === "asis" ? "Hoy" : "Con agente"}</button>)}
       </div>
-      {canWrite && (draft
+      {canEdit && (draft
         ? <div className="flex gap-2"><Button variant="ghost" onClick={() => setEditing(null)}>Cancelar</Button>
             <Button onClick={async () => {
               const vsm = clone(v) as Record<string, unknown>

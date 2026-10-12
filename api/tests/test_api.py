@@ -14,6 +14,7 @@ ESQUEMA = "prueba_" + secrets.token_hex(4)
 os.environ["DB_SCHEMA"] = ESQUEMA
 os.environ["NEXO_EDITORES"] = "editora@grupopdc.com"
 os.environ.pop("DEV_USUARIO", None)
+os.environ["NEXO_CORREO_REMITENTE"] = ""  # las pruebas no mandan correos
 
 from fastapi.testclient import TestClient  # noqa: E402
 
@@ -103,6 +104,27 @@ def test_cualquiera_envia_solicitud_y_el_servidor_sella(cliente):
         ("SOL-1007-AB", "Nexo", "Media", 20, 3, "oid-persona")]
 
 
+def test_solicitud_manda_la_guia_de_intake_al_solicitante(cliente, monkeypatch):
+    from app import correo, main
+
+    enviados = []
+    monkeypatch.setattr(main.correo, "enviar_intake", lambda *a: enviados.append(a))
+    r = cliente.post("/api/c/tickets", json={**SOLICITUD, "code": "SOL-1007-EM"}, headers=PERSONA)
+    assert r.status_code == 200, r.text
+    # Al correo de la sesión (Entra), no a uno escrito en la solicitud.
+    assert enviados == [("persona@grupopdc.com", "Luis Persona", "SOL-1007-EM", "Conciliar facturas")]
+    asunto, cuerpo = correo.mensaje("Luis Persona", "SOL-1007-EM", "<b>x</b>", "https://ejemplo/guia")
+    assert "SOL-1007-EM" in asunto and "Hola Luis" in cuerpo and "https://ejemplo/guia" in cuerpo
+    assert "Puedes usar IA para llenarla" in cuerpo and "<b>x</b>" not in cuerpo  # el título se escapa
+
+
+def test_correo_sin_configurar_no_envia(monkeypatch):
+    from app import correo
+
+    monkeypatch.setenv("NEXO_CORREO_REMITENTE", "")
+    assert correo.enviar_intake("persona@grupopdc.com", "Luis", "SOL-1", "x") is False
+
+
 def test_solicitud_invalida_no_se_guarda(cliente):
     for malo in ({"urgency": "Urgente"}, {"hours": -1}, {"title": ""}, {"area": "Marte"}, {"extra": "x"}):
         r = cliente.post("/api/c/tickets", json={**SOLICITUD, "code": "SOL-1007-ZZ", **malo}, headers=PERSONA)
@@ -147,11 +169,6 @@ def test_importar_solo_editores(cliente):
     assert cliente.get("/api/c/asanaMeta/sync", headers=PERSONA).json()["datos"]["syncedAt"].startswith("2026-10-06")
 
 
-def test_asana_sin_token(cliente):
-    os.environ.pop("ASANA_TOKEN", None)
-    assert cliente.post("/api/asana/tarea", json={"task_id": "123"}, headers=PERSONA).status_code == 403
-    r = cliente.post("/api/asana/tarea", json={"task_id": "123"}, headers=EDITORA)
-    assert r.status_code == 503 and r.json()["detail"]["codigo"] == "no_configurado"
 
 
 def test_coleccion_desconocida(cliente):
