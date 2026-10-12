@@ -17,7 +17,7 @@ import { StackDiagram } from "@/components/stack-diagram"
 // Nexo AI Stack hidden: agents run on the Vikingo AI agent platform instead.
 const SHOW_STACK = false
 const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
-const SHOW_LOG = true // Bitácora hidden for now; updates still live in each project sheet
+const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
 function LevelRow({ x, pid, field, i }: { x: Level; pid: string; field: "levels" | "parts"; i: number }) {
@@ -145,7 +145,7 @@ export function Portfolio() {
             <h3 className="text-3xl font-medium tracking-tight">Tus apps y tus guías, en Nexo Apps.</h3>
             <p className="max-w-2xl text-base text-sub">Encuentra las apps del equipo, consulta buenas prácticas y publica tu proyecto con ayuda de tu asistente.</p>
             <p className="text-sm text-sub">Este portafolio ya completó el recorrido: GitHub → pruebas → Azure → catálogo de Nexo.</p>
-            <figure className="mt-3 overflow-hidden rounded-xl border border-line bg-white"><img src={nexoAppsScreenshot} alt="Nexo Apps: el Portafolio IA Nexo aparece en Espacios con visibilidad para Grupo PDC." loading="lazy" className="w-full h-auto" /><figcaption className="px-4 py-3 text-xs text-sub">Nexo Apps · Portafolio publicado para Grupo PDC · 12 oct 2026</figcaption></figure>
+            <figure className="mt-3 w-full max-w-[420px] overflow-hidden rounded-xl border border-line bg-white"><img src={nexoAppsScreenshot} alt="Nexo Apps: el Portafolio IA Nexo aparece en Espacios con visibilidad para Grupo PDC." loading="lazy" className="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain" /><figcaption className="px-4 py-3 text-xs text-sub">Nexo Apps · Portafolio publicado para Grupo PDC · 12 oct 2026</figcaption></figure>
             <span className="text-sm font-semibold text-accent-ink">Explorar Nexo Apps ↗</span>
           </a>
           <PracticesMap />
