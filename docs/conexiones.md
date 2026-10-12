@@ -8,7 +8,7 @@ El 12 de octubre de 2026 Alexandra confirmó expresamente conservar público est
 
 - URL: https://nexo-portafolio-ia.wittysea-7e111699.eastus.azurecontainerapps.io
 - Recurso existente: `rg-nexo-ai-core/nexo-portafolio-ia`, revisión Single, registro `crnexoaipdc01`.
-- GitHub Actions: `.github/workflows/deploy.yml` (ver nombre real del archivo en el repositorio), entorno `produccion`, push a `main`, PR con pruebas y ejecución manual.
+- GitHub Actions: `.github/workflows/desplegar.yml`, entorno `produccion`, push a `main`, PR con pruebas y ejecución manual.
 - GitHub OIDC usa las variables `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`; identidad de despliegue separada de la identidad administrada de runtime.
 - Build reproducible: `npm ci --prefix app && npm run build:nexo --prefix app`; Dockerfile construye interfaz y API. Backend probado contra PostgreSQL efímero en CI.
 - Imagen inmutable por digest; comprobante `deployment.json` del workflow contiene commit, digest anterior, revisión y fecha. La revisión debe estar Healthy/Running y coincidir con latestRevisionName y latestReadyRevisionName.
