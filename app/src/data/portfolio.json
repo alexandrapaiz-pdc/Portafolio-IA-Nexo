@@ -991,12 +991,12 @@
     {
      "name": "Nivel 2.5 · Backends",
      "status": "en_construccion",
-     "who": "Apps que leen y guardan sus propios datos"
+     "who": "Apps que leen y guardan sus propios datos · piloto en Azure"
     },
     {
      "name": "Nivel 3 · Agentes",
-     "status": "en_construccion",
-     "who": "Agentes y automatizaciones sobre el stack de Nexo"
+     "status": "pendiente",
+     "who": "Agentes sobre la plataforma de Vikingo AI · próximamente"
     }
    ],
    "name": "AI Best Practices",
@@ -1020,9 +1020,10 @@
    "repo": "https://github.com/alexandrapaiz-pdc/BestPracticesAI",
    "savings": {},
    "sponsor": "Benji (ciberseguridad) · Óscar",
-   "summary": "Repositorio BestPracticesAI con estándares por nivel: 1 · Usuario de Claude (activo), 2 · Constructor de apps (activo), 2.5 · Backends (en construcción), 3 · Agentes (en construcción). Incluye biblioteca de skills de Nexo y reglas base: agentes solo lectura, repos nunca públicos, sin secretos en código.",
-   "tagline": "Estándares por tier de usuario",
-   "wave": 0
+   "summary": "Nexo Apps es el sitio de despliegue y la guía: ahí vive la biblioteca de buenas prácticas por nivel (1 · Usuario de Claude, activo; 2 · Constructor de apps, activo; 2.5 · Backends, piloto en Azure; 3 · Agentes, próximamente) y ahí se registra y publica cada app, con Entra. Cada guía o skill trae «Hacerlo con mi asistente» para aplicarla con Claude. El código fuente vive en el repositorio BestPracticesAI. Reglas base: agentes solo lectura, sin secretos en código.",
+   "tagline": "Guías por nivel y Nexo Apps, el sitio de despliegue",
+   "wave": 0,
+   "site": "https://nexo-apps.wittysea-7e111699.eastus.azurecontainerapps.io/"
   },
   {
    "id": "step",
@@ -1480,6 +1481,16 @@
    "projectId": "infra",
    "tag": "Avance",
    "text": "Portal de agentes: los agentes se agrupan por gemelo de Edge, el portal ya navega en vivo la estructura organizacional del Company Brain y quedó documentado cómo continuar su construcción. Sigue en piloto, solo para la dueña.",
+   "value": null
+  },
+  {
+   "id": "u-1012-proto",
+   "date": "2026-10-12",
+   "tag": "Avance",
+   "text": "Nexo Apps queda como el sitio de despliegue y la guía de buenas prácticas: la biblioteca de guías y skills vive ahí, con «Hacerlo con mi asistente», y el piloto en Azure con Entra registra y publica cada app.",
+   "projectId": "protocolos",
+   "createdAt": "2026-10-12T18:00:00Z",
+   "kpiId": null,
    "value": null
   }
  ],

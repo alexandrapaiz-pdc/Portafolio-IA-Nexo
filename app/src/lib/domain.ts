@@ -10,7 +10,7 @@ export interface Vsm { asis?: VsmStep[]; tobe?: VsmStep[]; asisNote?: string; to
 export interface Level { name: string; who?: string; desc?: string; status: string }
 export interface Project {
   id: string; name: string; bu?: string; sponsor?: string; tagline?: string; summary?: string
-  priority?: number; wave?: number; program?: string; enabler?: boolean; noAzure?: boolean; paused?: boolean
+  site?: string; priority?: number; wave?: number; program?: string; enabler?: boolean; noAzure?: boolean; paused?: boolean
   phase?: string; blocker?: string; next?: string; impactLabel?: string
   pains?: string[]; needs?: string[]; discovery?: Milestone[]; kpis?: Kpi[]
   savings?: { baseline?: number | null; current?: number | null; target?: number | null; unit?: string; note?: string }
@@ -32,7 +32,7 @@ export const VMODES: Record<Mode, string> = { manual: "Manual", mixto: "Humano +
 export const PROGRAMS = [
   // Nexo AI Stack: hidden, agents run on the Vikingo AI agent platform. Kept for history.
   { id: "stack", hidden: true, name: "Nexo AI Stack", lead: "infra", sec: "stack-sec", line: "Azure, agentes, datos y controles: la base de todo." },
-  { id: "practicas", name: "AI Best Practices", lead: "protocolos", sec: "practicas", line: "Guías por nivel para usar y construir con IA, en GitHub." },
+  { id: "practicas", name: "AI Best Practices", lead: "protocolos", sec: "practicas", line: "Nexo Apps: las guías por nivel y el sitio donde se publica cada app." },
   { id: "brain", name: "Company Brain", lead: "companybrain", sec: "brain", line: "Databricks, datos de la empresa y portales como Portal de Mundos." },
   { id: "agentes", name: "AI Agent Projects", lead: null as string | null, sec: "proyectos", line: "Automatizaciones con dueño, línea base y KPI." },
 ]

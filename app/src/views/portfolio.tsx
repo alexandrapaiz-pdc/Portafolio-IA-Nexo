@@ -130,9 +130,10 @@ export function Portfolio() {
 
       <Section id="practicas">
         <SectionHead title="AI Best Practices">
-          <SecP>Estándares para usar y construir con IA: guías por nivel, en GitHub, abiertas a mejoras de cualquiera.</SecP>
+          <SecP>Nexo Apps es el sitio de despliegue y la guía: las buenas prácticas por nivel viven ahí, y ahí se registra y publica cada app, con Entra.</SecP>
           <div className="flex flex-wrap items-center gap-2.5">
             <Button variant="ghost" onClick={() => openProject("protocolos")}>Ver detalle</Button>
+            {pr?.site && <a href={pr.site} target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Abrir Nexo Apps ›</a>}
             {pr?.repo && <a href={pr.repo} target="_blank" rel="noopener" className="text-sm font-medium text-accent-ink no-underline hover:underline">Abrir en GitHub ›</a>}
             {isNum(pr?.pendingDecisions) && <span className="text-sm text-sub">{pr!.pendingDecisions} decisiones pendientes</span>}
           </div>
