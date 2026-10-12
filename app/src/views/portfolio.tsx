@@ -1,3 +1,4 @@
+import { ArrowRight } from "lucide-react"
 import nexoAppsScreenshot from "@/assets/nexo-apps.jpg"
 import { ChevronRight } from "lucide-react"
 import { agentsOf, inProgram, LSTAT, NEXT_LEVEL, NEXT_STATUS, PROGRAMS, savings, STATUS, type Level } from "@/lib/domain"
@@ -140,13 +141,19 @@ export function Portfolio() {
           </div>
         </SectionHead>
         <div className="grid gap-[18px]">
-          <a href={pr?.site} target="_blank" rel="noopener" className="grid gap-3 rounded-2xl border border-line-2 bg-group p-7 text-inherit no-underline transition-shadow hover:shadow-[var(--shadow-hover)]">
-            <span className="text-xs font-medium text-accent-ink">YA DISPONIBLE · ACCESO CORPORATIVO</span>
-            <h3 className="text-3xl font-medium tracking-tight">Tus apps y tus guías, en Nexo Apps.</h3>
-            <p className="max-w-2xl text-base text-sub">Encuentra las apps del equipo, consulta buenas prácticas y publica tu proyecto con ayuda de tu asistente.</p>
-            <p className="text-sm text-sub">Este portafolio ya completó el recorrido: GitHub → pruebas → Azure → catálogo de Nexo.</p>
-            <figure className="mt-3 w-full max-w-[420px] overflow-hidden rounded-xl border border-line bg-white"><img src={nexoAppsScreenshot} alt="Nexo Apps: el Portafolio IA Nexo aparece en Espacios con visibilidad para Grupo PDC." loading="lazy" className="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain" /><figcaption className="px-4 py-3 text-xs text-sub">Nexo Apps · Portafolio publicado para Grupo PDC · 12 oct 2026</figcaption></figure>
-            <span className="text-sm font-semibold text-accent-ink">Explorar Nexo Apps ↗</span>
+          <a href={pr?.site} target="_blank" rel="noopener" className="group grid items-center gap-8 overflow-hidden rounded-2xl border border-line-2 bg-group p-7 text-inherit no-underline transition-shadow hover:shadow-[var(--shadow-hover)] sm:grid-cols-[minmax(0,1fr)_280px] sm:p-9">
+            <div className="grid justify-items-start gap-4">
+              <span className="text-xs font-medium tracking-wide text-accent-ink">NEXO APPS · GRUPO PDC</span>
+              <h3 className="max-w-sm text-3xl font-medium leading-tight tracking-tight">Un lugar para las apps del equipo.</h3>
+              <p className="max-w-md text-base leading-relaxed text-sub">Encuentra herramientas, consulta buenas prácticas y publica tu próxima app con ayuda de tu asistente.</p>
+              <span className="mt-2 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white transition group-hover:brightness-105">Explorar Nexo Apps <ArrowRight size={16} aria-hidden /></span>
+            </div>
+            <figure className="mx-auto w-full max-w-[280px]">
+              <svg viewBox="145 607 335 375" role="img" aria-label="Nexo Apps: el Portafolio IA Nexo aparece en Espacios con visibilidad para Grupo PDC." className="w-full rounded-2xl shadow-sm">
+                <image href={nexoAppsScreenshot} width="1280" height="1489" />
+              </svg>
+              <figcaption className="mt-3 text-center text-xs text-sub">Este portafolio, ya en Nexo Apps.</figcaption>
+            </figure>
           </a>
           <PracticesMap />
           <details className="group">
