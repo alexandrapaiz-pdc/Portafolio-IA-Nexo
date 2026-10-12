@@ -141,7 +141,8 @@ export function Portfolio() {
           </div>
         </SectionHead>
         <div className="grid gap-[18px]">
-          <a href={pr?.site} target="_blank" rel="noopener" className="group grid items-center gap-8 overflow-hidden rounded-2xl border border-line-2 bg-group p-7 text-inherit no-underline transition-shadow hover:shadow-[var(--shadow-hover)] sm:grid-cols-[minmax(0,1fr)_280px] sm:p-9">
+          <GlowCard glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
+          <a href={pr?.site} target="_blank" rel="noopener" className="group grid items-center gap-8 rounded-2xl p-7 text-inherit no-underline sm:grid-cols-[minmax(0,1fr)_280px] sm:p-9">
             <div className="grid justify-items-start gap-4">
               <span className="text-xs font-medium tracking-wide text-accent-ink">NEXO APPS · GRUPO PDC</span>
               <h3 className="max-w-sm text-3xl font-medium leading-tight tracking-tight">Un lugar para las apps del equipo.</h3>
@@ -155,6 +156,7 @@ export function Portfolio() {
               <figcaption className="mt-3 text-center text-xs text-sub">Este portafolio, ya en Nexo Apps.</figcaption>
             </figure>
           </a>
+          </GlowCard>
           <PracticesMap />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver los {lv.length} niveles <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
