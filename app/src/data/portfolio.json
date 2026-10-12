@@ -1286,11 +1286,11 @@
   {
    "id": "orquestacion",
    "name": "Orquestación y agentes: Temporal + LangGraph",
-   "note": "Bus de eventos aplicado y probado (temas datos, agentes, acciones y portal). Primer agente desplegado: vigia-metricos. Bitácora de decisiones (ledger) funcionando de punta a punta.",
+   "note": "Arquitectura C4 de orquestación verificada el 12 oct: de 12 componentes, 3 sostienen la creación de agentes en vivo, 5 tienen base o funcionalidad parcial y 4 faltan (runtime OODAL, Temporal, gateway de ejecución, memoria conectada). Aún no hay ejecución de agentes de punta a punta.",
    "order": 9,
    "owner": "Alexandra",
    "status": "en_curso",
-   "updated": "2026-10-07"
+   "updated": "2026-10-12"
   },
   {
    "id": "stack",
@@ -1492,6 +1492,16 @@
    "createdAt": "2026-10-12T18:00:00Z",
    "kpiId": null,
    "value": null
+  },
+  {
+   "id": "u-1012-infra-c4",
+   "projectId": "infra",
+   "date": "2026-10-12",
+   "createdAt": "2026-10-12T23:55:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Se documentó y verificó la arquitectura C4 de orquestación: 3 de 12 componentes sostienen hoy la creación de agentes en el portal, 5 tienen base o funcionan en parte y 4 siguen pendientes. Los equipos OODAL (observar, orientar, decidir, actuar, aprender) ya tienen especificaciones reutilizables y el portal los muestra como equipo, aparte de los agentes de workflows. Todavía no corre ningún agente de punta a punta."
   }
  ],
  "snapshotAt": "2026-10-12"
