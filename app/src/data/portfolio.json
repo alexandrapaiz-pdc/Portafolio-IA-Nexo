@@ -261,52 +261,58 @@
   },
   {
    "id": "companybrain",
-   "blocker": "Unity Catalog necesita al administrador de la cuenta de Databricks.",
+   "blocker": "Carga inicial de SharePoint en curso; acceso multiusuario y permisos por fuente pendientes.",
    "bu": "Nexo",
    "discovery": [
     {
+     "label": "Mapa organizacional y estructura de conocimiento en Databricks",
      "done": true,
-     "due": null,
-     "label": "Glosario y mapa organizacional en GitHub"
+     "due": null
     },
     {
+     "label": "Sincronización de SharePoint y Asana implementada",
      "done": true,
-     "due": "2026-09-30",
-     "label": "Plan de datos en Databricks (borrador)"
+     "due": null
     },
     {
+     "label": "MCP personal: listado y lectura autenticada verificados",
      "done": true,
-     "due": "2026-10-05",
-     "label": "Workspace de Databricks y lago ADLS creados"
+     "due": null
     },
     {
+     "label": "Completar carga documental inicial y revisar fallos",
      "done": false,
-     "due": null,
-     "label": "Revisión del plan con IT y ciberseguridad"
+     "due": null
     },
     {
+     "label": "Verificar navegación del portal en navegador",
      "done": false,
-     "due": null,
-     "label": "Cargar el esquema semantic desde el repositorio"
+     "due": null
     },
     {
+     "label": "Autorización por usuario y fuente antes de ampliar acceso",
      "done": false,
-     "due": null,
-     "label": "Primeros productos gold: Kickoff Avon, Portal de Mundos, Contraloría y STEP"
+     "due": null
     }
    ],
    "enabler": true,
    "impactLabel": "Datos y vocabulario para 4 proyectos",
    "kpis": [
     {
-     "baseline": 0,
-     "current": 0,
-     "id": "sources",
-     "name": "Fuentes del inventario cargadas en Databricks",
-     "note": "Ver inventario_fuentes.yaml en el repositorio.",
-     "target": null,
-     "unit": "",
-     "updated": "2026-10-01"
+     "id": "sharepoint_sites",
+     "name": "Sitios SharePoint autorizados para sincronización",
+     "current": 4,
+     "unit": "sitios",
+     "note": "Estado documentado el 12 oct; no indica extracción completa.",
+     "updated": "2026-10-12"
+    },
+    {
+     "id": "asana_projects",
+     "name": "Proyectos Asana sincronizados",
+     "current": 2,
+     "unit": "proyectos",
+     "note": "AVON y Nexo Scrum.",
+     "updated": "2026-10-12"
     }
    ],
    "name": "Company Brain",
@@ -316,7 +322,7 @@
     "controles",
     "github"
    ],
-   "next": "Unity Catalog (brain_dev y brain_prod) en cuanto haya administrador de cuenta.",
+   "next": "Completar y verificar la extracción inicial de SharePoint; validar navegación del portal y mantener el piloto solo para la dueña.",
    "noAzure": false,
    "pains": [
     "Los agentes no entienden el vocabulario de la empresa ni quién es quién.",
@@ -325,35 +331,36 @@
    ],
    "parts": [
     {
-     "desc": "Glosario, alias y mapa organizacional en GitHub; base del esquema semantic",
      "name": "Vocabulario y ontología",
+     "desc": "Mapa organizacional importado y estructura de conocimiento en Databricks; no es sincronización viva con el directorio.",
+     "status": "listo"
+    },
+    {
+     "name": "Conocimiento documental",
+     "desc": "Cuatro sitios SharePoint autorizados; sincronización cada 15 minutos y carga inicial aún incompleta.",
      "status": "en_curso"
     },
     {
-     "desc": "SIGO, políticas y SOPs en SharePoint, consultados en vivo vía Microsoft Graph",
-     "name": "Conocimiento documental",
-     "status": "pendiente"
-    },
-    {
-     "desc": "JD Edwards, STEP, ventas de Avon, Asana y Jira en Databricks",
      "name": "Datos operativos",
-     "status": "pendiente"
+     "desc": "AVON y Nexo Scrum de Asana sincronizados. JDE y ERP Avon pendientes.",
+     "status": "en_curso"
     },
     {
-     "desc": "KPIs y líneas base por proyecto y por mundo, para tableros y agentes",
      "name": "Productos de datos",
-     "status": "pendiente"
+     "desc": "MCP personal de solo lectura verificado; datasets tipados de Excel y acceso multiusuario pendientes.",
+     "status": "en_curso"
     }
    ],
    "paused": false,
-   "phase": "construccion",
+   "phase": "piloto",
    "priority": 0.7,
    "program": "brain",
    "savings": {},
    "sponsor": "Alexandra Paiz",
-   "summary": "La capa de conocimiento de Grupo PDC: 1) vocabulario y ontología (glosario y mapa organizacional en GitHub), 2) documentos en SharePoint consultados en vivo, 3) datos operativos (JD Edwards, STEP, ventas de Avon, Asana, Jira) y 4) productos de datos (KPIs y líneas base) en Databricks.",
+   "summary": "Company Brain ya opera en Databricks: sincroniza cuatro sitios autorizados de SharePoint y los proyectos AVON y Nexo Scrum de Asana cada 15 minutos. Incluye mapa organizacional y un MCP personal de solo lectura verificado el 12 de octubre. La carga documental inicial sigue en curso; Granola, JDE y el acceso multiusuario aún no están conectados.",
    "tagline": "Capa de conocimiento para agentes y personas",
-   "wave": 0
+   "wave": 0,
+   "repo": "https://github.com/alexandrapaiz-pdc/CompanyBrainPDC"
   },
   {
    "id": "contraloria",
@@ -924,57 +931,45 @@
   },
   {
    "id": "protocolos",
-   "blocker": "Revisión de ciberseguridad con Benji: reglas de datos sensibles y retención de los complementos de Office.",
+   "blocker": "Continúa la revisión de ciberseguridad y la mejora del flujo de publicación.",
    "bu": "Nexo",
    "discovery": [
     {
+     "label": "Biblioteca de guías y skills accesible desde Nexo Apps",
+     "done": true,
+     "due": null
+    },
+    {
+     "label": "Portafolio publicado desde main y registrado por MCP",
+     "done": true,
+     "due": null
+    },
+    {
+     "label": "Visibilidad Company confirmada en el catálogo",
+     "done": true,
+     "due": null
+    },
+    {
+     "label": "Validar transición automática al catálogo en todos los clientes",
      "done": false,
-     "due": null,
-     "label": "Definir protocolos de ciberseguridad con Benji"
+     "due": null
     },
     {
-     "done": true,
-     "due": null,
-     "label": "Estándares Tier 1: seguridad, settings recomendados, conectores y plugins"
-    },
-    {
-     "done": true,
-     "due": null,
-     "label": "Estándares Tier 2: portal de Diego Villatoro, GitHub privado, inner source"
-    },
-    {
-     "done": true,
-     "due": null,
-     "label": "Publicar protocolos en GitHub personal y migrar al empresarial"
-    },
-    {
+     "label": "Completar revisión de ciberseguridad",
      "done": false,
-     "due": null,
-     "label": "Modelo escalable de despliegue de agentes: sandbox, portal y guía"
+     "due": null
     }
    ],
    "enabler": true,
    "impactLabel": "Uso seguro para todos los usuarios",
    "kpis": [
     {
-     "baseline": 0,
-     "current": 0,
-     "id": "tier1",
-     "name": "Usuarios Tier 1 con protocolo aplicado",
-     "note": "",
-     "target": null,
-     "unit": "",
-     "updated": "2026-09-30"
-    },
-    {
-     "baseline": 0,
-     "current": 0,
-     "id": "tier2",
-     "name": "Portales Tier 2 en el portal corporativo",
-     "note": "Requiere Entra ID.",
-     "target": null,
-     "unit": "",
-     "updated": "2026-09-30"
+     "id": "verified_flow",
+     "name": "Recorridos de publicación verificados en este portafolio",
+     "current": 1,
+     "unit": "app",
+     "note": "Portafolio IA Nexo, 12 oct. No es el total de apps del catálogo.",
+     "updated": "2026-10-12"
     }
    ],
    "levels": [
@@ -999,29 +994,27 @@
      "who": "Agentes sobre la plataforma de Vikingo AI · próximamente"
     }
    ],
-   "name": "AI Best Practices",
+   "name": "Nexo Apps · AI Best Practices",
    "needs": [
     "github",
     "controles"
    ],
-   "next": "Cerrar las decisiones pendientes de Nivel 1 y 2 y la revisión de ciberseguridad.",
-   "noAzure": true,
+   "next": "Validar el recorrido de publicación con nuevos constructores y mejorar la llegada automática al catálogo al terminar.",
+   "noAzure": false,
    "pains": [
-    "Usuarios ya crean soluciones con Claude sin documentación ni estándar.",
-    "Riesgo con API keys, secrets y archivos .env.",
-    "El código no debe quedar en repositorios públicos.",
-    "Todo el despliegue no puede centralizarse en el líder de IA."
+    "Las apps necesitan un lugar común para encontrarse y compartirse con la audiencia correcta.",
+    "Los constructores necesitan guías y una ruta reproducible de publicación.",
+    "Credenciales y permisos deben mantenerse fuera del código y aplicarse también en la app."
    ],
    "paused": false,
-   "pendingDecisions": 32,
-   "phase": "construccion",
+   "phase": "piloto",
    "priority": 0.5,
    "program": "practicas",
    "repo": "https://github.com/alexandrapaiz-pdc/BestPracticesAI",
    "savings": {},
    "sponsor": "Benji (ciberseguridad) · Óscar",
-   "summary": "Nexo Apps es el sitio de despliegue y la guía: ahí vive la biblioteca de buenas prácticas por nivel (1 · Usuario de Claude, activo; 2 · Constructor de apps, activo; 2.5 · Backends, piloto en Azure; 3 · Agentes, próximamente) y ahí se registra y publica cada app, con Entra. Cada guía o skill trae «Hacerlo con mi asistente» para aplicarla con Claude. El código fuente vive en el repositorio BestPracticesAI. Reglas base: agentes solo lectura, sin secretos en código.",
-   "tagline": "Guías por nivel y Nexo Apps, el sitio de despliegue",
+   "summary": "Nexo Apps reúne el catálogo corporativo y las buenas prácticas para usar IA y construir apps. El flujo conecta el proyecto con GitHub, publica en Azure con Microsoft Entra y registra el resultado mediante MCP. El Portafolio IA Nexo ya completó este recorrido: pruebas, despliegue automático desde main y tarjeta con visibilidad Company.",
+   "tagline": "De una idea a una app publicada, con guías y acompañamiento del asistente",
    "wave": 0,
    "site": "https://nexo-apps.wittysea-7e111699.eastus.azurecontainerapps.io/"
   },
@@ -1198,6 +1191,92 @@
     "updated": "2026-10-01"
    },
    "wave": 1
+  },
+  {
+   "id": "regulatorio",
+   "name": "MegaMás · Motor Regulatorio",
+   "bu": "MegaMás",
+   "program": "agentes",
+   "phase": "descubrimiento",
+   "paused": false,
+   "sponsor": "Equipo de Regulatorio · Alexandra Paiz",
+   "summary": "MVP propuesto para registros sanitarios de Guatemala, centrado en el bloque 2: checklist de requisitos y verificación documental. La fase 0 de H-Twin ya genera reportes con Power Automate e IA; el agente del motor regulatorio sigue en definición y debe comenzar en modo observación, con validación humana.",
+   "tagline": "Seguimiento de octubre · prioridad por acordar",
+   "next": "Recibir matrices y fuentes; documentar el To-Be y presentar la propuesta del bloque 2 antes del 22 de octubre.",
+   "blocker": "Fuentes y criterios de aceptación pendientes; comparar contra el proceso manual antes de automatizar decisiones.",
+   "needs": [
+    "datos",
+    "controles"
+   ],
+   "savings": {
+    "note": "Línea base y meta de automatización pendientes de validar."
+   },
+   "kpis": [],
+   "discovery": [
+    {
+     "label": "Sesión de alcance del 8 de octubre",
+     "done": true,
+     "due": null
+    },
+    {
+     "label": "Fase 0 de H-Twin reportada operativa en Guatemala",
+     "done": true,
+     "due": null
+    },
+    {
+     "label": "Recibir fuentes y matriz de requisitos",
+     "done": false,
+     "due": null
+    },
+    {
+     "label": "Diseño To-Be y propuesta de agente del bloque 2",
+     "done": false,
+     "due": null
+    }
+   ]
+  },
+  {
+   "id": "demografia",
+   "name": "MegaMás · Demografía y Catálogos",
+   "bu": "MegaMás",
+   "program": "agentes",
+   "phase": "construccion",
+   "paused": false,
+   "sponsor": "Gestión de Catálogos Maestros · Gestión Humana",
+   "summary": "Prototipo HTML presentado el 9 de octubre para gestionar estructura y movimientos, con vista previa, confirmación e historial de cambios. Todavía no está conectado a una base de datos ni desplegado. La oportunidad agéntica requiere documentar el flujo y definir métricas.",
+   "tagline": "Seguimiento de octubre · prioridad por acordar",
+   "next": "Preparar el repositorio y probar la publicación con Nexo Apps; acordar persistencia, permisos y métricas antes del piloto.",
+   "blocker": "Despliegue y base de datos pendientes; las capacidades demostradas corresponden al prototipo.",
+   "needs": [
+    "datos",
+    "controles"
+   ],
+   "savings": {
+    "note": "Línea base y meta de automatización pendientes de validar."
+   },
+   "kpis": [],
+   "discovery": [
+    {
+     "label": "Demostración del prototipo el 9 de octubre",
+     "done": true,
+     "due": null
+    },
+    {
+     "label": "Preparar repositorio y despliegue con Nexo Apps",
+     "done": false,
+     "due": null
+    },
+    {
+     "label": "Conectar persistencia y verificar permisos",
+     "done": false,
+     "due": null
+    },
+    {
+     "label": "Documentar flujo y métricas del agente futuro",
+     "done": false,
+     "due": null
+    }
+   ]
   }
  ],
  "components": [
@@ -1464,16 +1543,6 @@
    "value": null
   },
   {
-   "id": "u-1012-brain",
-   "createdAt": "2026-10-12T16:35:00Z",
-   "date": "2026-10-12",
-   "kpiId": null,
-   "projectId": "companybrain",
-   "tag": "Avance",
-   "text": "Primer consumidor en vivo: el portal de agentes ya navega la estructura organizacional del Company Brain para dar contexto a cada agente.",
-   "value": null
-  },
-  {
    "id": "u-1012-infra",
    "createdAt": "2026-10-12T16:35:00Z",
    "date": "2026-10-12",
@@ -1484,12 +1553,42 @@
    "value": null
   },
   {
-   "id": "u-1012-proto",
+   "id": "u-1012-brain",
+   "projectId": "companybrain",
    "date": "2026-10-12",
    "tag": "Avance",
-   "text": "Nexo Apps queda como el sitio de despliegue y la guía de buenas prácticas: la biblioteca de guías y skills vive ahí, con «Hacerlo con mi asistente», y el piloto en Azure con Entra registra y publica cada app.",
-   "projectId": "protocolos",
+   "text": "GitHub confirma sincronización de cuatro sitios SharePoint y dos proyectos Asana, más MCP personal de solo lectura verificado. Carga inicial SharePoint en curso. El portal tiene pruebas de navegación de backend; su verificación final en navegador queda pendiente. Acceso multiusuario, Granola y JDE no están habilitados.",
    "createdAt": "2026-10-12T18:00:00Z",
+   "kpiId": null,
+   "value": null
+  },
+  {
+   "id": "u-1012-proto",
+   "projectId": "protocolos",
+   "date": "2026-10-12",
+   "tag": "Avance",
+   "text": "Nexo Apps ya publicó este portafolio desde main: 26 pruebas de backend y 3 de despliegue aprobadas, revisión Azure saludable y registro MCP con visibilidad Company. Se mantiene la mejora del paso final hacia el catálogo.",
+   "createdAt": "2026-10-12T18:00:00Z",
+   "kpiId": null,
+   "value": null
+  },
+  {
+   "id": "u-1008-regulatorio",
+   "projectId": "regulatorio",
+   "date": "2026-10-08",
+   "tag": "Avance",
+   "text": "Reunión Megamas Regulatorio: fase 0 de H-Twin operativa en Guatemala; MVP agéntico enfocado en checklist y verificación del bloque 2. Próximo entregable: fuentes, To-Be y propuesta antes del 22 de octubre. Agente propuesto en modo observación y proceso manual en paralelo.",
+   "createdAt": "2026-10-08T18:00:00Z",
+   "kpiId": null,
+   "value": null
+  },
+  {
+   "id": "u-1009-demografia",
+   "projectId": "demografia",
+   "date": "2026-10-09",
+   "tag": "Avance",
+   "text": "Reunión Megamas demografia: prototipo funcional presentado con movimientos, confirmación e historial. Aún sin base de datos ni despliegue. Siguiente paso: repositorio y prueba en Nexo Apps; alcance y métricas del agente por definir.",
+   "createdAt": "2026-10-09T18:00:00Z",
    "kpiId": null,
    "value": null
   }
