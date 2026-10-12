@@ -6,8 +6,10 @@ import { Intro } from "@/components/intro"
 import { ProjectSheet } from "@/components/project-sheet"
 import { Home } from "@/views/home"
 import { Portfolio } from "@/views/portfolio"
-import { Agents } from "@/views/agents"
 import { Tickets } from "@/views/tickets"
+
+// Full-screen shader welcome ("Bienvenido al futuro de Nexo"): off, the motion was dizzying.
+const SHOW_INTRO = false
 
 function Shell() {
   const { view } = useRouter()
@@ -23,10 +25,9 @@ function Shell() {
       <Nav />
       {view === "inicio" && <Home />}
       {view === "portafolio" && <Portfolio />}
-      {view === "agentes" && <Agents />}
       {view === "solicitudes" && <Tickets />}
       <ProjectSheet />
-      <Intro />
+      {SHOW_INTRO && <Intro />}
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
-import { agentsOf, discovery, inProgram, PHASES, phaseLabel, PROGRAMS, readiness, savings, STATUS, TAGS, taskStats, type Kpi, type Project } from "@/lib/domain"
+import { agentsOf, discovery, inProgram, PHASES, phaseLabel, PROGRAMS, readiness, savings, STATUS, TAGS, type Kpi, type Project } from "@/lib/domain"
 import { clone, fdate, fnum, isNum, nf, pct, today } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
@@ -36,7 +36,7 @@ const DEPLOYED = false // show KPI trends once an agent is in production
 export function ProjectSheet() {
   const { project: id, closeProject } = useRouter()
   const store = useStore()
-  const { projects, components, updates, asana, canWrite, db, write } = store
+  const { projects, components, updates, canEdit, db, write } = store
   const p = projects.find((x) => x.id === id)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState<{ blocker: string; kpis: Kpi[]; savings: NonNullable<Project["savings"]> } | null>(null)
@@ -47,7 +47,6 @@ export function ProjectSheet() {
   const pdoc = () => db.doc("projects/" + p.id)
   const r = readiness(p, components), s = savings(p), d = discovery(p), pi = PHASES.findIndex((x) => x[0] === p.phase)
   const ups = updates.filter((u) => u.projectId === p.id)
-  const at = asana[p.id]?.tasks, ats = at ? taskStats(at) : null
   const isAg = inProgram(p, "agentes"), ag = agentsOf(projects), prog = PROGRAMS.find((g) => g.lead === p.id || (!isAg && inProgram(p, g.id)))
   const title = isAg ? `AI Agent Projects · Prioridad ${ag.indexOf(p) + 1}` : prog?.name || "Proyecto"
 
@@ -72,12 +71,12 @@ export function ProjectSheet() {
         <div className="grid gap-3">
           <div className="flex flex-wrap gap-3.5 text-[13px] text-faint">
             {isAg ? <><b className="font-semibold text-accent-ink">Prioridad {ag.indexOf(p) + 1}</b><span>Ola {p.wave}</span></> : <b className="font-semibold text-accent-ink">{prog?.name}</b>}
-            <span>{p.bu}</span>{p.noAzure && <span>Avanza sin Azure</span>}
+            <span>{p.bu}</span>
           </div>
           <h2 className="text-[clamp(30px,5vw,40px)] leading-[1.05] tracking-[-.04em]">{p.name}</h2>
           <p className="max-w-[36em] text-[17px] tracking-[-.015em] text-sub">{p.summary || p.tagline}</p>
           <p className="text-sm text-sub">{p.sponsor}</p>
-          {canWrite && <div className="flex justify-end gap-2">{editing ? <><Button variant="ghost" onClick={() => setEditing(false)}>Cancelar</Button><Button onClick={save}>Guardar</Button></> : <Button variant="ghost" onClick={startEdit}>Editar</Button>}</div>}
+          {canEdit && <div className="flex justify-end gap-2">{editing ? <><Button variant="ghost" onClick={() => setEditing(false)}>Cancelar</Button><Button onClick={save}>Guardar</Button></> : <Button variant="ghost" onClick={startEdit}>Editar</Button>}</div>}
         </div>
 
         <div>
@@ -86,7 +85,7 @@ export function ProjectSheet() {
             {PHASES.map(([pid, l], i) => {
               const cls = cn("grid gap-2 border-0 bg-transparent p-0 text-left text-xs text-faint", i === pi && "font-semibold text-text")
               const bar = <i className={cn("block h-1 rounded-sm bg-line-2", i < pi && "bg-strong", i === pi && "bg-accent")} />
-              return canWrite
+              return canEdit
                 ? <button key={pid} type="button" className={cls} onClick={() => pid !== p.phase && write(() => pdoc().update({ phase: pid, paused: false }), "Fase: " + l)}>{bar}<span className="max-sm:text-xs">{l}</span></button>
                 : <div key={pid} className={cls}>{bar}<span className="max-sm:text-xs">{l}</span></div>
             })}
@@ -109,7 +108,7 @@ export function ProjectSheet() {
             <div className="grid gap-2 px-5 pb-1.5 pt-4"><div className="flex justify-between text-[13px] text-sub"><span>Cerrados</span><b className="num font-semibold text-text">{d.done} de {d.total}</b></div><div className="bar"><i style={{ width: pct(d.done, d.total) + "%" }} /></div></div>
             {(p.discovery || []).map((x, i) => (
               <label key={i} className="row grid-cols-[auto_minmax(0,1fr)_auto] px-5 py-[11px] text-sm">
-                <input type="checkbox" className="size-4 accent-[var(--navy)]" checked={!!x.done} disabled={!canWrite}
+                <input type="checkbox" className="size-4 accent-[var(--navy)]" checked={!!x.done} disabled={!canEdit}
                   onChange={(e) => { const disc = clone(p.discovery || []); disc[i].done = e.target.checked; write(() => pdoc().update({ discovery: disc })) }} />
                 <span className={cn(x.done && "text-faint line-through decoration-line-2")}>{x.label}</span>
                 <span className="num whitespace-nowrap text-xs text-faint">{x.due ? fdate(x.due) : ""}</span>
@@ -118,11 +117,6 @@ export function ProjectSheet() {
           </div></div>
         </div>
 
-        {at && at.length > 0 && ats && (
-          <div className="group-box flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-            <span className="num text-sm text-sub">Asana: {ats.total - ats.done} tareas abiertas{ats.late ? ` · ${ats.late} vencidas` : ""} · {ats.done} cerradas</span>
-          </div>
-        )}
 </>)}
 
         {!p.enabler && (
@@ -180,7 +174,7 @@ export function ProjectSheet() {
         {p.next && <div><H5>Próximo hito</H5><div className="group-box px-5 py-4">{p.next}</div></div>}
 
         <div><H5>Actualizaciones</H5>
-          {canWrite && <Composer p={p} />}
+          {canEdit && <Composer p={p} />}
           <div className="group-box">{ups.length ? ups.map((u) => <UpdateRow key={u.id} u={u} />) : <Empty>Sin actualizaciones todavía.</Empty>}</div>
         </div>
 </>)}

@@ -1,15 +1,14 @@
 import { useState, type ReactNode } from "react"
 import { ArrowRight, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { asanaUrl, discovery, phaseLabel, readiness, savings, STATUS, type AsanaTask, type Project, type Update } from "@/lib/domain"
-import { fdate, fnum, isNum, nf, pct, today } from "@/lib/format"
+import { discovery, phaseLabel, readiness, savings, STATUS, type Project, type Update } from "@/lib/domain"
+import { fdate, fnum, isNum, nf, pct } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
 
-export function SectionHead({ eyebrow, title, children, className }: { eyebrow: string; title: string; children?: ReactNode; className?: string }) {
+export function SectionHead({ title, children, className }: { title: string; children?: ReactNode; className?: string }) {
   return (
     <div className={cn("grid max-w-[40em] gap-2.5", className)}>
-      <span className="inline-flex items-center gap-2 text-[13px] font-medium text-sub before:size-1.5 before:rounded-full before:bg-accent before:content-['']">{eyebrow}</span>
       <h2 className="h-sec">{title}</h2>
       {children}
     </div>
@@ -21,17 +20,16 @@ export function Section({ id, children, className }: { id?: string; children: Re
   return <section id={id} className={cn("grid scroll-mt-[60px] gap-[26px] pt-[84px]", className)}>{children}</section>
 }
 
-export function Hero({ eyebrow, title, sub, children, className }: { eyebrow: string; title: string; sub?: string; children?: ReactNode; className?: string }) {
+export function Hero({ title, sub, children, className }: { title: string; sub?: string; children?: ReactNode; className?: string }) {
   return (
     <section className={cn("grid gap-[18px] pb-14 pt-[88px]", className)}>
-      <div className="eyebrow">{eyebrow}</div>
       <h1 className="h-display">{title}{sub && <span className="sub">{sub}</span>}</h1>
       {children}
     </section>
   )
 }
 
-export function Footer({ left = "Grupo PDC · Nexo · Liderazgo de IA", right }: { left?: string; right: string }) {
+export function Footer({ left = "Grupo PDC · Nexo · Forward Deployed Engineering", right }: { left?: string; right: string }) {
   return <footer className="mt-24 flex flex-wrap justify-between gap-3 border-t border-line pb-11 pt-[22px] text-xs text-faint"><span>{left}</span><span>{right}</span></footer>
 }
 
@@ -106,7 +104,7 @@ export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
 }
 
 export function UpdateRow({ u, showProject }: { u: Update; showProject?: boolean }) {
-  const { projects, canWrite, db, write } = useStore()
+  const { projects, canEdit, db, write } = useStore()
   const { openProject } = useRouter()
   const p = projects.find((x) => x.id === u.projectId)
   const k = p && u.kpiId ? (p.kpis || []).find((x) => x.id === u.kpiId) : null
@@ -117,7 +115,7 @@ export function UpdateRow({ u, showProject }: { u: Update; showProject?: boolean
         <div className="mb-1 flex flex-wrap items-baseline gap-2.5">
           {showProject && p && <button type="button" onClick={() => openProject(p.id)} className="border-0 bg-transparent p-0 text-left font-semibold hover:text-accent-ink">{p.name}</button>}
           <span className={cn("text-xs text-faint", u.tag === "Bloqueo" && "text-accent-ink")}>{u.tag || "Avance"}</span>
-          {canWrite && <ConfirmDelete onConfirm={() => write(() => db.doc("updates/" + u.id).delete(), "Actualización eliminada")} />}
+          {canEdit && <ConfirmDelete onConfirm={() => write(() => db.doc("updates/" + u.id).delete(), "Actualización eliminada")} />}
         </div>
         <div className="whitespace-pre-wrap break-words text-[15px]">{u.text}</div>
         {k && isNum(u.value) && <div className="num mt-1 text-[13px] font-medium text-accent-ink">{k.name}: {fnum(u.value, k.unit)}</div>}
@@ -136,22 +134,6 @@ export function ConfirmDelete({ onConfirm, label = "Eliminar" }: { onConfirm: ()
   )
 }
 
-export function TaskRow({ t, project }: { t: AsanaTask; project?: Project }) {
-  const late = !t.done && !!t.due && t.due < today()
-  return (
-    <div className={cn("row grid-cols-[auto_minmax(0,1fr)_auto] px-5 py-[11px] text-sm", t.done && "opacity-80")}>
-      <span aria-hidden className={cn("size-2 rounded-full", t.done ? "bg-strong" : "shadow-[inset_0_0_0_1.5px_var(--faint)]")} />
-      <span className="min-w-0">
-        <a href={asanaUrl(t.gid)} target="_blank" rel="noopener" className={cn("text-inherit no-underline hover:underline", t.done && "text-faint line-through decoration-line-2")}>{t.name}</a>
-        {project && <span className="mt-px block text-xs text-faint">{project.name}</span>}
-      </span>
-      <span className={cn("num whitespace-nowrap text-xs text-faint", late && "font-semibold text-accent-ink")}>
-        {t.done ? (t.completedAt ? "Cerrada " + fdate(t.completedAt) : "Cerrada") : t.due ? (late ? "Vencida · " : "") + fdate(t.due) : "Sin fecha"}
-      </span>
-    </div>
-  )
-}
-
 export const Empty = ({ children }: { children: ReactNode }) => <div className="px-5 py-7 text-center text-faint">{children}</div>
 export const H5 = ({ children }: { children: ReactNode }) => <h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">{children}</h5>
 
@@ -162,7 +144,7 @@ export function RequestCta() {
     <section className="mt-24 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-6 card px-8 py-8 max-sm:grid-cols-1 max-sm:px-6">
       <div className="grid gap-1.5">
         <h2 className="text-[clamp(22px,2.6vw,28px)] font-medium tracking-[-.03em]">¿Tienes un proceso manual que se repite?</h2>
-        <p className="text-[15px] text-sub">Envíalo a Nexo. Toda solicitud se evalúa y entra al backlog de IA.</p>
+        <p className="text-[15px] text-sub">Envíalo. Reviso cada solicitud contigo, en tu equipo, y entra al backlog de IA.</p>
       </div>
       <button type="button" onClick={() => go("solicitudes")}
         className="group inline-flex h-[52px] items-center gap-2 justify-self-start rounded-full bg-accent px-6 text-base font-medium text-white shadow-[0_8px_24px_-10px_rgba(255,81,0,.7)] transition hover:brightness-105">

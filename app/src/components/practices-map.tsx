@@ -7,7 +7,7 @@ const LEVELS = [
   { n: "1", name: "Usuario de Claude", who: "Cualquier persona con licencia", guides: 11, ships: ["skill pdc-startup"], open: 16 },
   { n: "2", name: "Constructor de apps", who: "Portales, tableros y páginas", guides: 9, ships: ["skill publicar-app", "plantilla README"], open: 8 },
   { n: "2.5", name: "Backends", who: "Apps con sus propios datos", guides: 4, ships: ["skill crear-backend", "API base", "ejemplo KPIs"], open: 8 },
-  { n: "3", name: "Agentes", who: "Sobre el stack de Nexo", guides: 7, ships: ["sandbox local"], open: 0, future: true },
+  { n: "3", name: "Agentes", who: "Sobre la plataforma de Vikingo AI", guides: 7, ships: ["sandbox local"], open: 0, future: true },
 ]
 const DOT: Record<string, string> = { activo: "listo", en_construccion: "en_curso" }
 

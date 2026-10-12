@@ -7,12 +7,12 @@ import { Badge } from "@/components/ui/badge"
 import logoLight from "@/assets/grupo-pdc-principal.png"
 
 const TABS: { v: View; label: string; soon?: boolean }[] = [
-  { v: "inicio", label: "Inicio" }, { v: "portafolio", label: "Portafolio" }, { v: "agentes", label: "Agentes", soon: true },
+  { v: "inicio", label: "Inicio" }, { v: "portafolio", label: "Portafolio" },
 ]
 
 export function Nav() {
   const { view, go } = useRouter()
-  const { canWrite, updates } = useStore()
+  const { updates } = useStore()
   const tabsRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const tr = tabsRef.current, tb = tr?.querySelector<HTMLElement>(`[data-v="${view}"]`)
@@ -34,7 +34,6 @@ export function Nav() {
           ))}
         </div>
         <span className="flex-1 max-sm:hidden" />
-        {canWrite && <span className="whitespace-nowrap text-xs font-medium text-accent-ink max-sm:hidden" title="Puedes editar esta página">Edición</span>}
         {stamp && <span className="whitespace-nowrap text-xs text-faint max-sm:hidden">Act. {fdate(stamp)}</span>}
         <button type="button" onClick={() => go("solicitudes")} aria-current={view === "solicitudes" ? "page" : undefined}
           className={cn("flex-none whitespace-nowrap rounded-full border-0 bg-accent px-[15px] py-1.5 text-[13px] font-semibold text-white hover:brightness-105", view === "solicitudes" && "shadow-[0_0_0_3px_var(--accent-soft)]")}>
