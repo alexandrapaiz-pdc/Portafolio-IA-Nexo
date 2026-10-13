@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 import { quarterOf, type QuarterMetrics } from "@/lib/domain"
 import { isNum, nf } from "@/lib/format"
@@ -24,7 +24,90 @@ const CARDS: Card[] = [
 
 const prevQuarter = (q: string) => { const [y, n] = q.split("-Q").map(Number); return n === 1 ? `${y - 1}-Q4` : `${y}-Q${n - 1}` }
 const label = (q: string) => q.replace("-", " · ")
-type Save = "idle" | "saving" | "saved" | "error" | "invalid"
+type Save = "idle" | "pending" | "saving" | "saved" | "error" | "invalid"
+type Raw = Partial<Record<Field | "note", string>>
+const FIELDS = CARDS.flatMap((c) => c.fields.map(([f]) => f))
+
+// Text in the inputs -> the record saved for a quarter (empty = not measured).
+function toDoc(q: string, raw: Raw): QuarterMetrics {
+  const doc: QuarterMetrics = { id: q, quarter: q, note: raw.note?.trim() || null }
+  for (const f of FIELDS) { const t = (raw[f] ?? "").trim(), n = Number(t); doc[f] = t !== "" && Number.isFinite(n) && n >= 0 ? n : null }
+  return doc
+}
+const toRaw = (m?: QuarterMetrics): Raw => {
+  const r: Raw = { note: m?.note || "" }
+  for (const f of FIELDS) r[f] = isNum(m?.[f]) ? String(m![f]) : ""
+  return r
+}
+const invalid = (d: QuarterMetrics) => isNum(d.pilots) && isNum(d.pilotsToProduction) && d.pilotsToProduction > d.pilots
+
+/* Autosave, per the Nexo backend practices: short wait after typing, one write at a time
+   (always the latest edits, never out of order), safe retries with backoff, retry when the
+   connection returns, visible status, and a warning before leaving with unsaved changes.
+   Edits made while a save is in flight are never overwritten by the saved copy arriving. */
+function useAutosave(db: { doc: (p: string) => { set: (d: unknown) => Promise<unknown> } } | null, q: string, saved?: QuarterMetrics) {
+  const [raw, setRaw] = useState<Raw>(() => toRaw(saved))
+  const [state, setState] = useState<Save>("idle")
+  const st = useRef({ q, raw, rev: 0, savedRev: 0, busy: false, timer: 0, retry: 0, tries: 0 })
+
+  const again = useRef<() => void>(() => {})
+  const run = useCallback(async () => {
+    const s = st.current
+    window.clearTimeout(s.timer); window.clearTimeout(s.retry)
+    if (!db || s.busy || s.rev === s.savedRev) return
+    const doc = toDoc(s.q, s.raw), rev = s.rev, quarter = s.q
+    if (invalid(doc)) { setState("invalid"); return }
+    s.busy = true; setState("saving")
+    try {
+      const { id: _id, ...data } = doc
+      await db.doc("metricas/" + quarter).set(data)
+      s.tries = 0
+      if (s.q === quarter && s.rev === rev) s.savedRev = rev
+      if (s.q !== quarter || s.rev === rev) setState("saved")
+    } catch {
+      s.tries++; setState("error")
+      s.retry = window.setTimeout(() => { s.busy = false; again.current() }, Math.min(30000, 2000 * 2 ** (s.tries - 1)))
+      return
+    }
+    s.busy = false
+    if (s.rev !== s.savedRev) again.current() // edits arrived while saving: save the newest
+  }, [db])
+  useEffect(() => { again.current = run }, [run])
+
+  const edit = (f: Field | "note", value: string) => {
+    if (f !== "note" && value !== "" && !(Number(value) >= 0)) return
+    const s = st.current
+    s.raw = { ...s.raw, [f]: value }; s.rev++
+    setRaw(s.raw); setState("pending")
+    window.clearTimeout(s.timer); s.timer = window.setTimeout(run, 800)
+  }
+  const flush = () => { run() }
+  const editing = () => st.current.rev !== st.current.savedRev
+
+  // Switching quarter: save what was pending for the old one first, then load the new one.
+  useEffect(() => {
+    const s = st.current
+    if (s.q === q) return
+    if (s.rev !== s.savedRev) run()
+    s.q = q; s.rev = 0; s.savedRev = 0; s.tries = 0
+    s.raw = toRaw(saved); setRaw(s.raw); setState("idle")
+  }, [q, saved, run])
+  // A newer saved copy (another tab, another editor) replaces the inputs only when nothing is pending.
+  useEffect(() => {
+    const s = st.current
+    if (s.q !== q || s.busy || s.rev !== s.savedRev) return
+    const next = toRaw(saved)
+    if (JSON.stringify(toDoc(q, next)) !== JSON.stringify(toDoc(q, s.raw))) { s.raw = next; setRaw(next) }
+  }, [saved, q])
+  useEffect(() => {
+    const warn = (e: BeforeUnloadEvent) => { if (editing()) { run(); e.preventDefault() } }
+    const online = () => { if (editing()) { st.current.tries = 0; st.current.busy = false; run() } }
+    const hidden = () => { if (document.hidden && editing()) run() }
+    window.addEventListener("beforeunload", warn); window.addEventListener("online", online); document.addEventListener("visibilitychange", hidden)
+    return () => { window.removeEventListener("beforeunload", warn); window.removeEventListener("online", online); document.removeEventListener("visibilitychange", hidden); if (editing()) run() }
+  }, [run])
+  return { raw, edit, state, flush, editing }
+}
 
 export function Metrics() {
   const { metrics, db, canWrite, loaded, noDb } = useStore()
@@ -33,38 +116,11 @@ export function Metrics() {
   const [q, setQ] = useState(now)
   const byQ = (x: string) => metrics.find((m) => m.id === x)
   const saved = byQ(q)
-  const [draft, setDraft] = useState<Partial<QuarterMetrics>>({})
-  const [state, setState] = useState<Save>("idle")
-  const dirty = useRef(false), timer = useRef(0)
+  const { raw, edit, state, flush } = useAutosave(db, q, saved)
+  const draft = toDoc(q, raw)
+  const pick = (x: string) => { if (x !== q) { flush(); setQ(x) } }
 
-  // Load the saved quarter into the editor, unless there are unsaved edits.
-  useEffect(() => { if (!dirty.current) setDraft(saved ? { ...saved } : {}) }, [saved, q])
-  useEffect(() => { dirty.current = false; setState("idle") }, [q])
-  useEffect(() => {
-    const warn = (e: BeforeUnloadEvent) => { if (dirty.current) e.preventDefault() }
-    window.addEventListener("beforeunload", warn); return () => window.removeEventListener("beforeunload", warn)
-  }, [])
-
-  const save = (next: Partial<QuarterMetrics>) => {
-    window.clearTimeout(timer.current)
-    timer.current = window.setTimeout(async () => {
-      if (!db) return
-      const doc: Record<string, unknown> = { quarter: q }
-      for (const c of CARDS) for (const [f] of c.fields) doc[f] = isNum(next[f]) ? next[f] : null
-      doc.note = next.note?.trim() || null
-      if (isNum(doc.pilots) && isNum(doc.pilotsToProduction) && (doc.pilotsToProduction as number) > (doc.pilots as number)) { setState("invalid"); return }
-      setState("saving")
-      try { await db.doc("metricas/" + q).set(doc); dirty.current = false; setState("saved") } catch { setState("error") }
-    }, 800)
-  }
-  const edit = (f: Field | "note", raw: string) => {
-    const v = f === "note" ? raw : raw === "" ? null : Number(raw)
-    if (f !== "note" && v !== null && (!Number.isFinite(v) || (v as number) < 0)) return
-    const next = { ...draft, [f]: v }
-    dirty.current = true; setDraft(next); save(next)
-  }
-
-  const shown = canWrite ? draft : saved || {}
+  const shown: Partial<QuarterMetrics> = canWrite ? draft : saved || {}
   const prev = byQ(prevQuarter(q))
   const history = quarters.map(byQ).filter(Boolean) as QuarterMetrics[]
 
@@ -79,10 +135,10 @@ export function Metrics() {
 
       <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
         <div className="seg" role="group" aria-label="Trimestre">
-          {quarters.map((x) => <button key={x} type="button" aria-pressed={q === x} onClick={() => setQ(x)}>{label(x)}{x === now ? " · actual" : ""}</button>)}
+          {quarters.map((x) => <button key={x} type="button" aria-pressed={q === x} onClick={() => pick(x)}>{label(x)}{x === now ? " · actual" : ""}</button>)}
         </div>
-        {canWrite && <span aria-live="polite" className={cn("text-xs", state === "error" || state === "invalid" ? "text-accent-ink" : "text-faint")}>
-          {state === "saving" ? "Guardando…" : state === "saved" ? "Guardado" : state === "invalid" ? "Sin guardar: los pilotos en producción no pueden ser más que los pilotos." : state === "error" ? "No se pudo guardar. Revisa tu conexión e intenta de nuevo." : "Los cambios se guardan solos."}
+        {canWrite && <span aria-live="polite" className={cn("text-xs", state === "error" || state === "invalid" ? "text-accent-ink" : "text-faint")} data-state={state}>
+          {state === "saving" ? "Guardando…" : state === "pending" ? "Cambios sin guardar…" : state === "saved" ? "Guardado" : state === "invalid" ? "Sin guardar: los pilotos en producción no pueden ser más que los pilotos." : state === "error" ? "No se pudo guardar. Reintentando…" : "Los cambios se guardan solos."}
         </span>}
       </div>
 
@@ -105,7 +161,7 @@ export function Metrics() {
                 <div className={cn("mt-1 grid gap-2 border-t border-line pt-3", c.fields.length > 1 && "grid-cols-2")}>
                   {c.fields.map(([f, l]) => (
                     <label key={f} className="grid gap-1 text-xs text-sub">{l}
-                      <Input type="number" inputMode="decimal" min={0} step="any" value={isNum(draft[f]) ? String(draft[f]) : ""} placeholder="Sin medir" onChange={(e) => edit(f, e.target.value)} />
+                      <Input type="number" inputMode="decimal" min={0} step="any" value={raw[f] ?? ""} placeholder="Sin medir" onChange={(e) => edit(f, e.target.value)} />
                     </label>
                   ))}
                 </div>
@@ -117,7 +173,7 @@ export function Metrics() {
 
       {canWrite ? (
         <label className="grid gap-1.5 pt-5 text-[13px] font-medium text-sub">Nota del trimestre
-          <Textarea value={draft.note || ""} maxLength={2000} placeholder="Qué explica los números de este trimestre: hitos, bloqueos, cambios de alcance." onChange={(e) => edit("note", e.target.value)} />
+          <Textarea value={raw.note ?? ""} maxLength={2000} placeholder="Qué explica los números de este trimestre: hitos, bloqueos, cambios de alcance." onChange={(e) => edit("note", e.target.value)} />
         </label>
       ) : saved?.note && <p className="mt-5 rounded-r-sm bg-group px-4 py-3 text-sm text-sub">{saved.note}</p>}
 
