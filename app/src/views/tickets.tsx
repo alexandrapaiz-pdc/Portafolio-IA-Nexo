@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Empty, Footer, Section, SectionHead, SecP, Stat, StatsRow } from "@/components/shared"
+import { Empty, Section, SectionHead, SecP, Stat, StatsRow } from "@/components/shared"
 
 // Self-service roadmap (A largo plazo: autoservicio con guardrails). Hidden until the organization is ready for it.
 const SHOW_SELF_SERVICE = false
@@ -99,7 +99,7 @@ export function Tickets() {
         </div>
         {import.meta.env.MODE !== "nexo" && <p className="rounded-r-sm bg-group px-4 py-3 text-[13px] text-sub">Por ahora las solicitudes se guardan aquí; pasarán a Azure cuando esté listo.</p>}
       </Section>
-      <Footer right="Dudas: Alexandra Paiz, Forward Deployed Engineer de IA" />
+      <div className="pb-11" />
 
       {open?.mode === "new" && <NewTicket onClose={() => setOpen(null)} />}
       {open?.mode === "view" && <TicketDetail id={open.id} who={who} onClose={() => setOpen(null)} />}
@@ -191,9 +191,9 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
 
 // Right after sending: the requester downloads the intake guide, fills it (AI may help) and sends it back.
 const INTAKE_STEPS: [string, string][] = [
-  ["Descarga la guía de intake", "Ábrela en SharePoint y descárgala con Archivo › Descargar, o trabaja en tu propia copia."],
-  ["Llénala, con IA si quieres", "Claude u otra herramienta de IA aprobada por la empresa puede ayudarte a redactar las respuestas a partir de tus notas o documentos del proceso. Revisa que todo sea correcto."],
-  ["Envíala", "Mándala a alexandra.paiz@grupopdc.com con el código de tu solicitud en el asunto."],
+  ["Descarga la guía", "Se abre en SharePoint: Archivo › Descargar."],
+  ["Llénala, con IA si quieres", "Claude puede redactar las respuestas a partir de tus notas. Revisa el resultado."],
+  ["Envíala", "A alexandra.paiz@grupopdc.com, con el código de tu solicitud en el asunto."],
 ]
 function Sent({ code, onClose }: { code: string; onClose: () => void }) {
   const [got, setGot] = useState(false)
@@ -201,12 +201,13 @@ function Sent({ code, onClose }: { code: string; onClose: () => void }) {
     <div className="grid gap-5">
       <div className="grid gap-2.5"><span className="num text-[13px] font-medium text-faint">{code}</span><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Solicitud enviada.</h2>
         <p className="text-[17px] text-sub">Falta un paso: completar la guía de intake, para que podamos evaluar el proceso contigo.{EMAILS ? " También te la enviamos por correo." : ""}</p></div>
-      <ol className="m-0 grid list-none gap-3.5 border-t border-line p-0 pt-4">
+      <ol className="group-box m-0 list-none p-0">
         {INTAKE_STEPS.map(([h, d], i) => (
-          <li key={h} className="grid grid-cols-[22px_minmax(0,1fr)] gap-2.5"><b className="num text-[15px] font-semibold text-accent">{i + 1}</b>
-            <div className="grid gap-0.5"><span className="text-[15px] font-semibold tracking-[-.01em]">{h}</span><span className="text-sm text-sub">{d}</span>
-              {i === 0 && <a href={GUIA_INTAKE} target="_blank" rel="noopener" onClick={() => setGot(true)} className="mt-2 inline-flex h-10 items-center gap-2 justify-self-start rounded-full bg-accent px-5 text-sm font-medium text-white no-underline hover:brightness-105">Descargar la guía de intake<ArrowRight size={16} /></a>}
-            </div></li>
+          <li key={h} className="row grid-cols-[24px_minmax(0,1fr)_auto] items-center gap-3 max-sm:grid-cols-[24px_minmax(0,1fr)]">
+            <span className="num grid size-6 place-items-center rounded-full bg-accent-soft text-xs font-semibold text-accent-ink">{i + 1}</span>
+            <div className="min-w-0"><div className="text-[15px] font-semibold tracking-[-.01em]">{h}</div><div className="text-[13px] text-sub">{d}</div></div>
+            {i === 0 && <a href={GUIA_INTAKE} target="_blank" rel="noopener" onClick={() => setGot(true)} className="inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-4 text-[13px] font-medium text-white no-underline hover:brightness-105 max-sm:col-start-2 max-sm:justify-self-start">Abrir guía<ArrowRight size={14} /></a>}
+          </li>
         ))}
       </ol>
       <div className="flex flex-wrap items-center justify-end gap-3">

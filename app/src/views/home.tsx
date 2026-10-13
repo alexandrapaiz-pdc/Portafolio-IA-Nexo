@@ -2,7 +2,7 @@ import { useRouter } from "@/lib/router"
 import openexoLogo from "@/assets/openexo.png"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { ArrowRight } from "lucide-react"
-import { Footer, RequestCta, Section, SectionHead, SecP } from "@/components/shared"
+import { RequestCta, Section, SectionHead, SecP } from "@/components/shared"
 import { RobotBand } from "@/components/robot-band"
 
 const ISTACK = [
@@ -108,7 +108,6 @@ export function Home() {
         </div>
       </Section>
       <RequestCta />
-      <Footer right="Marco: Organizaciones Exponenciales 3.0 (OpenExO)" />
     </main>
   )
 }
