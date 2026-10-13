@@ -3,7 +3,7 @@
    it is updated by editing the snapshot and republishing. Only requests (tickets, triage) use the
    claude.ai artifact database, or the app's own API when built with --mode nexo (nexo-runtime.ts). */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
-import type { Component, Project, Ticket, Triage, Update } from "./domain"
+import type { Component, Project, QuarterMetrics, Ticket, Triage, Update } from "./domain"
 import { nexoRuntime } from "./nexo-runtime"
 import snapshot from "@/data/portfolio.json"
 
@@ -18,8 +18,8 @@ export interface Store {
   db: Any; user: Any
   canWrite: boolean; canEdit: boolean; me: string | null; names: Record<string, string>
   projects: Project[]; components: Component[]; updates: Update[]
-  tickets: Ticket[]; triage: Record<string, Triage>
-  loaded: { p: boolean; c: boolean; u: boolean; t: boolean }
+  tickets: Ticket[]; triage: Record<string, Triage>; metrics: QuarterMetrics[]
+  loaded: { p: boolean; c: boolean; u: boolean; t: boolean; m: boolean }
   noDb: boolean
   toast: (m: string) => void
   write: (fn: () => Promise<unknown>, ok?: string) => Promise<boolean>
@@ -37,7 +37,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const projects = SNAP.projects, components = SNAP.components, updates = UPDATES
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [triage, setTriage] = useState<Record<string, Triage>>({})
-  const [loaded, setLoaded] = useState({ p: true, c: true, u: true, t: false })
+  const [metrics, setMetrics] = useState<QuarterMetrics[]>([])
+  const [loaded, setLoaded] = useState({ p: true, c: true, u: true, t: false, m: false })
   const [noDb, setNoDb] = useState(false)
   const [toastMsg, setToastMsg] = useState("")
   const toastTimer = useRef<number>(0)
@@ -54,7 +55,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   // Boot: resolve capabilities, then subscribe once to each collection.
   useEffect(() => {
     const cl = import.meta.env.MODE === "nexo" ? nexoRuntime : window.claude
-    const all = () => setLoaded((l) => ({ ...l, t: true }))
+    const all = () => setLoaded((l) => ({ ...l, t: true, m: true }))
     if (!cl?.use) { all(); setNoDb(true); return }
     const unsubs: (() => void)[] = []
     let alive = true
@@ -70,6 +71,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const err = () => toast("Se perdió la conexión con los datos. Recarga la página.")
       const docs = (s: Any) => s.docs.map((d: Any) => ({ id: d.id, ...d.data() }))
       unsubs.push(db.collection("tickets").orderBy("createdAt", "desc").limit(500).onSnapshot((s: Any) => { setTickets(docs(s)); setLoaded((l) => ({ ...l, t: true })) }, err))
+      unsubs.push(db.collection("metricas").onSnapshot((s: Any) => { setMetrics(docs(s)); setLoaded((l) => ({ ...l, m: true })) }, err))
       unsubs.push(db.collection("triage").onSnapshot((s: Any) => { const m: Record<string, Triage> = {}; s.docs.forEach((d: Any) => (m[d.id] = d.data())); setTriage(m) }, err))
     })()
     return () => { alive = false; unsubs.forEach((u) => u?.()) }
@@ -85,8 +87,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [tickets, caps.user])
 
   const value = useMemo<Store>(() => ({
-    ...caps, canWrite, canEdit: false, me, names, projects, components, updates, tickets, triage, loaded, noDb, toast, write,
-  }), [caps, canWrite, me, names, projects, components, updates, tickets, triage, loaded, noDb, toast, write])
+    ...caps, canWrite, canEdit: false, me, names, projects, components, updates, tickets, triage, metrics, loaded, noDb, toast, write,
+  }), [caps, canWrite, me, names, projects, components, updates, tickets, triage, metrics, loaded, noDb, toast, write])
 
   return (
     <Ctx.Provider value={value}>

@@ -38,6 +38,7 @@ Primer caso real del estándar de Nexo para apps con datos: la página y su API 
 | `api/app/main.py` | FastAPI: entrega la página y la API de datos (colecciones, documentos, personas, importación, correo de intake) |
 | `api/app/colecciones.py` | Cómo se guarda cada colección. `projects`, `components`, `updates`, `asana`, `asanaMeta` y `triage` como **documentos**; `tickets` (solicitudes) como **tabla con columnas** (`solicitudes`), validada y lista para reportes |
 | `api/app/correo.py` | Correo al solicitante con la guía de intake, por Microsoft Graph con la identidad de la app |
+| `api/migraciones/003_metricas_fde.sql` | Métricas trimestrales de despliegue (colección `metricas`, tabla `metricas_fde`): una fila por trimestre, solo editores escriben, validación y historial |
 | `api/app/almacen.py` | Documentos y tablas con las mismas reglas: versión por fila, historial de cada cambio, borrado lógico y número de cambio para que la página se actualice sola |
 | `api/migraciones/` | SQL versionado que la app aplica al arrancar |
 | `api/tests/` | Pruebas contra un PostgreSQL real |

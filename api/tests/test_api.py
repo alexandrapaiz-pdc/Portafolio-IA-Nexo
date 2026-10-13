@@ -118,6 +118,23 @@ def test_solicitud_manda_la_guia_de_intake_al_solicitante(cliente, monkeypatch):
     assert "Puedes usar IA para llenarla" in cuerpo and "<b>x</b>" not in cuerpo  # el título se escapa
 
 
+def test_metricas_trimestrales_solo_editores(cliente):
+    q = {"quarter": "2026-Q4", "daysToValue": 9, "liveWithUsers": 0, "pilots": 3, "pilotsToProduction": 0,
+         "hoursSaved": 0, "note": "Primer trimestre medido"}
+    assert cliente.put("/api/c/metricas/2026-Q4", json=q, headers=PERSONA).status_code == 403
+    r = cliente.put("/api/c/metricas/2026-Q4", json=q, headers=EDITORA)
+    assert r.status_code == 200, r.text
+    doc = cliente.get("/api/c/metricas/2026-Q4", headers=PERSONA).json()["datos"]
+    assert doc["pilots"] == 3 and doc["daysToValue"] == 9 and "savingsUsd" not in doc  # vacío = sin medir
+    assert cliente.patch("/api/c/metricas/2026-Q4", json={"savingsUsd": 1200}, headers=EDITORA).status_code == 200
+    assert cliente.get("/api/c/metricas/2026-Q4", headers=PERSONA).json()["datos"]["savingsUsd"] == 1200
+    # Producción no puede superar los pilotos; el id debe ser un trimestre.
+    assert cliente.patch("/api/c/metricas/2026-Q4", json={"pilotsToProduction": 4}, headers=EDITORA).status_code == 422
+    assert cliente.put("/api/c/metricas/otro", json={**q, "quarter": "otro"}, headers=EDITORA).status_code == 422
+    assert sql("SELECT trimestre, pilotos, ahorro_usd FROM metricas_fde") == [("2026-Q4", 3, 1200)]
+    assert len(sql("SELECT 1 FROM historial WHERE coleccion = 'metricas'")) == 2
+
+
 def test_correo_sin_configurar_no_envia(monkeypatch):
     from app import correo
 

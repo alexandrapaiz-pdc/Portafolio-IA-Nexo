@@ -17,6 +17,12 @@ export interface Project {
   vsm?: Vsm; levels?: Level[]; parts?: Level[]; repo?: string; pendingDecisions?: number
 }
 export interface Component { id: string; name: string; owner?: string; note?: string; status: Status; order?: number; key?: boolean; updated?: string }
+/** Quarterly deployment metrics (one doc per quarter, id "2026-Q4"). Missing = not measured yet. */
+export interface QuarterMetrics {
+  id: string; quarter: string; daysToValue?: number | null; liveWithUsers?: number | null; pilots?: number | null
+  pilotsToProduction?: number | null; savingsUsd?: number | null; hoursSaved?: number | null; daysBlocked?: number | null; note?: string | null
+}
+export const quarterOf = (d = new Date()) => `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
 export interface Update { id: string; projectId: string; date: string; tag?: string; text: string; kpiId?: string | null; value?: number | null; createdAt?: string }
 export interface Ticket { id: string; code?: string; title: string; area?: string; type?: string; urgency?: string; problem?: string; current?: string; hours?: number | null; people?: number | null; wanted?: string | null; impact?: string; systems?: string; createdBy?: string | null; createdAt?: string }
 export interface Triage { status?: string; priority?: number | null; note?: string; updatedAt?: string }

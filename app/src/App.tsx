@@ -7,6 +7,7 @@ import { ProjectSheet } from "@/components/project-sheet"
 import { Home } from "@/views/home"
 import { Portfolio } from "@/views/portfolio"
 import { Tickets } from "@/views/tickets"
+import { Metrics } from "@/views/metrics"
 
 // Full-screen shader welcome ("Bienvenido al futuro de Nexo"): off, the motion was dizzying.
 const SHOW_INTRO = false
@@ -25,6 +26,7 @@ function Shell() {
       <Nav />
       {view === "inicio" && <Home />}
       {view === "portafolio" && <Portfolio />}
+      {view === "metricas" && <Metrics />}
       {view === "solicitudes" && <Tickets />}
       <ProjectSheet />
       {SHOW_INTRO && <Intro />}

@@ -7,7 +7,7 @@ Es el único archivo propio de cada app (junto con sus migraciones). Regla de Ne
 from datetime import datetime, timezone
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .almacen import Documentos, Regla, Tabla
 
@@ -44,12 +44,42 @@ SOLICITUDES = {
     "impact": "impacto", "systems": "sistemas", "createdBy": "creado_por", "createdAt": "creado_en",
 }
 
+class MetricaTrimestre(BaseModel):
+    """Métricas de despliegue de un trimestre. Vacío = aún no medido (nunca un valor inventado)."""
+
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    quarter: str = Field(pattern=r"^20[0-9]{2}-Q[1-4]$")
+    daysToValue: float | None = Field(default=None, ge=0, le=3650)
+    liveWithUsers: int | None = Field(default=None, ge=0, le=10000)
+    pilots: int | None = Field(default=None, ge=0, le=10000)
+    pilotsToProduction: int | None = Field(default=None, ge=0, le=10000)
+    savingsUsd: float | None = Field(default=None, ge=0, le=1_000_000_000)
+    hoursSaved: float | None = Field(default=None, ge=0, le=10_000_000)
+    daysBlocked: float | None = Field(default=None, ge=0, le=36500)
+    note: str | None = Field(default=None, max_length=2000)
+
+    @model_validator(mode="after")
+    def produccion_no_supera_pilotos(self):
+        if self.pilots is not None and self.pilotsToProduction is not None and self.pilotsToProduction > self.pilots:
+            raise ValueError("Los pilotos que pasaron a producción no pueden ser más que los pilotos")
+        return self
+
+
+METRICAS = {
+    "quarter": "trimestre", "daysToValue": "dias_primer_valor", "liveWithUsers": "despliegues_con_usuarios",
+    "pilots": "pilotos", "pilotsToProduction": "pilotos_a_produccion", "savingsUsd": "ahorro_usd",
+    "hoursSaved": "horas_liberadas", "daysBlocked": "dias_bloqueado", "note": "nota",
+}
+
 COLECCIONES = {
     "projects": Documentos(),
     "components": Documentos(),
     "updates": Documentos(),
     "asana": Documentos(),
     "asanaMeta": Documentos(),
+    # Métricas trimestrales de despliegue: todos leen, solo editores escriben.
+    "metricas": Tabla(tabla="metricas_fde", modelo=MetricaTrimestre, columnas=METRICAS),
     "triage": Documentos(),
     # Cualquier persona de PDC puede enviar una solicitud; solo editores la cambian o la borran.
     # Quién la envía y cuándo los pone el servidor.
