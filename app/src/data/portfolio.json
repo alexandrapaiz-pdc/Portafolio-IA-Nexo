@@ -1290,7 +1290,7 @@
    "order": 9,
    "owner": "Alexandra",
    "status": "en_curso",
-   "updated": "2026-10-12"
+   "updated": "2026-10-13"
   },
   {
    "id": "stack",
@@ -1542,6 +1542,16 @@
    "kpiId": null,
    "value": null,
    "text": "Nexo Apps: cada publicación queda a nombre de su autor, las apps se pueden editar desde el portal y hay un patrón probado para leer Excel con el acceso de cada persona (piloto con SIGO)."
+  },
+  {
+   "id": "u-1013-infra",
+   "projectId": "infra",
+   "date": "2026-10-13",
+   "createdAt": "2026-10-13T23:55:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Marco universal de agentes publicado en el portal: 14 secciones de requisitos y una plantilla en blanco reutilizable, consultable desde la CLI y el MCP de autoría. No crea agentes ni cambia proyectos guardados; la versión quedó verificada en Azure."
   }
  ],
  "snapshotAt": "2026-10-12"
