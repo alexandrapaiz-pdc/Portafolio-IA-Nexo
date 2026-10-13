@@ -2,7 +2,7 @@
  "projects": [
   {
    "id": "avon",
-   "blocker": "Fecha dura: APT se apaga a mediados de octubre. Falta un machote real (.xlsb) de C17'26 para construir el lector.",
+   "blocker": "Acceso directo a MAPS (hoy son exports manuales) y abrir el piloto al equipo de planeación: consentimiento y pruebas del MCP remoto desde sus computadoras.",
    "bu": "Avon",
    "discovery": [
     {
@@ -31,7 +31,7 @@
      "label": "Mapa del proceso de planeación de 15 pasos"
     },
     {
-     "done": false,
+     "done": true,
      "due": "2026-10-08",
      "label": "Alcance de automatización Excel → KPIs (sprint de 7 semanas)"
     },
@@ -90,7 +90,7 @@
     "github",
     "datos"
    ],
-   "next": "Fundación del camino interino antes del apagado: lector del machote, salida para facturación y macro MOSTRO.",
+   "next": "Primera generación real del kickoff con Claude y validación del deck con la líder de campaña.",
    "pains": [
     "APT se apaga a mediados de octubre de 2026 (fin del TSA con Natura); el script actual muere con él.",
     "El kickoff de cada campaña toma 15 h de trabajo manual.",
@@ -100,7 +100,7 @@
     "La planeación de una campaña toma 15–20 días."
    ],
    "paused": false,
-   "phase": "construccion",
+   "phase": "piloto",
    "priority": 1,
    "program": "agentes",
    "savings": {
@@ -111,7 +111,7 @@
     "unit": "h/campaña"
    },
    "sponsor": "Planeación Avon",
-   "summary": "Automatizar el kickoff de campaña: de la base de ventas a las tablas de KPIs sin extracción manual. Elimina 15 h de trabajo manual por campaña. Incluye el reemplazo de APT (Macro Revista y Leader List). Sustituto agéntico en construcción (Python, LangGraph, MCP, Postgres): motor portado y validado contra la corrida de referencia de Denis Martínez.",
+   "summary": "Automatizar el kickoff de campaña: de los exports de MAPS a las tablas, el deck y el one-pager que hoy se arman a mano (15 h por campaña). El workspace de planeación ya tiene Kickoff, Planner, Histórico, análisis de catálogo, constructor visual para Mostro y biblioteca de kickoffs, y corre en Azure con Entra como piloto privado, con un MCP remoto para Claude. El reemplazo de APT (motor portado y validado contra la corrida de referencia) sigue en su propio repositorio.",
    "tagline": "Prioridad 1, acordada con Lisa",
    "vsm": {
     "asis": [
@@ -261,7 +261,7 @@
   },
   {
    "id": "companybrain",
-   "blocker": "Unity Catalog necesita al administrador de la cuenta de Databricks.",
+   "blocker": "Acceso multiusuario: hoy solo la dueña puede consultar el Company Brain. Unity Catalog de producción sigue esperando al administrador de la cuenta de Databricks.",
    "bu": "Nexo",
    "discovery": [
     {
@@ -285,7 +285,7 @@
      "label": "Revisión del plan con IT y ciberseguridad"
     },
     {
-     "done": false,
+     "done": true,
      "due": null,
      "label": "Cargar el esquema semantic desde el repositorio"
     },
@@ -316,7 +316,7 @@
     "controles",
     "github"
    ],
-   "next": "Unity Catalog (brain_dev y brain_prod) en cuanto haya administrador de cuenta.",
+   "next": "Terminar la carga inicial de SharePoint y definir el acceso para más personas.",
    "noAzure": false,
    "pains": [
     "Los agentes no entienden el vocabulario de la empresa ni quién es quién.",
@@ -327,17 +327,17 @@
     {
      "desc": "Glosario, alias y mapa organizacional en GitHub; base del esquema semantic",
      "name": "Vocabulario y ontología",
-     "status": "en_curso"
+     "status": "listo"
     },
     {
      "desc": "SIGO, políticas y SOPs en SharePoint, consultados en vivo vía Microsoft Graph",
      "name": "Conocimiento documental",
-     "status": "pendiente"
+     "status": "en_curso"
     },
     {
      "desc": "JD Edwards, STEP, ventas de Avon, Asana y Jira en Databricks",
      "name": "Datos operativos",
-     "status": "pendiente"
+     "status": "en_curso"
     },
     {
      "desc": "KPIs y líneas base por proyecto y por mundo, para tableros y agentes",
@@ -351,7 +351,7 @@
    "program": "brain",
    "savings": {},
    "sponsor": "Alexandra Paiz",
-   "summary": "La capa de conocimiento de Grupo PDC: 1) vocabulario y ontología (glosario y mapa organizacional en GitHub), 2) documentos en SharePoint consultados en vivo, 3) datos operativos (JD Edwards, STEP, ventas de Avon, Asana, Jira) y 4) productos de datos (KPIs y líneas base) en Databricks.",
+   "summary": "La capa de conocimiento de Grupo PDC: 1) vocabulario y ontología (451 términos, mundos, áreas y personas cargados en Databricks), 2) documentos de cuatro sitios de SharePoint, sincronizados cada 15 minutos en solo lectura (carga inicial en curso), 3) datos operativos (backlogs de Asana de AVON y Nexo ya sincronizados; JD Edwards y ERP de Avon pendientes) y 4) productos de datos (KPIs y líneas base). Un MCP personal de solo lectura ya responde, y el portal de agentes navega la estructura organizacional.",
    "tagline": "Capa de conocimiento para agentes y personas",
    "wave": 0
   },
@@ -844,11 +844,11 @@
   },
   {
    "id": "mundos",
-   "blocker": "",
+   "blocker": "Antes de abrirlo a más personas: probar con una segunda cuenta, la revocación de acceso y nombrar un suplente.",
    "bu": "Grupo PDC",
    "discovery": [
     {
-     "done": false,
+     "done": true,
      "due": null,
      "label": "Acceso de Alexandra al hosting"
     },
@@ -903,7 +903,7 @@
     "dominio",
     "controles"
    ],
-   "next": "Dominio propio con IT y arquitectura de largo plazo con Edgar.",
+   "next": "Conectar el Excel de cada mundo desde Nexo Apps y abrir el piloto al comité de PDC Brands.",
    "noAzure": true,
    "pains": [
     "El comité ejecutivo revisa el desempeño con presentaciones armadas a mano.",
@@ -918,7 +918,7 @@
     "note": "Horas de preparación de presentaciones por revisión: línea base pendiente."
    },
    "sponsor": "Sergio",
-   "summary": "Un tablero por mundo para reemplazar las presentaciones del comité. Plantilla SIGO IA: un HTML autocontenido con 7 bloques (Métricos, Planeadores, Cadenas de Valor, Proyectos clave, Estructura, Metas y Bonos, Proyecciones Financieras), todos funcionales salvo dos sub-pestañas de Estructura. Hoy lee Excel vía Microsoft Graph. Piloto: PDC Brands.",
+   "summary": "Un tablero por mundo para reemplazar las presentaciones del comité. SIGO Métricos v1 (plantilla de Jorge, 7 bloques) quedó publicado en Nexo Apps el 12 oct, en Azure con Entra, y ya lee Excel en vivo con el acceso de Microsoft de cada persona (verificado con 3 libros y 2 listas). Piloto: PDC Brands.",
    "tagline": "Tablero de gestión por mundo para el comité ejecutivo",
    "wave": 1
   },
@@ -1020,7 +1020,7 @@
    "repo": "https://github.com/alexandrapaiz-pdc/BestPracticesAI",
    "savings": {},
    "sponsor": "Benji (ciberseguridad) · Óscar",
-   "summary": "Nexo Apps es el sitio de despliegue y la guía: ahí vive la biblioteca de buenas prácticas por nivel (1 · Usuario de Claude, activo; 2 · Constructor de apps, activo; 2.5 · Backends, piloto en Azure; 3 · Agentes, próximamente) y ahí se registra y publica cada app, con Entra. Cada guía o skill trae «Hacerlo con mi asistente» para aplicarla con Claude. El código fuente vive en el repositorio BestPracticesAI. Reglas base: agentes solo lectura, sin secretos en código.",
+   "summary": "Nexo Apps es el sitio de despliegue y la guía: ahí vive la biblioteca de buenas prácticas por nivel (1 · Usuario de Claude, activo; 2 · Constructor de apps, activo; 2.5 · Backends, piloto en Azure; 3 · Agentes, próximamente) y ahí se registra, edita y publica cada app, con Entra y a nombre de su autor. Ya incluye el estándar de API y MCP de PDC y un patrón para leer Excel con el acceso de cada persona. Cada guía o skill trae «Hacerlo con mi asistente» para aplicarla con Claude. El código fuente vive en el repositorio BestPracticesAI. Reglas base: agentes solo lectura, sin secretos en código.",
    "tagline": "Guías por nivel y Nexo Apps, el sitio de despliegue",
    "wave": 0,
    "site": "https://nexo-apps.wittysea-7e111699.eastus.azurecontainerapps.io/"
@@ -1502,6 +1502,46 @@
    "kpiId": null,
    "value": null,
    "text": "Se documentó y verificó la arquitectura C4 de orquestación: 3 de 12 componentes sostienen hoy la creación de agentes en el portal, 5 tienen base o funcionan en parte y 4 siguen pendientes. Los equipos OODAL (observar, orientar, decidir, actuar, aprender) ya tienen especificaciones reutilizables y el portal los muestra como equipo, aparte de los agentes de workflows. Todavía no corre ningún agente de punta a punta."
+  },
+  {
+   "id": "u-1012-avon",
+   "projectId": "avon",
+   "date": "2026-10-12",
+   "createdAt": "2026-10-12T20:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "El workspace de Avon corre en Azure con Entra como piloto privado y ya tiene MCP remoto para Claude, con verificación por cuenta y el estándar de API y MCP de PDC. Falta abrirlo al equipo de planeación."
+  },
+  {
+   "id": "u-1012-mundos",
+   "projectId": "mundos",
+   "date": "2026-10-12",
+   "createdAt": "2026-10-12T20:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "SIGO Métricos v1 publicado en Nexo Apps (Azure con Entra) y leyendo Excel en vivo con el acceso de Microsoft de cada persona."
+  },
+  {
+   "id": "u-1012-brain-sp",
+   "projectId": "companybrain",
+   "date": "2026-10-12",
+   "createdAt": "2026-10-12T20:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Sincronización de solo lectura con cuatro sitios de SharePoint cada 15 minutos (carga inicial en curso) y backlogs de Asana de AVON y Nexo. El MCP personal de solo lectura ya responde."
+  },
+  {
+   "id": "u-1012-proto-apps",
+   "projectId": "protocolos",
+   "date": "2026-10-12",
+   "createdAt": "2026-10-12T20:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Nexo Apps: cada publicación queda a nombre de su autor, las apps se pueden editar desde el portal y hay un patrón probado para leer Excel con el acceso de cada persona (piloto con SIGO)."
   }
  ],
  "snapshotAt": "2026-10-12"
