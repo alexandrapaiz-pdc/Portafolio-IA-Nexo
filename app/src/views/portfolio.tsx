@@ -5,7 +5,7 @@ import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
 import { Button } from "@/components/ui/button"
 import { GlowCard } from "@/components/ui/spotlight-card"
-import { Empty, Footer, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow, RequestCta } from "@/components/shared"
+import { Empty, ProjectRow, Section, SectionHead, SecP, Stat, StatsRow, StatusPill, UpdateRow, RequestCta } from "@/components/shared"
 import { PracticesMap } from "@/components/practices-map"
 import portalMundos from "@/assets/portal-mundos.webp"
 import { AgentBoard } from "@/components/agent-board"
@@ -189,7 +189,7 @@ export function Portfolio() {
       )}
 
       <RequestCta />
-      <Footer right="Fuentes: reuniones en Granola y repositorios en GitHub. “Pendiente” indica una línea base aún no medida." />
+      <div className="pb-11" />
     </main>
   )
 }

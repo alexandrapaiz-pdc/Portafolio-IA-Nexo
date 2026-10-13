@@ -29,8 +29,8 @@ export function Hero({ title, sub, children, className }: { title: string; sub?:
   )
 }
 
-export function Footer({ left = "Grupo PDC · Nexo · Forward Deployed Engineering", right }: { left?: string; right: string }) {
-  return <footer className="mt-24 flex flex-wrap justify-between gap-3 border-t border-line pb-11 pt-[22px] text-xs text-faint"><span>{left}</span><span>{right}</span></footer>
+export function Footer({ left, right }: { left?: string; right: string }) {
+  return <footer className="mt-24 flex flex-wrap justify-between gap-3 border-t border-line pb-11 pt-[22px] text-xs text-faint">{left && <span>{left}</span>}<span>{right}</span></footer>
 }
 
 export function StatusPill({ status, label, onClick }: { status: string; label?: string; onClick?: () => void }) {
