@@ -361,6 +361,11 @@
    "bu": "MegaMás",
    "discovery": [
     {
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": false
+    },
+    {
      "done": false,
      "due": "2026-10-02",
      "label": "Acceso a vista de liquidaciones y carpeta de Tráfico"
@@ -560,75 +565,70 @@
   },
   {
    "id": "gh",
-   "blocker": "Recibir insumos: SharePoint, Excel de vacaciones y línea base de liquidaciones 2026.",
+   "blocker": "Validar el saldo de vacaciones del 100% de colaboradores, con apoyo de KAMs y líderes de área.",
    "bu": "MegaMás",
    "discovery": [
     {
-     "done": false,
-     "due": "2026-10-01",
-     "label": "Insumos: SharePoint, Excel de vacaciones, videos, liquidaciones 2026"
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": true
     },
     {
-     "done": false,
-     "due": "2026-10-07",
-     "label": "Análisis: casos críticos por país y dinero en riesgo"
+     "label": "Validación de saldos del 100% de colaboradores",
+     "due": "2026-10-16",
+     "done": false
     },
     {
-     "done": false,
-     "due": "2026-10-08",
-     "label": "Ficha del proyecto (costo evitado, 3 hipótesis Q4)"
+     "label": "Lanzamiento para PDC Brands, Nexo y Vikingo Distribución",
+     "due": null,
+     "done": false
     },
     {
-     "done": false,
-     "due": "2026-10-12",
-     "label": "Acceso al portal sin correo corporativo"
-    },
-    {
-     "done": false,
-     "due": "2026-10-19",
-     "label": "Diseño del agente de alertas y reportes a líderes y CAM"
+     "label": "Medir esfuerzo por caso y tiempo de espera",
+     "due": null,
+     "done": false
     }
    ],
    "kpis": [
     {
+     "id": "volume",
+     "name": "Volumen de solicitudes aprobadas",
+     "unit": "solicitudes",
+     "baseline": 40,
+     "current": 40,
+     "target": null,
+     "note": "≈40 desde el lanzamiento (29 sep), medido en Asana «Cartas Vacaciones» y el log de vacaciones. Meta pendiente.",
+     "updated": "2026-10-19"
+    },
+    {
+     "id": "effort",
+     "name": "Esfuerzo por caso",
+     "unit": "min-persona",
      "baseline": null,
      "current": null,
-     "id": "critical",
-     "name": "Casos críticos (> 2 periodos acumulados)",
-     "note": "",
      "target": null,
-     "unit": "",
+     "note": "Pendiente: medir con colaborador, líder y responsable de firma.",
      "updated": ""
     },
     {
+     "id": "wait",
+     "name": "Tiempo de espera (aprobación del líder + firma)",
+     "unit": "h/caso",
      "baseline": null,
      "current": null,
-     "id": "payout",
-     "name": "Vacaciones pagadas en liquidaciones 2026",
-     "note": "Luis Fernando obtiene la línea base de planilla.",
      "target": null,
-     "unit": "Q",
+     "note": "Pendiente: historial de aprobaciones y Asana.",
      "updated": ""
     },
     {
-     "baseline": null,
-     "current": null,
-     "id": "days",
-     "name": "Días de vacaciones acumulados",
-     "note": "",
+     "id": "letters",
+     "name": "Cartas de goce pendientes de firma",
+     "unit": "tareas",
+     "baseline": 22,
+     "current": 22,
      "target": null,
-     "unit": "días",
-     "updated": ""
-    },
-    {
-     "baseline": null,
-     "current": null,
-     "id": "coverage",
-     "name": "Personal con acceso al portal",
-     "note": "",
-     "target": 100,
-     "unit": "%",
-     "updated": ""
+     "note": "22 de 84 tareas abiertas al 8 oct. Resultado de negocio; meta pendiente.",
+     "updated": "2026-10-19"
     }
    ],
    "name": "MegaMás · Portal Gestión Humana",
@@ -640,23 +640,23 @@
     "dominio",
     "controles"
    ],
-   "next": "Análisis de casos críticos — 7 oct.",
+   "next": "Completar la validación de saldos (semana del 13 al 16 de octubre) y lanzar para PDC Brands, Nexo y Vikingo Distribución.",
    "pains": [
-    "Los días de vacaciones se acumulan sin controles ni alertas y solo se ven en la liquidación.",
-    "Hay vacaciones tomadas sin reportar; los registros no cuadran con lo real.",
-    "El portal debe llegar al 100% del personal, incluido quien no tiene correo corporativo.",
-    "El manejo de vacaciones y el reporte de costo de personal son manuales y no estandarizados entre países."
+    "Varias vías de entrada (web SIGO desactualizada, correo).",
+    "Saldos en varios Excel actualizados a mano.",
+    "Aprobaciones sin respuesta vencen a los 30 días sin aviso.",
+    "22 de 84 cartas de goce abiertas al 8 oct, algunas vencidas desde agosto."
    ],
    "paused": false,
-   "phase": "descubrimiento",
+   "phase": "construccion",
    "priority": 4,
    "program": "agentes",
    "savings": {
-    "note": "Horas de reporte manual de vacaciones y costo de personal: línea base pendiente."
+    "note": "Horas-persona al mes: pendiente (volumen × esfuerzo por caso ÷ 60). Revisión quincenal; metas entre noviembre y diciembre 2026."
    },
-   "sponsor": "Luis Fernando Chang",
-   "summary": "Portal y agente de alertas para que las vacaciones acumuladas no aparezcan hasta la liquidación. Caso de costo evitado.",
-   "tagline": "Alertas de vacaciones acumuladas",
+   "sponsor": "Luis Fernando Chang · Relaciones Laborales",
+   "summary": "Workflow de solicitud de vacaciones para los 7 países: hoy las solicitudes llegan por varias vías (web SIGO, correo) y los saldos se llevan a mano en varios Excel, con confusión y sin trazabilidad. El nuevo flujo (Forms, validaciones, aprobación del líder, constancia y firma en Asana, saldo en Actimo) se lanzó el 29 sep para Mostro y Vikingo AI. La meta es un solo punto de partida y una sola base de saldos.",
+   "tagline": "Solicitud de vacaciones en un solo flujo",
    "wave": 2
   },
   {
@@ -767,6 +767,11 @@
    "blocker": "Capa de datos del stack.",
    "bu": "MegaMás",
    "discovery": [
+    {
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": false
+    },
     {
      "done": false,
      "due": "2026-10-09",
@@ -1031,6 +1036,11 @@
    "bu": "Nexo",
    "discovery": [
     {
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": false
+    },
+    {
      "done": false,
      "due": "2026-10-09",
      "label": "Revisar documentación y PoC de Rodny"
@@ -1198,6 +1208,99 @@
     "updated": "2026-10-01"
    },
    "wave": 1
+  },
+  {
+   "id": "regulatorio",
+   "blocker": "Habilitar la carpeta de expedientes en SharePoint, la ubicación de comprobantes de pago y el acceso a iComply/CADD.",
+   "bu": "Nexo",
+   "discovery": [
+    {
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": true
+    },
+    {
+     "label": "Sprint 3: entrada única de solicitudes",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Sprint 4: motor automático de checklist",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Acceso a carpeta de expedientes e iComply/CADD",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Paso 1: Registros Sanitarios Guatemala (Sprint 5Q4)",
+     "due": null,
+     "done": false
+    }
+   ],
+   "kpis": [
+    {
+     "id": "auto",
+     "name": "Proceso automatizado",
+     "unit": "%",
+     "baseline": 0,
+     "current": 0,
+     "target": 90,
+     "note": "Project Charter 1.4 Fase 2 · medido.",
+     "updated": "2026-10-19"
+    },
+    {
+     "id": "dossier",
+     "name": "Tiempo de solicitud a expediente listo",
+     "unit": "días",
+     "baseline": 20,
+     "current": 20,
+     "target": 10,
+     "note": "≈20 días hoy, meta ≤10 · medido.",
+     "updated": "2026-10-19"
+    },
+    {
+     "id": "obs",
+     "name": "Trámites con observaciones por errores internos",
+     "unit": "%",
+     "baseline": 10,
+     "current": 10,
+     "target": 3,
+     "note": "≈10% hoy, meta ≤3% · estimado.",
+     "updated": "2026-10-19"
+    },
+    {
+     "id": "hours",
+     "name": "Horas administrativas de Regulatorio",
+     "unit": "h/mes",
+     "baseline": 40,
+     "current": 40,
+     "target": null,
+     "note": "40+ h/mes; meta: liberar ≥40% · estimado.",
+     "updated": "2026-10-19"
+    }
+   ],
+   "name": "MegaMás · Regulatorio",
+   "needs": [],
+   "next": "Sprint 4: motor automático de checklist (Sprint 3, entrada única de solicitudes, en desarrollo).",
+   "pains": [
+    "Sin punto de entrada único ni formato estándar.",
+    "Requisitos revisados y corregidos varias veces.",
+    "Seguimiento depende de cada líder de RS; sin trazabilidad en tiempo real.",
+    "Pago e ingreso presencial ante MSPAS en Guatemala."
+   ],
+   "paused": false,
+   "phase": "construccion",
+   "priority": 7,
+   "program": "agentes",
+   "savings": {
+    "note": "40+ h/mes administrativas (estimado); meta liberar ≥40%. Revisión semanal/mensual con Alejandra Álvarez."
+   },
+   "sponsor": "Alejandra Álvarez · Silvia Ramírez (Gestión de Riesgos)",
+   "summary": "Coordinación de Registros Sanitarios (nuevos, renovaciones y actualizaciones) para marcas propias y representadas en 7 países. Hoy las solicitudes llegan por correo, WhatsApp o de palabra, sin formato ni trazabilidad, y los requisitos se revisan varias veces. El proyecto (1.4 Fase 2) busca una entrada única, checklist automático, expediente digital, alertas por excepción y cierre automático. Piloto: Guatemala.",
+   "tagline": "Registros Sanitarios de punta a punta, piloto Guatemala"
   }
  ],
  "components": [
@@ -1552,6 +1655,26 @@
    "kpiId": null,
    "value": null,
    "text": "Marco universal de agentes publicado en el portal: 14 secciones de requisitos y una plantilla en blanco reutilizable, consultable desde la CLI y el MCP de autoría. No crea agentes ni cambia proyectos guardados; la versión quedó verificada en Azure."
+  },
+  {
+   "id": "u-1019-gh",
+   "projectId": "gh",
+   "date": "2026-10-19",
+   "createdAt": "2026-10-19T18:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Guía de intake completada por Relaciones Laborales: KPIs de volumen, esfuerzo por caso y tiempo de espera; pasa a construcción."
+  },
+  {
+   "id": "u-1019-regulatorio",
+   "projectId": "regulatorio",
+   "date": "2026-10-19",
+   "createdAt": "2026-10-19T18:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Guía de intake completada por Regulatorio: KPIs de proceso automatizado, tiempo a expediente listo y observaciones por errores internos; entra al portafolio en construcción."
   }
  ],
  "snapshotAt": "2026-10-12"
