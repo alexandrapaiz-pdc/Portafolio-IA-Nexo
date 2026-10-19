@@ -178,6 +178,19 @@ export function Metrics() {
       ) : saved?.note && <p className="mt-5 rounded-r-sm bg-group px-4 py-3 text-sm text-sub">{saved.note}</p>}
 
       <Section>
+        <SectionHead title="Tendencia por métrica"><SecP>Cada métrica trimestre a trimestre. La gráfica aparece cuando hay datos de al menos dos trimestres.</SecP></SectionHead>
+        {(() => {
+          const asc = [...history].sort((a, b) => a.id.localeCompare(b.id))
+          const ready = CARDS.map((c) => ({ c, pts: asc.map((m) => ({ q: m.id, v: c.value(m) })).filter((x): x is { q: string; v: number } => x.v !== null) })).filter((x) => x.pts.length >= 2)
+          return ready.length ? (
+            <div className="grid grid-cols-3 gap-3.5 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
+              {ready.map(({ c, pts }) => <Trend key={c.id} card={c} pts={pts} />)}
+            </div>
+          ) : <div className="group-box px-5 py-7 text-center text-faint">Pendiente de data: todavía no hay dos trimestres con la misma métrica medida.</div>
+        })()}
+      </Section>
+
+      <Section>
         <SectionHead title="Histórico por trimestre"><SecP>Cada trimestre queda guardado; los cambios tienen historial.</SecP></SectionHead>
         <div className="group-box overflow-x-auto">
           {history.length ? (
@@ -195,5 +208,52 @@ export function Metrics() {
       </Section>
       <div className="pb-11" />
     </main>
+  )
+}
+
+const fmtV = (c: Card, v: number) => (c.unit === "US$" ? "US$" + nf(v) : nf(v) + (c.unit ? (c.unit === "%" ? "%" : " " + c.unit) : ""))
+const niceMax = (v: number) => { if (v <= 0) return 1; const e = 10 ** Math.floor(Math.log10(v)), f = v / e; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e }
+
+// One metric over quarters: 2px line on a zero baseline, end value labelled, hover/focus tooltip per quarter.
+function Trend({ card, pts }: { card: Card; pts: { q: string; v: number }[] }) {
+  const [hot, setHot] = useState<number | null>(null)
+  const W = 320, H = 132, L = 36, R = 16, T = 18, B = 26
+  const max = card.unit === "%" ? 100 : Math.max(2, niceMax(Math.max(...pts.map((p) => p.v)))) // >= 2 keeps ticks whole for counts
+  const x = (i: number) => L + (pts.length === 1 ? 0 : (i * (W - L - R)) / (pts.length - 1))
+  const y = (v: number) => T + (1 - v / max) * (H - T - B)
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ")
+  const area = `${line} L${x(pts.length - 1).toFixed(1)},${y(0)} L${x(0).toFixed(1)},${y(0)} Z`
+  const last = pts[pts.length - 1], h = hot === null ? null : pts[hot]
+  return (
+    <figure className="card relative m-0 grid min-w-0 content-start gap-1 p-5">
+      <figcaption className="grid gap-0.5"><span className="text-[13px] font-medium text-sub">{card.k}</span><span className="text-[11px] text-faint">{card.lower ? "Menos es mejor" : "Más es mejor"}</span></figcaption>
+      <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full overflow-visible" role="img"
+        aria-label={`${card.k}: ${pts.map((p) => `${label(p.q)} ${fmtV(card, p.v)}`).join(", ")}`} onMouseLeave={() => setHot(null)}>
+        {[0, max / 2, max].map((t) => (
+          <g key={t}>
+            <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} />
+            <text x={L - 6} y={y(t)} dy="0.32em" textAnchor="end" className="num" fontSize={10} fill="var(--faint)">{nf(t)}</text>
+          </g>
+        ))}
+        <path d={area} fill="var(--accent)" opacity={0.1} />
+        <path d={line} fill="none" stroke="var(--accent)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+        {h && <line x1={x(hot!)} x2={x(hot!)} y1={T} y2={y(0)} stroke="var(--line-2)" strokeWidth={1} />}
+        {pts.map((p, i) => (
+          <g key={p.q}>
+            <circle cx={x(i)} cy={y(p.v)} r={hot === i ? 5.5 : 4} fill="var(--accent)" stroke="var(--raise)" strokeWidth={2} />
+            <text x={x(i)} y={H - 8} textAnchor={i === 0 ? "start" : i === pts.length - 1 ? "end" : "middle"} fontSize={10} fill="var(--faint)">{p.q.slice(5)} {p.q.slice(2, 4)}</text>
+            <circle cx={x(i)} cy={y(p.v)} r={14} fill="transparent" tabIndex={0} role="img" aria-label={`${label(p.q)}: ${fmtV(card, p.v)}`}
+              onMouseEnter={() => setHot(i)} onFocus={() => setHot(i)} onBlur={() => setHot(null)} className="cursor-default outline-none" />
+          </g>
+        ))}
+        {hot === null && <text x={x(pts.length - 1)} y={y(last.v) - 10} textAnchor="end" className="num" fontSize={11} fontWeight={600} fill="var(--text)">{fmtV(card, last.v)}</text>}
+      </svg>
+      {h && (
+        <div role="status" className="pointer-events-none absolute z-10 -translate-x-1/2 rounded-lg border border-line bg-raise px-2.5 py-1.5 text-xs shadow-[0_6px_20px_-8px_rgba(15,23,42,.35)]"
+          style={{ left: `calc(20px + (100% - 40px) * ${(x(hot!) / W).toFixed(4)})`, top: 34 }}>
+          <div className="text-faint">{label(h.q)}</div><div className="num font-semibold text-text">{fmtV(card, h.v)}</div>
+        </div>
+      )}
+    </figure>
   )
 }
