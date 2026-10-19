@@ -20,18 +20,6 @@ permissions:
 jobs:
   pruebas:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        # Docker Official Images mirror avoids shared-runner Docker Hub pull limits.
-        image: public.ecr.aws/docker/library/postgres:16
-        env:
-          POSTGRES_PASSWORD: postgres
-          # test_conexion_con_token_de_entra connects with a fake Entra token as the password;
-          # this throwaway database only exists inside the run, so it accepts any password.
-          POSTGRES_HOST_AUTH_METHOD: trust
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     defaults:
       run:
         working-directory: api
@@ -40,6 +28,16 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
+      # PostgreSQL ships preinstalled on ubuntu-latest, so no image pull (and no registry
+      # rate limit) can block a deploy. test_conexion_con_token_de_entra connects with a
+      # fake Entra token as the password; this throwaway database only exists inside the
+      # run, so local TCP connections are trusted.
+      - name: Start PostgreSQL
+        run: |
+          sudo sed -i -E 's/^(host\s+all\s+all\s+\S+\s+)\S+$/\1trust/' /etc/postgresql/*/main/pg_hba.conf
+          sudo systemctl start postgresql.service
+          for i in $(seq 1 20); do pg_isready -h localhost && break; sleep 1; done
+          pg_isready -h localhost
       - run: pip install -r requirements-dev.txt
       - run: python -m unittest discover -s ../.github/scripts -v
       - run: python -m pytest -q tests
