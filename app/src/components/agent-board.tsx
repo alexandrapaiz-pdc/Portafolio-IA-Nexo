@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react"
-import { agentsOf, PHASES, savings, type Project } from "@/lib/domain"
-import { nf } from "@/lib/format"
+import { agentsOf, PHASES, type Project } from "@/lib/domain"
+import { IntakeSummary } from "./intake"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
 import { cn } from "@/lib/utils"
@@ -27,12 +27,11 @@ export function AgentBoard() {
               </div>
               <div className="grid content-start gap-2 rounded-r border border-dashed border-line-2 p-2">
                 {items.map((p) => {
-                  const s = savings(p)
                   return (
                     <button key={p.id} type="button" onClick={() => openProject(p.id)}
                       className="grid gap-1 card px-3.5 py-3 text-left transition-shadow hover:shadow-[var(--shadow-hover)]">
                       <span className="flex items-baseline gap-2"><b className="num text-[13px] font-semibold text-accent">{rank(p)}</b><span className="text-[14px] font-medium leading-snug">{p.name}</span></span>
-                      <span className="text-xs text-faint">{s.saved ? `${nf(s.saved)} ${s.unit} liberadas` : s.baseline ? `${nf(s.baseline)} ${s.unit} manuales` : "Línea base pendiente"}</span>
+                      <IntakeSummary i={p.intake} compact />
                     </button>
                   )
                 })}

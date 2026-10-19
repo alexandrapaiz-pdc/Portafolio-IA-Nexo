@@ -14,7 +14,33 @@ export interface Project {
   phase?: string; blocker?: string; next?: string; impactLabel?: string
   pains?: string[]; needs?: string[]; discovery?: Milestone[]; kpis?: Kpi[]
   savings?: { baseline?: number | null; current?: number | null; target?: number | null; unit?: string; note?: string }
-  vsm?: Vsm; levels?: Level[]; parts?: Level[]; repo?: string; pendingDecisions?: number
+  vsm?: Vsm; intake?: Intake; levels?: Level[]; parts?: Level[]; repo?: string; pendingDecisions?: number
+}
+/** The project's intake guide, kept as the guide gave it (texts as written, numbers only where given). */
+export interface IntakeStep { n: string; name: string; who: string; uses?: string; src?: string[]; out?: string; branch?: string | null }
+export interface VsmRow { n: string; name: string; active?: string | null; lo?: number | null; hi?: number | null; wait?: string | null; effort?: string | null; stuck?: string | null }
+export interface IntakeMetric { key: string; name: string; current?: string | null; target?: string | null; state: "medido" | "estimado" | "pendiente"; source?: string; kpi?: boolean; value?: number | null; unit?: string | null }
+export interface Intake {
+  status: "completada" | "pendiente"; date?: string; by?: string; url?: string
+  process?: { bu?: string; area?: string; country?: string; what?: string; stages?: string[] }
+  workflow?: { name?: string; trigger?: string; result?: string; problem?: string; improve?: string; owner?: string }
+  parts?: { name: string; detail?: string }[]
+  steps?: IntakeStep[]
+  vsm?: { unit: string; case?: string; period?: string | null; steps: VsmRow[] }
+  sources?: { id: string; name: string; who?: string; contact?: string; access?: string; state: "habilitado" | "pendiente" | "sin_estado"; url?: string }[]
+  metrics?: IntakeMetric[]
+  review?: { who?: string | null; cadence?: string; due?: string; period?: string | null; cases?: string }
+  tracking?: { stage?: string; next?: string; blocker?: string; coordinator?: string | null; route?: [string, string, string][] }
+  contacts?: { name: string; role?: string; email?: string | null }[]
+  folder?: string
+}
+/** Agent projects and Company Brain are shown from their intake guide only. */
+export const usesIntake = (p: Project) => inProgram(p, "agentes") || p.id === "companybrain"
+/** Hours-person per month, by the guide's formula: cases per month × minutes-person per case ÷ 60. */
+export function intakeHours(i?: Intake) {
+  const m = (k: string) => i?.metrics?.find((x) => x.key === k)?.value
+  const v = m("volume"), e = m("effort")
+  return isNum(v) && isNum(e) ? (v * e) / 60 : null
 }
 export interface Component { id: string; name: string; owner?: string; note?: string; status: Status; order?: number; key?: boolean; updated?: string }
 /** Quarterly deployment metrics (one doc per quarter, id "2026-Q4"). Missing = not measured yet. */

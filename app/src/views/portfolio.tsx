@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react"
-import { agentsOf, inProgram, LSTAT, NEXT_LEVEL, NEXT_STATUS, PROGRAMS, savings, STATUS, type Level } from "@/lib/domain"
+import { agentsOf, inProgram, intakeHours, LSTAT, NEXT_LEVEL, NEXT_STATUS, PROGRAMS, STATUS, type Level } from "@/lib/domain"
 import { clone, isNum, nf, pct, today } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
@@ -45,7 +45,8 @@ export function Portfolio() {
   const comps = [...components].sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
   const ready = comps.filter((c) => c.status === "listo").length, prog = comps.filter((c) => c.status === "en_curso").length
   const byUnit: Record<string, number> = {}
-  projects.forEach((p) => { const s = savings(p); if (isNum(s.baseline)) byUnit[s.unit] = (byUnit[s.unit] || 0) + s.baseline })
+  // Manual work in scope comes only from intake guides (volume × effort ÷ 60), never from estimates typed elsewhere.
+  projects.forEach((p) => { const h = intakeHours(p.intake); if (isNum(h)) byUnit["h-persona/mes"] = (byUnit["h-persona/mes"] || 0) + h })
   const units = Object.entries(byUnit)
   const pr = byId("protocolos"), br = byId("companybrain")
   const lv = pr?.levels || [], act = lv.filter((x) => x.status === "activo").length
@@ -75,7 +76,7 @@ export function Portfolio() {
         {SHOW_STACK ? <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} /> : <Stat k="Solicitudes abiertas" v={openTickets} sub="Procesos por evaluar" />}
         <Stat k="Proyectos de agentes" v={ag.length} sub={`Prioridad 1: ${ag[0]?.name || "—"}`} />
         <Stat k="Agentes en producción" v={ag.filter((p) => p.phase === "produccion").length} sub="Los KPIs se miden al desplegar" />
-        <Stat k="Trabajo manual en alcance" accent v={units.length ? nf(units[0][1]) : "—"} unit={units[0]?.[0]} sub={units.length > 1 ? units.slice(1).map(([u, v]) => `${nf(v)} ${u}`).join(" · ") : "Horas medidas a la fecha"} />
+        <Stat k="Trabajo manual en alcance" accent={!!units.length} v={units.length ? nf(units[0][1]) : <span className="text-[22px] font-medium text-faint">Pendiente de data</span>} unit={units[0]?.[0]} sub="Horas-persona al mes, de las guías de intake" />
       </StatsRow>
       </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
-import { agentsOf, discovery, inProgram, PHASES, phaseLabel, PROGRAMS, readiness, savings, STATUS, TAGS, type Kpi, type Project } from "@/lib/domain"
+import { agentsOf, discovery, inProgram, usesIntake, PHASES, phaseLabel, PROGRAMS, readiness, savings, STATUS, TAGS, type Kpi, type Project } from "@/lib/domain"
 import { clone, fdate, fnum, isNum, nf, pct, today } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { H5, StatusPill, UpdateRow, Empty } from "./shared"
+import { IntakeBody } from "./intake"
 
 // Tasks, blockers, discovery checklists and updates are kept in the data but hidden: the sheet shows only
 // what matters once a project runs (phase, hours freed, execution KPIs, value stream).
@@ -48,6 +49,7 @@ export function ProjectSheet() {
   const r = readiness(p, components), s = savings(p), d = discovery(p), pi = PHASES.findIndex((x) => x[0] === p.phase)
   const ups = updates.filter((u) => u.projectId === p.id)
   const isAg = inProgram(p, "agentes"), ag = agentsOf(projects), prog = PROGRAMS.find((g) => g.lead === p.id || (!isAg && inProgram(p, g.id)))
+  const im = usesIntake(p) // agent projects and Company Brain: built from the intake guide only
   const title = isAg ? `AI Agent Projects · Prioridad ${ag.indexOf(p) + 1}` : prog?.name || "Proyecto"
 
   const startEdit = () => { setDraft({ blocker: p.blocker || "", kpis: clone(p.kpis || []), savings: { ...(p.savings || {}), unit: s.unit } }); setEditing(true) }
@@ -70,13 +72,13 @@ export function ProjectSheet() {
       <DialogContent title={title}>
         <div className="grid gap-3">
           <div className="flex flex-wrap gap-3.5 text-[13px] text-faint">
-            {isAg ? <><b className="font-semibold text-accent-ink">Prioridad {ag.indexOf(p) + 1}</b><span>Ola {p.wave}</span></> : <b className="font-semibold text-accent-ink">{prog?.name}</b>}
-            <span>{p.bu}</span>
+            {isAg ? <><b className="font-semibold text-accent-ink">Prioridad {ag.indexOf(p) + 1}</b>{!im && <span>Ola {p.wave}</span>}</> : <b className="font-semibold text-accent-ink">{prog?.name}</b>}
+            {!im && <span>{p.bu}</span>}
           </div>
           <h2 className="text-[clamp(30px,5vw,40px)] leading-[1.05] tracking-[-.04em]">{p.name}</h2>
-          <p className="max-w-[36em] text-[17px] tracking-[-.015em] text-sub">{p.summary || p.tagline}</p>
-          <p className="text-sm text-sub">{p.sponsor}</p>
-          {canEdit && <div className="flex justify-end gap-2">{editing ? <><Button variant="ghost" onClick={() => setEditing(false)}>Cancelar</Button><Button onClick={save}>Guardar</Button></> : <Button variant="ghost" onClick={startEdit}>Editar</Button>}</div>}
+          {im ? p.intake?.status === "completada" && p.intake.process?.what && <p className="max-w-[36em] text-[17px] tracking-[-.015em] text-sub">{p.intake.process.what}</p>
+            : <><p className="max-w-[36em] text-[17px] tracking-[-.015em] text-sub">{p.summary || p.tagline}</p><p className="text-sm text-sub">{p.sponsor}</p></>}
+          {canEdit && !im && <div className="flex justify-end gap-2">{editing ? <><Button variant="ghost" onClick={() => setEditing(false)}>Cancelar</Button><Button onClick={save}>Guardar</Button></> : <Button variant="ghost" onClick={startEdit}>Editar</Button>}</div>}
         </div>
 
         <div>
@@ -92,6 +94,7 @@ export function ProjectSheet() {
           </div>
         </div>
 
+{im ? <IntakeBody i={p.intake} /> : <>
 {SHOW_DETAIL && (<>
         {editing && draft
           ? <div><H5>Bloqueo actual</H5><Input value={draft.blocker} placeholder="Sin bloqueo" onChange={(e) => setDraft({ ...draft, blocker: e.target.value })} /></div>
@@ -184,6 +187,7 @@ export function ProjectSheet() {
           <div className="group-box">{ups.length ? ups.map((u) => <UpdateRow key={u.id} u={u} />) : <Empty>Sin actualizaciones todavía.</Empty>}</div>
         </div>
 </>)}
+</>}
       </DialogContent>
     </Dialog>
   )

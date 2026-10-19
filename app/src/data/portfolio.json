@@ -657,7 +657,502 @@
    "sponsor": "Luis Fernando Chang · Relaciones Laborales",
    "summary": "Workflow de solicitud de vacaciones para los 7 países: hoy las solicitudes llegan por varias vías (web SIGO, correo) y los saldos se llevan a mano en varios Excel, con confusión y sin trazabilidad. El nuevo flujo (Forms, validaciones, aprobación del líder, constancia y firma en Asana, saldo en Actimo) se lanzó el 29 sep para Mostro y Vikingo AI. La meta es un solo punto de partida y una sola base de saldos.",
    "tagline": "Solicitud de vacaciones en un solo flujo",
-   "wave": 2
+   "wave": 2,
+   "intake": {
+    "status": "completada",
+    "date": "2026-10-13",
+    "by": "Luis Fernando Chang",
+    "url": "https://codisaco.sharepoint.com/sites/05Softwareyservicios/Documentos compartidos/Gestión Humana/09. KAMs Gestión Humana/01. Sistemas y Metodologias/01. Vacaciones/Guia de intake - Megamas Vacaciones.docx",
+    "process": {
+     "bu": "Total Grupo PDC",
+     "area": "Gestión Humana · Relaciones Laborales",
+     "country": "Regional: GT, SV, HN, NI, PA, RD y PE",
+     "what": "Gestión de vacaciones: el colaborador solicita días, su líder aprueba, se descuenta el saldo, se genera la constancia de goce para firma y se actualiza el saldo en Actimo, con aprobaciones de Teams y correos automatizados.",
+     "stages": [
+      "Solicitud (Forms)",
+      "Validaciones",
+      "Cálculo de saldo",
+      "Aprobación del líder",
+      "Registro de días gozados",
+      "Constancia PDF",
+      "Tarea de firma en Asana",
+      "Saldo en Actimo",
+      "Firma y archivo"
+     ]
+    },
+    "workflow": {
+     "name": "Solicitud de vacaciones",
+     "trigger": "Solicitudes desde varias fuentes: la web SIGO (que ya no se actualiza) y el correo.",
+     "result": "Días actualizados a mano en varios documentos de Excel.",
+     "problem": "Varias fuentes de entrada y varias bases de control: confusión, más tiempo y pérdida de trazabilidad.",
+     "improve": "Consolidar las bases de datos y unificar el flujo en un solo punto de partida.",
+     "owner": "Relaciones Laborales · Luis Fernando Chang"
+    },
+    "steps": [
+     {
+      "n": "1",
+      "name": "Enviar la solicitud en Forms",
+      "who": "Colaborador",
+      "uses": "Código, correo, tipo y fechas",
+      "src": [
+       "D01"
+      ],
+      "out": "Respuesta de Forms",
+      "branch": "Código no coincide → correo y fin; vuelve a llenar"
+     },
+     {
+      "n": "2",
+      "name": "Validar al colaborador",
+      "who": "Power Automate",
+      "uses": "Estado, país, sociedad, grado, líder",
+      "src": [
+       "D02"
+      ],
+      "out": "Ejecución del flujo",
+      "branch": "No encontrado o inactivo → «No procesada» y fin"
+     },
+     {
+      "n": "3",
+      "name": "Confirmar los datos",
+      "who": "Colaborador",
+      "uses": "Resumen por correo",
+      "src": [
+       "D01"
+      ],
+      "out": "Respuesta del correo",
+      "branch": "Datos incorrectos → se cancela; vuelve a llenar"
+     },
+     {
+      "n": "4",
+      "name": "Filtrar liderazgo y obtener al líder",
+      "who": "Power Automate",
+      "uses": "Grado ≥ 14.1 y 12 excepciones",
+      "src": [
+       "D02"
+      ],
+      "out": "Ejecución del flujo",
+      "branch": "Puesto de liderazgo → no aplica y fin"
+     },
+     {
+      "n": "5",
+      "name": "Validar fechas",
+      "who": "Power Automate",
+      "uses": "Fecha inicial y final",
+      "src": [
+       "D01"
+      ],
+      "out": "Ejecución del flujo",
+      "branch": "Inicial mayor que final → correo y fin"
+     },
+     {
+      "n": "6",
+      "name": "Registrar la solicitud",
+      "who": "Power Automate",
+      "uses": "No. de ticket",
+      "src": [
+       "D03"
+      ],
+      "out": "Log: «En espera de aprobación»",
+      "branch": null
+     },
+     {
+      "n": "7",
+      "name": "Calcular el saldo disponible",
+      "who": "Power Automate",
+      "uses": "Ingreso, país, sociedad, días gozados",
+      "src": [
+       "D01",
+       "D02"
+      ],
+      "out": "Días disponibles",
+      "branch": "Sin fila de gozados o sin saldo → rechazo"
+     },
+     {
+      "n": "8",
+      "name": "Aprobar o rechazar",
+      "who": "Líder",
+      "uses": "Detalle y saldo",
+      "src": [
+       "D01"
+      ],
+      "out": "Aprobaciones (Outlook/Teams)",
+      "branch": "Rechaza → correo y fila «Rechazada»"
+     },
+     {
+      "n": "9",
+      "name": "Actualizar días gozados",
+      "who": "Power Automate",
+      "uses": "Gozados + días solicitados",
+      "src": [
+       "D01"
+      ],
+      "out": "Tabla de días gozados",
+      "branch": null
+     },
+     {
+      "n": "10",
+      "name": "Generar la constancia y el .ics",
+      "who": "Power Automate",
+      "uses": "Plantilla HTML con logo",
+      "src": [],
+      "out": "PDF en Cartas sin firmar; correo al líder",
+      "branch": null
+     },
+     {
+      "n": "11",
+      "name": "Crear la tarea de firma",
+      "who": "Power Automate",
+      "uses": "Enlace de solo lectura al PDF",
+      "src": [
+       "D05"
+      ],
+      "out": "Asana «Cartas Vacaciones»",
+      "branch": null
+     },
+     {
+      "n": "12",
+      "name": "Actualizar el saldo en Actimo",
+      "who": "Power Automate",
+      "uses": "Contact ID y nuevo saldo",
+      "src": [],
+      "out": "Actimo",
+      "branch": null
+     },
+     {
+      "n": "13",
+      "name": "Actualizar el log",
+      "who": "Power Automate",
+      "uses": "Días, estatus, comentario, ID Asana",
+      "src": [
+       "D02",
+       "D04"
+      ],
+      "out": "Log: «Carta pendiente de firma»",
+      "branch": null
+     },
+     {
+      "n": "14",
+      "name": "Firmar y archivar la carta",
+      "who": "Responsable de firma",
+      "uses": "PDF y tarea",
+      "src": [
+       "D05"
+      ],
+      "out": "Asana «Cartas firmadas»",
+      "branch": null
+     }
+    ],
+    "vsm": {
+     "unit": "min",
+     "case": "Una respuesta del formulario de solicitud = un caso (ticket).",
+     "period": "29 sep – 8 oct 2026 · 61 casos",
+     "steps": [
+      {
+       "n": "1",
+       "name": "Enviar la solicitud",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": null,
+       "effort": null,
+       "stuck": "Si el código no coincide, vuelve a llenar todo el formulario."
+      },
+      {
+       "n": "2",
+       "name": "Validar al colaborador",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": null
+      },
+      {
+       "n": "3",
+       "name": "Confirmar los datos",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": null,
+       "effort": null,
+       "stuck": "Espera la respuesta del colaborador; si marca «incorrectos», se repite el caso."
+      },
+      {
+       "n": "4",
+       "name": "Filtrar liderazgo",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "La lista de excepciones está escrita a mano en el flujo."
+      },
+      {
+       "n": "5",
+       "name": "Validar fechas",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "Un error de fechas repite el caso completo."
+      },
+      {
+       "n": "6",
+       "name": "Registrar la solicitud",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "Tickets duplicados (el No. 39 aparece 3 veces)."
+      },
+      {
+       "n": "7",
+       "name": "Calcular el saldo",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "Sin fila de gozados: se rechaza y debe reenviar."
+      },
+      {
+       "n": "8",
+       "name": "Aprobar o rechazar",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": "Espera del líder · pendiente",
+       "effort": null,
+       "stuck": "Aprobaciones sin respuesta vencen a los 30 días sin aviso; Cayalá se queda aquí."
+      },
+      {
+       "n": "9",
+       "name": "Actualizar días gozados",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "Sobrescritura si hay dos aprobaciones del mismo colaborador."
+      },
+      {
+       "n": "10",
+       "name": "Generar la constancia",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "Archivo temporal con nombre fijo: riesgo de mezclar constancias."
+      },
+      {
+       "n": "11",
+       "name": "Crear la tarea de firma",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "Todas las tareas van a la misma persona."
+      },
+      {
+       "n": "12",
+       "name": "Saldo en Actimo",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": "No se ejecuta si falla Asana, y no avisa."
+      },
+      {
+       "n": "13",
+       "name": "Actualizar el log",
+       "active": "< 1 min (automático, estimado)",
+       "lo": 0.5,
+       "hi": 0.5,
+       "wait": null,
+       "effort": null,
+       "stuck": null
+      },
+      {
+       "n": "14",
+       "name": "Firmar y archivar",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": "Espera de firma · pendiente",
+       "effort": null,
+       "stuck": "22 de 84 tareas abiertas al 8 oct; algunas vencidas desde agosto."
+      }
+     ]
+    },
+    "sources": [
+     {
+      "id": "D01",
+      "name": "Forms de solicitud",
+      "who": "Personas con el nuevo proceso",
+      "contact": "Alejandro Flores · alejandro.flores@grupopdc.com · Daniel Soto · danny@mostroagency.com",
+      "access": "Leer",
+      "state": "sin_estado"
+     },
+     {
+      "id": "D02",
+      "name": "Demografía (1. DEMO GENERAL.xlsx)",
+      "who": "Gestión Humana y algunos líderes",
+      "contact": "Brenda Gómez · brenda.gomez@grupopdc.com",
+      "access": "Leer",
+      "state": "sin_estado"
+     },
+     {
+      "id": "D03",
+      "name": "Log de vacaciones (Vacaciones.xlsx)",
+      "who": "Relaciones Laborales y Alejandro Flores",
+      "contact": "Alejandro Flores · alejandro.flores@grupopdc.com",
+      "access": "Leer",
+      "state": "sin_estado"
+     },
+     {
+      "id": "D04",
+      "name": "Matriz de vacaciones (Consulta_Vacaciones_.xlsx)",
+      "who": "Relaciones Laborales y KAMs",
+      "contact": "Daniel Soto · danny@mostroagency.com",
+      "access": "Leer",
+      "state": "sin_estado"
+     },
+     {
+      "id": "D05",
+      "name": "Asana «Cartas Vacaciones»",
+      "who": "Relaciones Laborales",
+      "contact": "Kimberly Orellana · kimberly.orellana@grupopdc.com",
+      "access": "Leer",
+      "state": "sin_estado",
+      "url": "https://app.asana.com/1/237422154455995/project/1213735891659153/list/1213752349757708"
+     }
+    ],
+    "metrics": [
+     {
+      "key": "volume",
+      "name": "Volumen",
+      "current": "≈40 solicitudes aprobadas",
+      "target": null,
+      "state": "medido",
+      "source": "Asana «Cartas Vacaciones» y log de Vacaciones.xlsx",
+      "kpi": true,
+      "value": 40,
+      "unit": "solicitudes"
+     },
+     {
+      "key": "effort",
+      "name": "Esfuerzo por caso",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "Medición con colaborador, líder y responsable de firma",
+      "kpi": true,
+      "value": null,
+      "unit": "min-persona"
+     },
+     {
+      "key": "hours",
+      "name": "Horas-persona al mes",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "Volumen × esfuerzo ÷ 60",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "e2e",
+      "name": "Tiempo de inicio a fin",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "Fecha de Forms + cierre en Asana",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "wait",
+      "name": "Tiempo de espera (líder + firma)",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "Historial de aprobaciones y Asana",
+      "kpi": true,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "errors",
+      "name": "Casos con error o corrección",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "result",
+      "name": "Cartas de goce pendientes de firma",
+      "current": "22 de 84 tareas abiertas (8 oct)",
+      "target": null,
+      "state": "medido",
+      "source": "Asana «Cartas Vacaciones»",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     }
+    ],
+    "review": {
+     "who": null,
+     "cadence": "Quincenal",
+     "due": "Entre noviembre y diciembre 2026",
+     "period": "Desde el lanzamiento (29 sep 2026)",
+     "cases": "Medio día, día completo o varios días; colaboradores no líderes (grado < 14.1) de los 7 países"
+    },
+    "tracking": {
+     "stage": "Lanzado para Mostro y Vikingo AI; próximo para PDC Brands, Nexo y Vikingo Distribución. Validando saldos.",
+     "next": "Completar la validación de saldos · semana del 13 al 16 oct",
+     "blocker": "Validar los días del 100% de colaboradores · apoyan KAMs y líderes de áreas",
+     "coordinator": null
+    },
+    "contacts": [
+     {
+      "name": "Luis Fernando Chang",
+      "role": "Seguimiento y gestión con KAMs",
+      "email": "luis.chang@grupopdc.com"
+     },
+     {
+      "name": "Kimberly Orellana",
+      "role": "Seguimiento y gestión con KAMs",
+      "email": "kimberly.orellana@grupopdc.com"
+     },
+     {
+      "name": "Alejandro Flores",
+      "role": "Comunicación a SIGO App",
+      "email": "alejandro.flores@grupopdc.com"
+     },
+     {
+      "name": "Daniel Soto",
+      "role": "Acceso y diagnóstico del flujo en Power Automate",
+      "email": "danny@mostroagency.com"
+     },
+     {
+      "name": "KAMs de Gestión Humana",
+      "role": "Validación de saldos de vacaciones",
+      "email": null
+     }
+    ],
+    "folder": "05 Relaciones Laborales › 3. Relaciones Laborales › Proyectos › Vacaciones"
+   }
   },
   {
    "id": "infra",
@@ -1300,7 +1795,477 @@
    },
    "sponsor": "Alejandra Álvarez · Silvia Ramírez (Gestión de Riesgos)",
    "summary": "Coordinación de Registros Sanitarios (nuevos, renovaciones y actualizaciones) para marcas propias y representadas en 7 países. Hoy las solicitudes llegan por correo, WhatsApp o de palabra, sin formato ni trazabilidad, y los requisitos se revisan varias veces. El proyecto (1.4 Fase 2) busca una entrada única, checklist automático, expediente digital, alertas por excepción y cierre automático. Piloto: Guatemala.",
-   "tagline": "Registros Sanitarios de punta a punta, piloto Guatemala"
+   "tagline": "Registros Sanitarios de punta a punta, piloto Guatemala",
+   "intake": {
+    "status": "completada",
+    "date": "2026-10-14",
+    "by": "Alejandra Álvarez",
+    "url": "https://codisaco.sharepoint.com/sites/Documentacin/regulatorio/Documentos compartidos/SOLICITUDES RS GT AUTOMATIZADAS/Bases de diseño/Charter - oct 26/Guia de intake - Megamás Regulatorio oct 26.docx",
+    "process": {
+     "bu": "Nexo",
+     "area": "Gestión de Riesgos · Regulatorio",
+     "country": "Guatemala (piloto), luego SV, HN, NI, PA, RD y PE",
+     "what": "Coordinación de Registros Sanitarios de productos de consumo (nuevos, renovaciones y actualizaciones) para marcas propias y representadas, ante las entidades regulatorias de 7 países.",
+     "stages": [
+      "Solicitud",
+      "Checklist de requisitos",
+      "Revisión y armado de expediente",
+      "Pago",
+      "Ingreso ante entidad",
+      "Evaluación",
+      "Subsanación (si aplica)",
+      "Reingreso (si aplica)",
+      "Resolución",
+      "Comunicación a Marca",
+      "Actualización y almacenaje"
+     ]
+    },
+    "workflow": {
+     "name": "Registros Sanitarios de punta a punta · piloto Guatemala",
+     "trigger": "Solicitud de RS nuevo, renovación o actualización, hoy por correo, WhatsApp o de palabra.",
+     "result": "RS obtenido, certificado en iComply/CADD, base maestra actualizada y Marca notificada.",
+     "problem": "Sin entrada única ni formato; información en muchas herramientas; sin trazabilidad; requisitos revisados varias veces. Resultado: atrasos, omisiones, retrabajo y alta carga administrativa.",
+     "improve": "Entrada única con ID automático, checklist automático por país y categoría, expediente digital, seguimiento por excepción y cierre automático hasta la renovación.",
+     "owner": "Alejandra Álvarez · Líder del proyecto, Regulatorio"
+    },
+    "steps": [
+     {
+      "n": "1",
+      "name": "Solicitud de RS",
+      "who": "Marca o cliente",
+      "uses": "Datos del producto, país, tipo",
+      "src": [
+       "D01"
+      ],
+      "out": "Correo o verbal (hoy)",
+      "branch": null
+     },
+     {
+      "n": "2",
+      "name": "Ingreso manual a base de trámites",
+      "who": "Líder SR del país",
+      "uses": "Datos de la solicitud",
+      "src": [
+       "D01"
+      ],
+      "out": "Base de trámites",
+      "branch": null
+     },
+     {
+      "n": "3",
+      "name": "Generación de checklist",
+      "who": "Regulatorio",
+      "uses": "Matriz regulatoria",
+      "src": [
+       "D03"
+      ],
+      "out": "Plan de trabajo (correo)",
+      "branch": null
+     },
+     {
+      "n": "4",
+      "name": "Solicitar documentos a Ingeniería de Producto",
+      "who": "Regulatorio",
+      "uses": "Requisitos técnicos",
+      "src": [
+       "D03"
+      ],
+      "out": "Correo a IP",
+      "branch": "Revisión de Regulatorio"
+     },
+     {
+      "n": "5",
+      "name": "Solicitar documentos a Marca",
+      "who": "Regulatorio",
+      "uses": "Requisitos de marca",
+      "src": [
+       "D03"
+      ],
+      "out": "Correo a Marca",
+      "branch": "Revisión de Regulatorio"
+     },
+     {
+      "n": "6",
+      "name": "Recepción y revisión de documentos",
+      "who": "Regulatorio",
+      "uses": "Ficha técnica, artes, códigos",
+      "src": [
+       "D04"
+      ],
+      "out": "Carpeta SharePoint",
+      "branch": "Revisión del líder RS"
+     },
+     {
+      "n": "7",
+      "name": "Armado de expediente",
+      "who": "Regulatorio",
+      "uses": "Documentación completa",
+      "src": [
+       "D04"
+      ],
+      "out": "Carpeta del expediente",
+      "branch": "Validación de Regulatorio"
+     },
+     {
+      "n": "8",
+      "name": "Pago ante entidad (GT presencial)",
+      "who": "Asesor externo",
+      "uses": "Orden de pago",
+      "src": [
+       "D05"
+      ],
+      "out": "Comprobante físico",
+      "branch": null
+     },
+     {
+      "n": "9",
+      "name": "Ingreso ante MSPAS (GT presencial)",
+      "who": "Asesor externo",
+      "uses": "Expediente físico",
+      "src": [
+       "D04",
+       "D05"
+      ],
+      "out": "Número de expediente",
+      "branch": null
+     },
+     {
+      "n": "10",
+      "name": "Seguimiento semanal ante entidad",
+      "who": "Regulatorio",
+      "uses": "Consultas a MSPAS",
+      "src": [
+       "D06"
+      ],
+      "out": "Notas de seguimiento",
+      "branch": null
+     },
+     {
+      "n": "11",
+      "name": "Subsanación de observaciones",
+      "who": "Regulatorio",
+      "uses": "Observaciones de MSPAS",
+      "src": [
+       "D06"
+      ],
+      "out": "Documentación corregida + reingreso",
+      "branch": "Si hay observaciones → corregir y reingresar"
+     },
+     {
+      "n": "12",
+      "name": "Obtención y registro del RS",
+      "who": "Asesor externo",
+      "uses": "Certificado emitido",
+      "src": [
+       "D06"
+      ],
+      "out": "iComply/CADD + base maestra",
+      "branch": "Confirmación de Regulatorio"
+     },
+     {
+      "n": "13",
+      "name": "Comunicación de resolución",
+      "who": "Regulatorio",
+      "uses": "Número y datos del RS",
+      "src": [],
+      "out": "Correo a Marca o cliente",
+      "branch": null
+     }
+    ],
+    "vsm": {
+     "unit": "días",
+     "case": "Un trámite de RS desde la solicitud hasta el certificado o el desistimiento.",
+     "period": null,
+     "steps": [
+      {
+       "n": "1–2",
+       "name": "Solicitud e ingreso a base",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": "0",
+       "effort": null,
+       "stuck": "Solicitudes informales, datos incompletos."
+      },
+      {
+       "n": "3–5",
+       "name": "Checklist y solicitud de documentos",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": null,
+       "effort": null,
+       "stuck": "Sin estándar, revisión subjetiva."
+      },
+      {
+       "n": "6–7",
+       "name": "Recepción y armado de expediente",
+       "active": "~10–15 días",
+       "lo": 10,
+       "hi": 15,
+       "wait": null,
+       "effort": null,
+       "stuck": "Documentos incompletos, retrabajo, idas y vueltas."
+      },
+      {
+       "n": "8–9",
+       "name": "Pago e ingreso (GT presencial)",
+       "active": "~2–3 días hábiles",
+       "lo": 2,
+       "hi": 3,
+       "wait": null,
+       "effort": null,
+       "stuck": "Desplazamiento físico, cola en MSPAS."
+      },
+      {
+       "n": "10",
+       "name": "Evaluación ante entidad",
+       "active": "45 días hábiles (alimentos) · 7 meses (home care)",
+       "lo": 45,
+       "hi": 45,
+       "wait": "0",
+       "effort": null,
+       "stuck": "Proceso externo, sin control interno."
+      },
+      {
+       "n": "11",
+       "name": "Subsanación",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": null,
+       "effort": null,
+       "stuck": "Observaciones recurrentes por errores de expediente."
+      },
+      {
+       "n": "12–13",
+       "name": "Resolución y comunicación",
+       "active": null,
+       "lo": null,
+       "hi": null,
+       "wait": null,
+       "effort": null,
+       "stuck": "Digitación manual en iComply."
+      }
+     ]
+    },
+    "sources": [
+     {
+      "id": "D01",
+      "name": "Solicitudes (Forms y correo)",
+      "who": "Regulatorio",
+      "contact": "Alejandra Álvarez · alejandra.alvarez@grupopdc.com",
+      "access": "Leer",
+      "state": "habilitado"
+     },
+     {
+      "id": "D02",
+      "name": "Base de trámites (Solicitudes RS Guatemala.xlsx)",
+      "who": "Regulatorio",
+      "contact": "Alejandra Álvarez · alejandra.alvarez@grupopdc.com",
+      "access": "Leer/copiar",
+      "state": "habilitado"
+     },
+     {
+      "id": "D03",
+      "name": "Matriz regulatoria (REGULATORIO_CONFIGURACION_RS_v2)",
+      "who": "Regulatorio",
+      "contact": "Alejandra Álvarez · alejandra.alvarez@grupopdc.com",
+      "access": "Leer",
+      "state": "habilitado"
+     },
+     {
+      "id": "D04",
+      "name": "Carpeta SharePoint de Regulatorio",
+      "who": "Regulatorio",
+      "contact": "Alejandra Álvarez · alejandra.alvarez@grupopdc.com",
+      "access": "Leer/copiar",
+      "state": "pendiente"
+     },
+     {
+      "id": "D05",
+      "name": "Comprobantes de pago",
+      "who": "Regulatorio y asesor externo",
+      "contact": "Pendiente",
+      "access": "Leer",
+      "state": "pendiente"
+     },
+     {
+      "id": "D06",
+      "name": "Comunicaciones con la entidad (correo)",
+      "who": "Líder SR y Regulatorio",
+      "contact": "Pendiente",
+      "access": "Leer",
+      "state": "pendiente"
+     },
+     {
+      "id": "D07",
+      "name": "iComply / CADD",
+      "who": "Regulatorio",
+      "contact": "Alejandra Álvarez · alejandra.alvarez@grupopdc.com",
+      "access": "Leer/copiar",
+      "state": "pendiente"
+     }
+    ],
+    "metrics": [
+     {
+      "key": "auto",
+      "name": "Proceso automatizado",
+      "current": "0%",
+      "target": "90%",
+      "state": "medido",
+      "source": "Project Charter 1.4 Fase 2 · Alejandra Álvarez",
+      "kpi": true,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "dossier",
+      "name": "Tiempo solicitud → expediente listo",
+      "current": "~20 días",
+      "target": "≤10 días",
+      "state": "medido",
+      "source": "Project Charter 1.4 Fase 2 · Alejandra Álvarez",
+      "kpi": true,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "errors",
+      "name": "Trámites con observaciones por errores internos",
+      "current": "~10%",
+      "target": "≤3%",
+      "state": "estimado",
+      "source": "Project Charter 1.4 Fase 2 · Alejandra Álvarez",
+      "kpi": true,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "admin",
+      "name": "Horas administrativas de Regulatorio",
+      "current": "40+ h/mes",
+      "target": "Liberar ≥40%",
+      "state": "estimado",
+      "source": "Project Charter 1.4 Fase 2",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "volume",
+      "name": "Volumen de solicitudes",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "effort",
+      "name": "Esfuerzo por caso",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "hours",
+      "name": "Horas-persona al mes",
+      "current": null,
+      "target": null,
+      "state": "pendiente",
+      "source": "Volumen × esfuerzo ÷ 60",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     },
+     {
+      "key": "e2e",
+      "name": "Tiempo de inicio a fin (resolución MSPAS)",
+      "current": "45 días hábiles (alimentos) · 7 meses (home care, cosméticos)",
+      "target": "Sin cambio (proceso externo)",
+      "state": "medido",
+      "source": "Flujo del proceso RS",
+      "kpi": false,
+      "value": null,
+      "unit": null
+     }
+    ],
+    "review": {
+     "who": "Alejandra Álvarez",
+     "cadence": "Semanal y mensual",
+     "due": "Paso 1 Guatemala: Sprint 5Q4 · expansión regional: Sprint 5Q3",
+     "period": null,
+     "cases": "RS nuevos, renovaciones y actualizaciones · piloto Guatemala"
+    },
+    "tracking": {
+     "stage": "Sprint 3 · entrada única de solicitudes (en desarrollo)",
+     "next": "Sprint 4 · motor automático de checklist",
+     "blocker": "No descrito en la guía · ayuda a resolverlo: Alejandra Álvarez",
+     "coordinator": "Alejandra Álvarez",
+     "route": [
+      [
+       "Paso 1",
+       "Guatemala",
+       "Sprint 5Q4"
+      ],
+      [
+       "Paso 2",
+       "El Salvador y Nicaragua",
+       "Sprint 5Q1"
+      ],
+      [
+       "Paso 3",
+       "Honduras y República Dominicana",
+       "Sprint 5Q2"
+      ],
+      [
+       "Paso 4",
+       "Guatemala, Panamá y Perú",
+       "Sprint 5Q3"
+      ]
+     ]
+    },
+    "contacts": [
+     {
+      "name": "Alejandra Álvarez",
+      "role": "Líder del proyecto · Asuntos Regulatorios",
+      "email": "alejandra.alvarez@grupopdc.com"
+     },
+     {
+      "name": "Silvia Ramírez",
+      "role": "Líder Gestión de Riesgos",
+      "email": "silvia.ramirez@grupopdc.com"
+     },
+     {
+      "name": "Óscar Mejía",
+      "role": "Líder Nexo",
+      "email": "oscar.mejia@grupopdc.com"
+     },
+     {
+      "name": "Alexandra Paiz",
+      "role": "Líder de Herramientas de IA",
+      "email": "alexandra.paiz@grupopdc.com"
+     },
+     {
+      "name": "Asesor externo regulatorio GT",
+      "role": "Gestión ante MSPAS · pendiente",
+      "email": null
+     },
+     {
+      "name": "Líder SR Guatemala",
+      "role": "Seguimiento operativo de trámites · pendiente",
+      "email": null
+     }
+    ],
+    "folder": "SOLICITUDES RS GT AUTOMATIZADAS"
+   }
   }
  ],
  "components": [

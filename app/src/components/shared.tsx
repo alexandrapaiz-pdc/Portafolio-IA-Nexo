@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react"
 import { ArrowRight, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { discovery, phaseLabel, readiness, savings, STATUS, type Project, type Update } from "@/lib/domain"
+import { discovery, phaseLabel, readiness, savings, STATUS, usesIntake, type Project, type Update } from "@/lib/domain"
+import { IntakeSummary } from "./intake"
 import { fdate, fnum, isNum, nf, pct } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { useRouter } from "@/lib/router"
@@ -66,8 +67,10 @@ export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
   const { components } = useStore()
   const { openProject } = useRouter()
   const r = readiness(p, components), d = discovery(p), s = savings(p)
+  const im = usesIntake(p)
   let impact: ReactNode
-  if (p.enabler) impact = <><div className="text-[17px] font-semibold">Base</div><div className="text-xs text-faint">{p.impactLabel || "Habilita el portafolio"}</div></>
+  if (im) impact = null
+  else if (p.enabler) impact = <><div className="text-[17px] font-semibold">Base</div><div className="text-xs text-faint">{p.impactLabel || "Habilita el portafolio"}</div></>
   else if (s.saved) impact = <><div className="num text-[17px] font-semibold text-accent">{nf(s.saved)} {s.unit}</div><div className="text-xs text-faint">liberadas</div></>
   else if (isNum(s.baseline)) impact = <><div className="num text-[17px] font-semibold">{nf(s.baseline)} {s.unit}</div><div className="text-xs text-faint">manuales en alcance</div></>
   else impact = <div className="text-[13px] font-medium text-faint">Pendiente de data</div>
@@ -80,7 +83,8 @@ export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
       {rank && <span className="num text-[26px] font-semibold leading-none tracking-[-.04em] max-[820px]:text-[22px]">{rank}</span>}
       <div className="min-w-0">
         <div className="text-[17px] font-semibold tracking-[-.02em]">{p.name}</div>
-        <div className="mt-0.5 text-[13px] text-sub">{[p.sponsor, phaseLabel(p)].filter(Boolean).join(" · ")}</div>
+        <div className="mt-0.5 text-[13px] text-sub">{(im ? [p.intake?.process?.area, phaseLabel(p)] : [p.sponsor, phaseLabel(p)]).filter(Boolean).join(" · ")}</div>
+        {im && <div className="mt-1.5"><IntakeSummary i={p.intake} /></div>}
 {SHOW_ROW_DETAIL && (
         <div className="mt-1.5 flex flex-wrap gap-2.5 text-xs text-faint">
           {p.noAzure && <span className="font-medium text-accent-ink">Avanza sin Azure</span>}
