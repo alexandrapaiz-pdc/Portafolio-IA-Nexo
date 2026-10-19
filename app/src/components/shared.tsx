@@ -70,7 +70,7 @@ export function ProjectRow({ p, rank }: { p: Project; rank?: string }) {
   if (p.enabler) impact = <><div className="text-[17px] font-semibold">Base</div><div className="text-xs text-faint">{p.impactLabel || "Habilita el portafolio"}</div></>
   else if (s.saved) impact = <><div className="num text-[17px] font-semibold text-accent">{nf(s.saved)} {s.unit}</div><div className="text-xs text-faint">liberadas</div></>
   else if (isNum(s.baseline)) impact = <><div className="num text-[17px] font-semibold">{nf(s.baseline)} {s.unit}</div><div className="text-xs text-faint">manuales en alcance</div></>
-  else impact = <div className="text-[13px] font-medium text-faint">Línea base pendiente</div>
+  else impact = <div className="text-[13px] font-medium text-faint">Pendiente de data</div>
   const vsmSteps = p.vsm?.asis?.length || 0
   return (
     <button type="button" onClick={() => openProject(p.id)}

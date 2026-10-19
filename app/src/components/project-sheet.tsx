@@ -132,7 +132,7 @@ export function ProjectSheet() {
                 </div>
               </div>
             ) : (
-              <>
+              !isNum(s.baseline) && s.saved == null && s.pot == null ? <div className="px-5 py-4 text-[15px] font-medium text-faint">Pendiente de data</div> : <>
                 <div className="num grid grid-cols-3 gap-3 px-5 py-[18px]">
                   {[["Manual hoy", isNum(s.baseline) ? nf(s.baseline) : "Pendiente", ""], ["Liberadas", s.saved != null ? nf(s.saved) : "Pendiente", "text-accent"], ["Potencial", s.pot != null ? nf(s.pot) : "Pendiente", ""]].map(([k, v, c]) => (
                     <div key={k} className="grid gap-0.5"><span className="text-xs text-faint">{k}</span><span className={cn("text-2xl font-semibold tracking-[-.03em]", c)}>{v}</span></div>
@@ -154,6 +154,12 @@ export function ProjectSheet() {
                     onChange={(e) => { const kpis = [...draft.kpis]; kpis[i] = { ...k, [f]: n(e.target.value) }; setDraft({ ...draft, kpis }) }} /></Label>)}
                 </div>
                 <Label>Nota<Input value={k.note || ""} onChange={(e) => { const kpis = [...draft.kpis]; kpis[i] = { ...k, note: e.target.value }; setDraft({ ...draft, kpis }) }} /></Label>
+              </div>
+            ) : !isNum(k.baseline) && !isNum(k.target) && !isNum(k.current) ? (
+              // No data yet: just the name, no empty fields.
+              <div key={k.id} className="grid min-w-0 content-start gap-2 card px-5 py-[18px]">
+                <div className="text-[13px] text-sub">{k.name}</div>
+                <div className="text-[15px] font-medium text-faint">Pendiente de data</div>
               </div>
             ) : (
               <div key={k.id} className="grid min-w-0 content-start gap-2 card px-5 py-[18px]">
