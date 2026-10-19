@@ -4,16 +4,15 @@
 #   pruebas → imagen construida en Azure (ACR, sin Docker local) → solo cambia la imagen
 #   → espera revisión sana → verifica que Entra y la configuración protegida no cambiaron.
 #
-# Requiere en el entorno (nunca en el repo):
-#   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_CLIENT_SECRET   service principal limitado a esta app y al ACR
-#   AZURE_SUBSCRIPTION_ID                                   suscripción NEXO
-# y acceso de red a management.azure.com, login.microsoftonline.com y crnexoaipdc01.azurecr.io.
+# Identidad: si existen AZURE_CLIENT_ID, AZURE_TENANT_ID y AZURE_CLIENT_SECRET (service principal limitado a esta
+# app y al ACR), entra con ellas; si no, usa la sesión de `az login` ya abierta en la computadora (Claude Code local).
+# Requiere acceso de red a management.azure.com, login.microsoftonline.com y crnexoaipdc01.azurecr.io.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 export RESOURCE_GROUP=rg-nexo-ai-core APP_NAME=nexo-portafolio-ia ACR_NAME=crnexoaipdc01
 URL=https://nexo-portafolio-ia.wittysea-7e111699.eastus.azurecontainerapps.io
-: "${AZURE_CLIENT_ID:?falta AZURE_CLIENT_ID}" "${AZURE_TENANT_ID:?falta AZURE_TENANT_ID}" "${AZURE_CLIENT_SECRET:?falta AZURE_CLIENT_SECRET}" "${AZURE_SUBSCRIPTION_ID:?falta AZURE_SUBSCRIPTION_ID}"
+command -v az >/dev/null || { echo "Falta Azure CLI (az)." >&2; exit 1; }
 
 git diff --quiet && git diff --cached --quiet || { echo "Hay cambios sin commit: despliega solo código que está en GitHub." >&2; exit 1; }
 SHA=$(git rev-parse HEAD)
@@ -24,8 +23,12 @@ echo "1/4 Pruebas"
 python3 -m pytest -q .github/scripts
 
 echo "2/4 Imagen en Azure Container Registry ($SHA)"
-az login --service-principal -u "$AZURE_CLIENT_ID" -p "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID" --only-show-errors >/dev/null
-az account set --subscription "$AZURE_SUBSCRIPTION_ID"
+if [ -n "${AZURE_CLIENT_SECRET:-}" ]; then
+  az login --service-principal -u "$AZURE_CLIENT_ID" -p "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID" --only-show-errors >/dev/null
+else
+  az account show >/dev/null 2>&1 || { echo "Sin sesión de Azure: corre 'az login' primero." >&2; exit 1; }
+fi
+[ -n "${AZURE_SUBSCRIPTION_ID:-}" ] && az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 az acr build --registry "$ACR_NAME" --image "$APP_NAME:$SHA" \
   --build-arg BUILD_SHA="$SHA" --build-arg BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)" --only-show-errors . >/dev/null
 DIGEST=$(az acr repository show --name "$ACR_NAME" --image "$APP_NAME:$SHA" --query digest -o tsv)
