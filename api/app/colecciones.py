@@ -5,7 +5,7 @@ Es el único archivo propio de cada app (junto con sus migraciones). Regla de Ne
 - Tabla: datos acordados que alimentan reportes, Databricks o decisiones de dinero.
 """
 from datetime import datetime, timezone
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -24,11 +24,11 @@ class Solicitud(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     code: str = Field(pattern=r"^SOL-[0-9A-Z-]{3,20}$")
-    title: str = Field(min_length=1, max_length=120)
-    area: MUNDOS
-    type: TIPOS
-    urgency: Literal["Baja", "Media", "Alta"]
-    problem: str = Field(min_length=1, max_length=4000)
+    title: str = Field(default="", max_length=120)
+    area: MUNDOS | None = None
+    type: TIPOS | None = None
+    urgency: Literal["Baja", "Media", "Alta"] | None = None
+    problem: str = Field(default="", max_length=4000)
     current: str | None = Field(default=None, max_length=4000)
     hours: float | None = Field(default=None, ge=0, le=100000)
     people: int | None = Field(default=None, ge=0, le=100000)
@@ -36,6 +36,11 @@ class Solicitud(BaseModel):
     systems: str | None = Field(default=None, max_length=1000)
     createdBy: str
     createdAt: datetime
+
+
+class Intake(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    answers: dict[Literal["materials", "process", "workflow", "steps", "sources", "time", "metrics", "followup", "contacts", "sharepoint"], Annotated[str, Field(max_length=8000)]] = Field(default_factory=dict)
 
 
 SOLICITUDES = {
@@ -81,6 +86,7 @@ COLECCIONES = {
     # Métricas trimestrales de despliegue: todos leen, solo editores escriben.
     "metricas": Tabla(tabla="metricas_fde", modelo=MetricaTrimestre, columnas=METRICAS),
     "triage": Documentos(),
+    "intakes": Documentos(modelo=Intake),
     # Cualquier persona de PDC puede enviar una solicitud; solo editores la cambian o la borran.
     # Quién la envía y cuándo los pone el servidor.
     "tickets": Tabla(

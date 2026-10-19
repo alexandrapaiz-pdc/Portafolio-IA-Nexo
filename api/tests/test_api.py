@@ -14,7 +14,7 @@ ESQUEMA = "prueba_" + secrets.token_hex(4)
 os.environ["DB_SCHEMA"] = ESQUEMA
 os.environ["NEXO_EDITORES"] = "editora@grupopdc.com"
 os.environ.pop("DEV_USUARIO", None)
-os.environ["NEXO_CORREO_REMITENTE"] = ""  # las pruebas no mandan correos
+os.environ.pop("NEXO_CORREO_ACTIVO", None)  # las pruebas nunca envían correo real
 
 from fastapi.testclient import TestClient  # noqa: E402
 
@@ -104,20 +104,6 @@ def test_cualquiera_envia_solicitud_y_el_servidor_sella(cliente):
         ("SOL-1007-AB", "Nexo", "Media", 20, 3, "oid-persona")]
 
 
-def test_solicitud_manda_la_guia_de_intake_al_solicitante(cliente, monkeypatch):
-    from app import correo, main
-
-    enviados = []
-    monkeypatch.setattr(main.correo, "enviar_intake", lambda *a: enviados.append(a))
-    r = cliente.post("/api/c/tickets", json={**SOLICITUD, "code": "SOL-1007-EM"}, headers=PERSONA)
-    assert r.status_code == 200, r.text
-    # Al correo de la sesión (Entra), no a uno escrito en la solicitud.
-    assert enviados == [("persona@grupopdc.com", "Luis Persona", "SOL-1007-EM", "Conciliar facturas")]
-    asunto, cuerpo = correo.mensaje("Luis Persona", "SOL-1007-EM", "<b>x</b>", "https://ejemplo/guia")
-    assert "SOL-1007-EM" in asunto and "Hola Luis" in cuerpo and "https://ejemplo/guia" in cuerpo
-    assert "Puedes usar IA para llenarla" in cuerpo and "<b>x</b>" not in cuerpo  # el título se escapa
-
-
 def test_metricas_trimestrales_solo_editores(cliente):
     q = {"quarter": "2026-Q4", "daysToValue": 9, "liveWithUsers": 0, "pilots": 3, "pilotsToProduction": 0,
          "hoursSaved": 0, "note": "Primer trimestre medido"}
@@ -135,15 +121,8 @@ def test_metricas_trimestrales_solo_editores(cliente):
     assert len(sql("SELECT 1 FROM historial WHERE coleccion = 'metricas'")) == 2
 
 
-def test_correo_sin_configurar_no_envia(monkeypatch):
-    from app import correo
-
-    monkeypatch.setenv("NEXO_CORREO_REMITENTE", "")
-    assert correo.enviar_intake("persona@grupopdc.com", "Luis", "SOL-1", "x") is False
-
-
 def test_solicitud_invalida_no_se_guarda(cliente):
-    for malo in ({"urgency": "Urgente"}, {"hours": -1}, {"title": ""}, {"area": "Marte"}, {"extra": "x"}):
+    for malo in ({"urgency": "Urgente"}, {"hours": -1}, {"title": "x" * 121}, {"area": "Marte"}, {"extra": "x"}):
         r = cliente.post("/api/c/tickets", json={**SOLICITUD, "code": "SOL-1007-ZZ", **malo}, headers=PERSONA)
         assert r.status_code == 422, (malo, r.text)
     assert sql("SELECT count(*) FROM solicitudes WHERE codigo = 'SOL-1007-ZZ'") == [(0,)]
@@ -186,6 +165,11 @@ def test_importar_solo_editores(cliente):
     assert cliente.get("/api/c/asanaMeta/sync", headers=PERSONA).json()["datos"]["syncedAt"].startswith("2026-10-06")
 
 
+def test_asana_sin_token(cliente):
+    os.environ.pop("ASANA_TOKEN", None)
+    assert cliente.post("/api/asana/tarea", json={"task_id": "123"}, headers=PERSONA).status_code == 403
+    r = cliente.post("/api/asana/tarea", json={"task_id": "123"}, headers=EDITORA)
+    assert r.status_code == 503 and r.json()["detail"]["codigo"] == "no_configurado"
 
 
 def test_coleccion_desconocida(cliente):
@@ -208,3 +192,104 @@ def test_conexion_con_token_de_entra(cliente, monkeypatch):
     finally:
         monkeypatch.delenv("NEXO_PG_ENTRA")
         conexion.cerrar()
+
+
+def test_correo_encolado_una_vez_con_identidad_real(cliente):
+    carga = {**SOLICITUD, 'code': 'SOL-EMAIL-1', 'createdBy': 'atacante', 'createdAt': '2020-01-01T00:00:00Z'}
+    r = cliente.put('/api/c/tickets/email-1', json=carga, headers=PERSONA)
+    assert r.status_code == 200
+    assert sql('SELECT destinatario, nombre, estado FROM correos_solicitudes WHERE solicitud_id = %s', 'email-1') == [
+        ('persona@grupopdc.com', 'Luis Persona', 'pendiente')]
+    assert cliente.patch('/api/c/tickets/email-1', json={'title': 'Corregida'}, headers=EDITORA).status_code == 200
+    assert cliente.put('/api/c/tickets/email-1', json=carga, headers=EDITORA).status_code == 200
+    assert sql('SELECT count(*) FROM correos_solicitudes WHERE solicitud_id = %s', 'email-1') == [(1,)]
+    # Un rechazo por validación o código duplicado tampoco encola.
+    assert cliente.put('/api/c/tickets/email-malo', json={**carga, 'hours': -1}, headers=PERSONA).status_code == 422
+    assert cliente.put('/api/c/tickets/email-duplicado', json=carga, headers=PERSONA).status_code == 409
+    assert sql("SELECT count(*) FROM correos_solicitudes WHERE solicitud_id IN ('email-malo', 'email-duplicado')") == [(0,)]
+
+
+def test_importar_no_manda_correos(cliente):
+    datos = {**SOLICITUD, 'code': 'SOL-EMAIL-IMPORT', 'createdBy': 'historico', 'createdAt': '2026-01-01T00:00:00Z'}
+    assert cliente.post('/api/importar', json={'colecciones': {'tickets': {'historico': datos}}}, headers=EDITORA).status_code == 200
+    assert sql("SELECT count(*) FROM correos_solicitudes WHERE solicitud_id = 'historico'") == [(0,)]
+
+
+def test_correo_rollback_si_falla_encolado(cliente, monkeypatch):
+    from app import correos
+    def falla(*args):
+        raise RuntimeError('simulada')
+    monkeypatch.setattr(correos, 'encolar', falla)
+    with pytest.raises(RuntimeError, match='simulada'):
+        cliente.post('/api/c/tickets', json={**SOLICITUD, 'code': 'SOL-EMAIL-ROLLBACK'}, headers=PERSONA)
+    assert sql("SELECT count(*) FROM solicitudes WHERE codigo = 'SOL-EMAIL-ROLLBACK'") == [(0,)]
+
+
+def test_entrega_reintentos_y_permisos(cliente, monkeypatch):
+    from app import correos
+    from concurrent.futures import ThreadPoolExecutor
+    import time
+    # Aislar la cola de esta prueba sin enviar los tickets de otras pruebas.
+    sql("UPDATE correos_solicitudes SET proximo_intento = now() + interval '1 day' RETURNING solicitud_id")
+    cliente.put('/api/c/tickets/email-worker', json={**SOLICITUD, 'code': 'SOL-EMAIL-WORKER'}, headers=PERSONA)
+    def falla(*args):
+        raise correos.ErrorEnvio('graph_503')
+    monkeypatch.setattr(correos, 'enviar', falla)
+    assert correos.procesar_uno('remitente@example.com')
+    assert sql("SELECT estado, intentos, ultimo_error, proximo_intento > now() FROM correos_solicitudes WHERE solicitud_id = 'email-worker'") == [
+        ('pendiente', 1, 'graph_503', True)]
+    assert not correos.procesar_uno('remitente@example.com')
+    sql("UPDATE correos_solicitudes SET intentos = 4, proximo_intento = now() WHERE solicitud_id = 'email-worker' RETURNING solicitud_id")
+    assert correos.procesar_uno('remitente@example.com')
+    assert sql("SELECT estado, intentos FROM correos_solicitudes WHERE solicitud_id = 'email-worker'") == [('fallido', 5)]
+    assert cliente.get('/api/solicitudes/correos', headers=PERSONA).status_code == 403
+    assert cliente.post('/api/solicitudes/correos/email-worker/reintentar', headers=PERSONA).status_code == 403
+    assert cliente.post('/api/solicitudes/correos/email-worker/reintentar', headers=EDITORA).status_code == 200
+    enviados = []
+    def exito(*args):
+        time.sleep(.1)
+        enviados.append(args)
+    monkeypatch.setattr(correos, 'enviar', exito)
+    # Dos réplicas concurrentes: solo una toma la fila.
+    with ThreadPoolExecutor(2) as ex:
+        resultados = list(ex.map(correos.procesar_uno, ['remitente@example.com'] * 2))
+    assert sorted(resultados) == [False, True]
+    assert len(enviados) == 1 and enviados[0][1] == 'persona@grupopdc.com'
+    assert sql("SELECT estado, aceptado_en IS NOT NULL FROM correos_solicitudes WHERE solicitud_id = 'email-worker'") == [('aceptado', True)]
+    assert not correos.procesar_uno('remitente@example.com')
+    assert cliente.post('/api/solicitudes/correos/email-worker/reintentar', headers=EDITORA).status_code == 409
+    assert cliente.get('/api/solicitudes/correos', headers=EDITORA).status_code == 200
+
+
+def test_formulario_descargable_con_sesion(cliente):
+    assert cliente.get('/api/solicitudes/formulario').status_code == 401
+    r = cliente.get('/api/solicitudes/formulario', headers=PERSONA)
+    assert r.status_code == 200
+    assert r.content.startswith(b'PK')
+    assert 'Guia-workflow-IA.docx' in r.headers['content-disposition']
+
+
+def test_solicitud_campos_opcionales(cliente):
+    for codigo, campos in [("SOL-EMPTY-1", {}), ("SOL-EMPTY-2", {"title": "", "problem": "", "area": None, "type": None, "urgency": None})]:
+        r = cliente.post("/api/c/tickets", json={"code": codigo, **campos}, headers=PERSONA)
+        assert r.status_code == 200, r.text
+        doc = cliente.get(f"/api/c/tickets/{r.json()['id']}", headers=PERSONA).json()["datos"]
+        assert doc["title"] == "" and doc["problem"] == ""
+        assert doc["createdBy"] == "oid-persona"
+        assert sql("SELECT mundo, tipo, urgencia, horas_mes FROM solicitudes WHERE codigo = %s", codigo) == [(None, None, None, None)]
+
+
+def test_intake_pertenece_a_solicitud_y_se_puede_retomar(cliente):
+    tid = cliente.post("/api/c/tickets", json={"code": "SOL-INTAKE-1"}, headers=PERSONA).json()["id"]
+    ruta = f"/api/c/intakes/{tid}"
+    otro = principal("otra@grupopdc.com", "oid-otra", "Otra")
+    assert cliente.put(ruta, json={"answers": {}}, headers=otro).status_code == 403
+    assert cliente.put("/api/c/intakes/no-existe", json={"answers": {}}, headers=PERSONA).status_code == 404
+    assert cliente.put(ruta, json={"answers": {}}, headers=PERSONA).status_code == 200
+    assert cliente.put(ruta, json={"answers": {"process": "Proceso de prueba"}}, headers=PERSONA).status_code == 200
+    assert cliente.get(ruta, headers=PERSONA).json()["datos"]["answers"]["process"] == "Proceso de prueba"
+    assert cliente.patch(ruta, json={"answers": {"workflow": "Revisado"}}, headers=EDITORA).status_code == 200
+    assert cliente.put(ruta, json={"answers": {"unknown": "x"}}, headers=PERSONA).status_code == 422
+    assert cliente.put(ruta, json={"answers": {"process": "x" * 8001}}, headers=PERSONA).status_code == 422
+    assert cliente.delete(f"/api/c/tickets/{tid}", headers=EDITORA).status_code == 200
+    assert cliente.put(ruta, json={"answers": {}}, headers=PERSONA).status_code == 404

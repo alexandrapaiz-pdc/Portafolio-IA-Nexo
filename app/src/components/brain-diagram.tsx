@@ -11,7 +11,7 @@ const LAYERS: [string, string, number | null][] = [
   ["Productos de datos", "KPIs y líneas base listas para usar", 3],
   ["Memoria de agentes", "lo que los agentes aprenden y recuerdan", null],
 ]
-const OUT: [string, string][] = [["Portales", "Portal de Mundos y más"], ["Agentes", "trabajan con contexto"], ["Chat", "Claude para cualquier líder"]]
+const OUT: [string, string][] = [["Portales", "Portal de Mundos y más"], ["Agentes", "trabajan con contexto"], ["Chat", "MCP personal · piloto"]]
 const yOf = (i: number) => TOP + i * (H + GAP)
 
 export function BrainDiagram() {

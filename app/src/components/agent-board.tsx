@@ -30,7 +30,7 @@ export function AgentBoard() {
                   return (
                     <button key={p.id} type="button" onClick={() => openProject(p.id)}
                       className="grid gap-1 card px-3.5 py-3 text-left transition-shadow hover:shadow-[var(--shadow-hover)]">
-                      <span className="flex items-baseline gap-2"><b className="num text-[13px] font-semibold text-accent">{rank(p)}</b><span className="text-[14px] font-medium leading-snug">{p.name}</span></span>
+                      <span className="flex items-baseline gap-2"><b className="num text-[13px] font-semibold text-accent">{p.priority == null ? "—" : rank(p)}</b><span className="text-[14px] font-medium leading-snug">{p.name}</span></span>
                       <IntakeSummary i={p.intake} compact />
                     </button>
                   )

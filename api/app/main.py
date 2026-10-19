@@ -10,11 +10,12 @@ Rutas:
   POST   /api/personas                nombres a partir de ids
   GET    /api/c/{col}                 lista (orden, sentido, limite, desde)
   GET    /api/c/{col}/{id}            un documento (desde)
-  POST   /api/c/{col}                 crear con id nuevo (solicitudes: correo con la guía de intake)
+  POST   /api/c/{col}                 crear con id nuevo
   PUT    /api/c/{col}/{id}            crear o reemplazar
   PATCH  /api/c/{col}/{id}            cambiar algunos campos
   DELETE /api/c/{col}/{id}            borrado lógico
   POST   /api/importar                carga inicial (solo editores)
+  POST   /api/asana/tarea             lee una tarea de Asana (solo editores, solo lectura)
 """
 import hashlib
 import os
@@ -25,11 +26,11 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 import httpx
-from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, Query
+from fastapi import Body, Depends, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, HTMLResponse
 from psycopg import errors
 
-from . import conexion, correo
+from . import conexion, correos
 from .almacen import Coleccion
 from .colecciones import COLECCIONES
 from .identidad import Persona, persona_actual
@@ -66,8 +67,13 @@ def migrar() -> list[str]:
 @asynccontextmanager
 async def ciclo(app: FastAPI):
     migrar()
-    yield
-    conexion.cerrar()
+    entregas = correos.Entregas()
+    entregas.iniciar()
+    try:
+        yield
+    finally:
+        await entregas.cerrar()
+        conexion.cerrar()
 
 
 app = FastAPI(title="Portafolio IA Nexo", lifespan=ciclo, docs_url=None, redoc_url=None)
@@ -148,18 +154,28 @@ def _escribir(c: Coleccion, doc_id: str, persona: Persona, nuevo, parcial: bool 
     try:
         with conexion.pool().connection() as con, con.cursor() as cur:
             recordar(cur, persona)
+            if c.nombre == "intakes":
+                ticket = COLECCIONES["tickets"].obtener(cur, doc_id, bloquear=True)
+                if ticket is None:
+                    raise HTTPException(404, "La solicitud no existe")
+                if not persona.editor and ticket["createdBy"] != persona.id:
+                    raise HTTPException(403, "Solo el solicitante o un editor puede completar el intake")
             antes = c.obtener(cur, doc_id, bloquear=True)
             if antes is None:
                 if parcial:
                     raise HTTPException(404, "No existe")
-                c.regla.exigir("crear", persona)
+                if c.nombre != "intakes":
+                    c.regla.exigir("crear", persona)
                 datos, accion = c.sellar(nuevo, persona), "crear"
             else:
-                c.regla.exigir("editar", persona)
+                if c.nombre != "intakes":
+                    c.regla.exigir("editar", persona)
                 datos = {**antes, **nuevo} if parcial else dict(nuevo)
                 datos.update({k: antes[k] for k in c.sellos if k in antes})  # lo sellado no cambia
                 accion = "actualizar" if parcial else "reemplazar"
             c.guardar(cur, doc_id, datos, persona, accion, antes)
+            if c.nombre == "tickets" and accion == "crear":
+                correos.encolar(cur, doc_id, datos, persona)
             seq = c.ultimo_seq(cur)
     except errors.UniqueViolation as e:
         raise HTTPException(409, "Ya existe un registro con ese código") from e
@@ -169,11 +185,8 @@ def _escribir(c: Coleccion, doc_id: str, persona: Persona, nuevo, parcial: bool 
 
 
 @app.post("/api/c/{col}")
-def crear(col: str, persona: Yo, datos: Annotated[dict, Body()], tareas: BackgroundTasks):
-    hecho = _escribir(coleccion(col), secrets.token_hex(10), persona, datos)
-    if col == "tickets":  # al solicitante le llega la guía de intake, después de responder
-        tareas.add_task(correo.enviar_intake, persona.correo, persona.nombre, str(datos.get("code", "")), str(datos.get("title", "")))
-    return hecho
+def crear(col: str, persona: Yo, datos: Annotated[dict, Body()]):
+    return _escribir(coleccion(col), secrets.token_hex(10), persona, datos)
 
 
 @app.put("/api/c/{col}/{doc_id}")
@@ -213,6 +226,60 @@ def importar(persona: Yo, colecciones: Annotated[dict[str, dict[str, dict]], Bod
                 c.guardar(cur, validar_id(doc_id), datos, persona, "importar", c.obtener(cur, doc_id, bloquear=True))
             cuenta[col] = len(docs)
     return {"importados": cuenta}
+
+
+@app.get("/api/solicitudes/formulario")
+def formulario(persona: Yo):
+    return FileResponse(correos.FORMULARIO, media_type=correos.MIME_DOCX, filename="Guia-workflow-IA.docx")
+
+
+@app.get("/api/solicitudes/correos")
+def estado_correos(persona: Yo):
+    if not persona.editor:
+        raise HTTPException(403, "Solo los editores pueden revisar entregas")
+    with conexion.pool().connection() as con, con.cursor() as cur:
+        cur.execute("""SELECT solicitud_id, codigo, estado, intentos, ultimo_error, aceptado_en
+                       FROM correos_solicitudes ORDER BY creado_en DESC LIMIT 100""")
+        claves = [c.name for c in cur.description]
+        return {"activo": os.environ.get("NEXO_CORREO_ACTIVO") == "1",
+                "entregas": [dict(zip(claves, fila)) for fila in cur.fetchall()]}
+
+
+@app.post("/api/solicitudes/correos/{doc_id}/reintentar")
+def reintentar_correo(doc_id: str, persona: Yo):
+    if not persona.editor:
+        raise HTTPException(403, "Solo los editores pueden reintentar entregas")
+    with conexion.pool().connection() as con, con.cursor() as cur:
+        cur.execute("""UPDATE correos_solicitudes SET estado = 'pendiente', intentos = 0,
+                       proximo_intento = now(), ultimo_error = NULL
+                       WHERE solicitud_id = %s AND estado = 'fallido' RETURNING solicitud_id""",
+                    (validar_id(doc_id),))
+        if not cur.fetchone():
+            raise HTTPException(409, "La entrega no está fallida o no existe")
+    return {"estado": "pendiente"}
+
+
+ASANA = "https://app.asana.com/api/1.0/tasks/"
+
+
+@app.post("/api/asana/tarea")
+def asana_tarea(persona: Yo, task_id: Annotated[str, Body(pattern=r"^\d{1,30}$")], opt_fields: Annotated[str, Body(max_length=500)] = ""):
+    """Lee una tarea de Asana con el token de la app (Key Vault). Solo lectura, solo editores."""
+    if not persona.editor:
+        raise HTTPException(403, "Solo los editores pueden sincronizar Asana")
+    token = os.environ.get("ASANA_TOKEN")
+    if not token:
+        raise HTTPException(503, {"codigo": "no_configurado"})
+    try:
+        r = httpx.get(ASANA + task_id, params={"opt_fields": opt_fields} if opt_fields else None,
+                      headers={"Authorization": f"Bearer {token}"}, timeout=20)
+    except httpx.HTTPError as e:
+        raise HTTPException(503, {"codigo": "server_unavailable"}) from e
+    if r.status_code in (401, 403):
+        raise HTTPException(502, {"codigo": "asana_rechazo"})
+    if r.status_code >= 400:
+        raise HTTPException(502, {"codigo": "tool_error", "mensaje": f"Asana respondió {r.status_code}"})
+    return {"payload": r.json()}
 
 
 IMPORTAR = """<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

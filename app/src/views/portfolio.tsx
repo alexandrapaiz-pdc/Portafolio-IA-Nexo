@@ -1,3 +1,5 @@
+import { ArrowRight } from "lucide-react"
+import nexoAppsScreenshot from "@/assets/nexo-apps.jpg"
 import { ChevronRight } from "lucide-react"
 import { agentsOf, inProgram, intakeHours, LSTAT, NEXT_LEVEL, NEXT_STATUS, PROGRAMS, STATUS, type Level } from "@/lib/domain"
 import { clone, isNum, nf, pct, today } from "@/lib/format"
@@ -65,13 +67,13 @@ export function Portfolio() {
       <div className="grid gap-10">
       <section className="grid gap-[18px] pb-6 pt-[88px]">
         <h1 className="h-display">Portafolio.</h1>
-        <p className="lead">Tres frentes: las buenas prácticas, el Company Brain y los proyectos de agentes, que corren en la plataforma de agentes de Vikingo AI.</p>
+        <p className="lead">Tres frentes: Nexo Apps y buenas prácticas, Company Brain y proyectos de agentes con su avance verificado.</p>
         <nav aria-label="Secciones del portafolio" className="mt-1.5 flex flex-wrap gap-2">
           {JUMP.map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
         </nav>
       </section>
 
-      
+
       <StatsRow>
         {SHOW_STACK ? <Stat k="Stack listo" v={ready} unit={`de ${comps.length}`} sub={`${prog} componentes en curso`} /> : <Stat k="Solicitudes abiertas" v={openTickets} sub="Procesos por evaluar" />}
         <Stat k="Proyectos de agentes" v={ag.length} sub={`Prioridad 1: ${ag[0]?.name || "—"}`} />
@@ -130,7 +132,7 @@ export function Portfolio() {
       )}
 
       <Section id="practicas">
-        <SectionHead title="AI Best Practices">
+        <SectionHead title="Nexo Apps · AI Best Practices">
           <SecP>Nexo Apps es el sitio de despliegue y la guía: las buenas prácticas por nivel viven ahí, y ahí se registra y publica cada app, con Entra.</SecP>
           <div className="flex flex-wrap items-center gap-2.5">
             <Button variant="ghost" onClick={() => openProject("protocolos")}>Ver detalle</Button>
@@ -140,6 +142,22 @@ export function Portfolio() {
           </div>
         </SectionHead>
         <div className="grid gap-[18px]">
+          <GlowCard glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
+          <a href={pr?.site} target="_blank" rel="noopener" className="group grid items-center gap-8 rounded-2xl p-7 text-inherit no-underline sm:grid-cols-[minmax(0,1fr)_280px] sm:p-9">
+            <div className="grid justify-items-start gap-4">
+              <span className="text-xs font-medium tracking-wide text-accent-ink">NEXO APPS · GRUPO PDC</span>
+              <h3 className="max-w-sm text-3xl font-medium leading-tight tracking-tight">Un lugar para las apps del equipo.</h3>
+              <p className="max-w-md text-base leading-relaxed text-sub">Encuentra herramientas, consulta buenas prácticas y publica tu próxima app con ayuda de tu asistente.</p>
+              <span className="mt-2 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white transition group-hover:brightness-105">Explorar Nexo Apps <ArrowRight size={16} aria-hidden /></span>
+            </div>
+            <figure className="mx-auto w-full max-w-[280px]">
+              <svg viewBox="145 607 335 375" role="img" aria-label="Nexo Apps: el Portafolio IA Nexo aparece en Espacios con visibilidad para Grupo PDC." className="w-full rounded-2xl shadow-sm">
+                <image href={nexoAppsScreenshot} width="1280" height="1489" />
+              </svg>
+              <figcaption className="mt-3 text-center text-xs text-sub">Este portafolio, ya en Nexo Apps.</figcaption>
+            </figure>
+          </a>
+          </GlowCard>
           <PracticesMap />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver los {lv.length} niveles <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
@@ -150,7 +168,7 @@ export function Portfolio() {
 
       <Section id="brain">
         <SectionHead title="Company Brain">
-          <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
+          <SecP>SharePoint y Asana ya alimentan el piloto en Databricks. La carga documental sigue en curso y el acceso permanece limitado a la dueña.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
         <div className="grid gap-[18px]">
@@ -171,20 +189,20 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
+        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso. Regulatorio y Demografía se incorporan con prioridad por acordar.</SecP></SectionHead>
         <div className="grid gap-[18px]">
           <AiAgentPipeline />
           <AgentBoard />
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
-            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
+            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={p.priority == null ? undefined : String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
           </details>
         </div>
       </Section>
 
       {SHOW_LOG && (
       <Section id="bitacora">
-        <SectionHead title="Bitácora" />
+        <SectionHead title="Últimas actualizaciones" />
         <div className="group-box">{updates.length ? updates.slice(0, 10).map((u) => <UpdateRow key={u.id} u={u} showProject />) : <Empty>Aún no hay actualizaciones. Abre un proyecto y publica la primera.</Empty>}</div>
       </Section>
       )}

@@ -4,7 +4,7 @@
 # Pasos completos de despliegue: guía privada en BestPracticesAI (nivel 2.5).
 
 # 1) La página, compilada en modo Azure (usa la API de la app en lugar del artifact)
-FROM node:22-slim AS pagina
+FROM public.ecr.aws/docker/library/node:22-slim AS pagina
 WORKDIR /web
 COPY app/package.json app/package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -12,7 +12,7 @@ COPY app/ ./
 RUN npm run build:nexo
 
 # 2) La API (FastAPI) que también entrega la página
-FROM python:3.12-slim
+FROM public.ecr.aws/docker/library/python:3.12-slim
 RUN useradd --create-home --uid 10001 api
 WORKDIR /srv
 COPY api/requirements.txt .
@@ -21,6 +21,10 @@ COPY api/app ./app
 COPY api/migraciones ./migraciones
 COPY --from=pagina /web/dist/index.html ./static/index.html
 ENV PAGINA=/srv/static/index.html MIGRACIONES=/srv/migraciones PYTHONUNBUFFERED=1
+ARG BUILD_SHA=local
+ARG BUILD_TIME=
+ENV NEXO_BUILD_SHA=$BUILD_SHA NEXO_BUILD_TIME=$BUILD_TIME
+LABEL org.opencontainers.image.revision=$BUILD_SHA
 USER api
 EXPOSE 8000
 HEALTHCHECK CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/salud')"
