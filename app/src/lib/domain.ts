@@ -65,8 +65,8 @@ export const PROGRAMS = [
   // Nexo AI Stack: hidden, agents run on the Vikingo AI agent platform. Kept for history.
   { id: "stack", hidden: true, name: "Nexo AI Stack", lead: "infra", sec: "stack-sec", line: "Azure, agentes, datos y controles: la base de todo." },
   { id: "practicas", name: "AI Best Practices", lead: "protocolos", sec: "practicas", line: "Nexo Apps: las guías por nivel y el sitio donde se publica cada app." },
-  { id: "brain", name: "Company Brain", lead: "companybrain", sec: "brain", line: "Databricks, datos de la empresa y portales como Portal de Mundos." },
   { id: "agentes", name: "AI Agent Projects", lead: null as string | null, sec: "proyectos", line: "Automatizaciones con dueño, línea base y KPI." },
+  { id: "brain", name: "Company Brain", lead: "companybrain", sec: "brain", line: "Databricks, datos de la empresa y portales como Portal de Mundos." },
 ]
 
 export const phaseLabel = (p: Project) => (p.paused ? "En pausa" : (PHASES.find((x) => x[0] === p.phase) || [0, "—"])[1])

@@ -17,7 +17,7 @@ import { StackDiagram } from "@/components/stack-diagram"
 
 // Nexo AI Stack hidden: agents run on the Vikingo AI agent platform instead.
 const SHOW_STACK = false
-const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["brain", "Company Brain"], ["proyectos", "Agentes"]]
+const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["proyectos", "Agentes"], ["brain", "Company Brain"]]
 const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
@@ -166,6 +166,18 @@ export function Portfolio() {
         </div>
       </Section>
 
+      <Section id="proyectos">
+        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
+        <div className="grid gap-[18px]">
+          <AiAgentPipeline />
+          <AgentBoard />
+          <details className="group">
+            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
+            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={p.priority == null ? undefined : String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
+          </details>
+        </div>
+      </Section>
+
       <Section id="brain">
         <SectionHead title="Company Brain">
           <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
@@ -185,18 +197,6 @@ export function Portfolio() {
             <figcaption className="flex flex-wrap justify-between gap-2 px-5 py-3 text-[13px] text-sub"><span><b className="font-semibold text-text">Portal de Mundos</b> · un tablero por cada uno de los 6 mundos</span><span className="text-faint">Piloto: PDC Brands</span></figcaption>
           </figure>
           <div className="group-box">{projects.filter((p) => inProgram(p, "brain") && p.id !== "companybrain").map((p) => <ProjectRow key={p.id} p={p} />)}</div>
-        </div>
-      </Section>
-
-      <Section id="proyectos">
-        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
-        <div className="grid gap-[18px]">
-          <AiAgentPipeline />
-          <AgentBoard />
-          <details className="group">
-            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
-            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={p.priority == null ? undefined : String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
-          </details>
         </div>
       </Section>
 
