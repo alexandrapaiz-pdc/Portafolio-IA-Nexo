@@ -14,6 +14,7 @@ export interface Project {
   phase?: string; blocker?: string; next?: string; impactLabel?: string
   pains?: string[]; needs?: string[]; discovery?: Milestone[]; kpis?: Kpi[]
   savings?: { baseline?: number | null; current?: number | null; target?: number | null; unit?: string; note?: string }
+  intakes?: { title: string; url: string; receivedAt: string; submittedBy: string; note?: string }[]
   vsm?: Vsm; levels?: Level[]; parts?: Level[]; repo?: string; pendingDecisions?: number
 }
 export interface Component { id: string; name: string; owner?: string; note?: string; status: Status; order?: number; key?: boolean; updated?: string }

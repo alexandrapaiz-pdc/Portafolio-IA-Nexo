@@ -567,7 +567,7 @@
   },
   {
    "id": "gh",
-   "blocker": "Recibir insumos: SharePoint, Excel de vacaciones y línea base de liquidaciones 2026.",
+   "blocker": "Guía de vacaciones recibida; validar accesos, saldos y mediciones. Alinear solicitud de vacaciones con el alcance de alertas; línea base de liquidaciones pendiente.",
    "bu": "MegaMás",
    "discovery": [
     {
@@ -594,6 +594,11 @@
      "done": false,
      "due": "2026-10-19",
      "label": "Diseño del agente de alertas y reportes a líderes y CAM"
+    },
+    {
+     "label": "Guía de intake recibida · Luis Fernando Chang",
+     "done": true,
+     "due": "2026-10-13"
     }
    ],
    "kpis": [
@@ -636,6 +641,36 @@
      "target": 100,
      "unit": "%",
      "updated": ""
+    },
+    {
+     "id": "intake-volume",
+     "name": "Solicitudes de vacaciones (volumen observado)",
+     "unit": "casos",
+     "baseline": null,
+     "target": null,
+     "current": null,
+     "updated": "",
+     "note": "Guía del 13 oct.: 61 casos observados del 29 sep. al 8 oct. 2026; ≈40 aprobaciones reportadas por separado. No es tasa mensual ni línea base del agente de alertas."
+    },
+    {
+     "id": "intake-effort",
+     "name": "Esfuerzo por solicitud de vacaciones",
+     "unit": "min-persona/caso",
+     "baseline": null,
+     "target": null,
+     "current": null,
+     "updated": "",
+     "note": "KPI elegido en la guía recibida; baseline y meta pendientes de medir con colaborador, líder y responsable de firma."
+    },
+    {
+     "id": "intake-wait",
+     "name": "Espera de aprobación y firma",
+     "unit": "h/caso",
+     "baseline": null,
+     "target": null,
+     "current": null,
+     "updated": "",
+     "note": "KPI elegido en la guía recibida; baseline y meta pendientes. Revisión quincenal; responsable por definir."
     }
    ],
    "name": "MegaMás · Portal Gestión Humana",
@@ -647,7 +682,7 @@
     "dominio",
     "controles"
    ],
-   "next": "Análisis de casos críticos — 7 oct.",
+   "next": "Revisar intake recibido con Luis Fernando: alcance de alertas, responsable de KPIs, esfuerzo y esperas; confirmar validación de saldos.",
    "pains": [
     "Los días de vacaciones se acumulan sin controles ni alertas y solo se ven en la liquidación.",
     "Hay vacaciones tomadas sin reportar; los registros no cuadran con lo real.",
@@ -664,7 +699,16 @@
    "sponsor": "Luis Fernando Chang",
    "summary": "Portal y agente de alertas para que las vacaciones acumuladas no aparezcan hasta la liquidación. Caso de costo evitado.",
    "tagline": "Alertas de vacaciones acumuladas",
-   "wave": 2
+   "wave": 2,
+   "intakes": [
+    {
+     "title": "Guía de intake · Megamás Vacaciones",
+     "url": "https://codisaco.sharepoint.com/sites/05Softwareyservicios/Documentos%20compartidos/Gesti%C3%B3n%20Humana/09.%20KAMs%20Gesti%C3%B3n%20Humana/01.%20Sistemas%20y%20Metodologias/01.%20Vacaciones/Guia%20de%20intake%20-%20Megamas%20Vacaciones.docx",
+     "receivedAt": "2026-10-13",
+     "submittedBy": "Luis Fernando Chang",
+     "note": "Guía recibida de Luis Fernando Chang el 13 oct. Documenta solicitud, aprobación y firma de vacaciones; el alcance solicitado era reportes y alertas de vacaciones acumuladas. Alinear ambos antes de cambiar el alcance del proyecto. Observación: 61 casos entre 29 sep. y 8 oct.; ≈40 solicitudes aprobadas reportadas por separado, sin denominador comparable. Esfuerzo y esperas pendientes; no se calcula ahorro. Revisión quincenal; responsable de KPIs y metas numéricas pendientes."
+    }
+   ]
   },
   {
    "id": "infra",
@@ -1202,16 +1246,47 @@
    "sponsor": "Equipo de Regulatorio · Alexandra Paiz",
    "summary": "MVP propuesto para registros sanitarios de Guatemala, centrado en el bloque 2: checklist de requisitos y verificación documental. La fase 0 de H-Twin ya genera reportes con Power Automate e IA; el agente del motor regulatorio sigue en definición y debe comenzar en modo observación, con validación humana.",
    "tagline": "Seguimiento de octubre · prioridad por acordar",
-   "next": "Recibir matrices y fuentes; documentar el To-Be y presentar la propuesta del bloque 2 antes del 22 de octubre.",
+   "next": "Validar baselines y alcance del intake end-to-end frente al MVP del bloque 2; completar enlaces y criterios de aceptación.",
    "blocker": "Fuentes y criterios de aceptación pendientes; comparar contra el proceso manual antes de automatizar decisiones.",
    "needs": [
     "datos",
     "controles"
    ],
    "savings": {
-    "note": "Línea base y meta de automatización pendientes de validar."
+    "note": "Guía recibida: reporta 40+ h administrativas/mes y meta ≥40% liberadas, todavía por aclarar y validar. Sin ahorro medido; volumen y esfuerzo por caso pendientes."
    },
-   "kpis": [],
+   "kpis": [
+    {
+     "id": "automation",
+     "name": "Proceso automatizado",
+     "unit": "%",
+     "baseline": 0,
+     "target": 90,
+     "current": null,
+     "updated": "",
+     "note": "Declarado como medido en la guía del 14 oct. (Project Charter 1.4 Fase 2). Periodo, muestra y definición del denominador pendientes; no es avance verificado del agente."
+    },
+    {
+     "id": "dossier-time",
+     "name": "Solicitud → expediente listo",
+     "unit": "días",
+     "baseline": 20,
+     "target": 10,
+     "current": null,
+     "updated": "",
+     "note": "Baseline aproximado (~20); meta ≤10 días. Declarado como medido en la guía; validar periodo y muestra. Excluye resolución externa MSPAS."
+    },
+    {
+     "id": "internal-errors",
+     "name": "Trámites con observaciones por errores internos",
+     "unit": "%",
+     "baseline": 10,
+     "target": 3,
+     "current": null,
+     "updated": "",
+     "note": "Baseline estimado (~10%); meta ≤3%. Guía del 14 oct.; validar muestra y criterio de error interno."
+    }
+   ],
    "discovery": [
     {
      "label": "Sesión de alcance del 8 de octubre",
@@ -1232,6 +1307,20 @@
      "label": "Diseño To-Be y propuesta de agente del bloque 2",
      "done": false,
      "due": null
+    },
+    {
+     "label": "Guía de intake recibida · Alejandra Alvarez",
+     "done": true,
+     "due": "2026-10-14"
+    }
+   ],
+   "intakes": [
+    {
+     "title": "Guía de intake · Megamás Regulatorio",
+     "url": "https://codisaco.sharepoint.com/sites/Documentacin/regulatorio/Documentos%20compartidos/SOLICITUDES%20RS%20GT%20AUTOMATIZADAS/Bases%20de%20dise%C3%B1o/Charter%20-%20oct%2026/Guia%20de%20intake%20-%20Megam%C3%A1s%20Regulatorio%20oct%2026.docx",
+     "receivedAt": "2026-10-14",
+     "submittedBy": "Alejandra Alvarez",
+     "note": "Guía recibida de Alejandra Alvarez el 14 oct., en el chat con Silvia Ramírez. Documenta registros sanitarios de extremo a extremo en Guatemala; el MVP del portafolio sigue centrado en el bloque 2. Baselines y metas declarados en la guía, pendientes de validación del periodo y muestra. Revisa Alejandra; frecuencia semanal/mensual por precisar. No se atribuyen al agente las esperas externas ante MSPAS."
     }
    ]
   },
@@ -1591,7 +1680,27 @@
    "createdAt": "2026-10-09T18:00:00Z",
    "kpiId": null,
    "value": null
+  },
+  {
+   "id": "u-1019-intake-gh",
+   "projectId": "gh",
+   "date": "2026-10-13",
+   "tag": "Avance",
+   "text": "Guía recibida de Luis Fernando Chang el 13 oct. Documenta solicitud, aprobación y firma de vacaciones; el alcance solicitado era reportes y alertas de vacaciones acumuladas. Alinear ambos antes de cambiar el alcance del proyecto. Observación: 61 casos entre 29 sep. y 8 oct.; ≈40 solicitudes aprobadas reportadas por separado, sin denominador comparable. Esfuerzo y esperas pendientes; no se calcula ahorro. Revisión quincenal; responsable de KPIs y metas numéricas pendientes.",
+   "createdAt": "2026-10-19T15:00:00Z",
+   "kpiId": null,
+   "value": null
+  },
+  {
+   "id": "u-1019-intake-regulatorio",
+   "projectId": "regulatorio",
+   "date": "2026-10-14",
+   "tag": "Avance",
+   "text": "Guía recibida de Alejandra Alvarez el 14 oct., en el chat con Silvia Ramírez. Documenta registros sanitarios de extremo a extremo en Guatemala; el MVP del portafolio sigue centrado en el bloque 2. Baselines y metas declarados en la guía, pendientes de validación del periodo y muestra. Revisa Alejandra; frecuencia semanal/mensual por precisar. No se atribuyen al agente las esperas externas ante MSPAS.",
+   "createdAt": "2026-10-19T15:00:00Z",
+   "kpiId": null,
+   "value": null
   }
  ],
- "snapshotAt": "2026-10-12"
+ "snapshotAt": "2026-10-19"
 }

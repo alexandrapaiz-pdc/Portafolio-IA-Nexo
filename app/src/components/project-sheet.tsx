@@ -79,6 +79,15 @@ export function ProjectSheet() {
           {canEdit && <div className="flex justify-end gap-2">{editing ? <><Button variant="ghost" onClick={() => setEditing(false)}>Cancelar</Button><Button onClick={save}>Guardar</Button></> : <Button variant="ghost" onClick={startEdit}>Editar</Button>}</div>}
         </div>
 
+        {!!p.intakes?.length && <section aria-label="Guías de intake recibidas">
+          <H5>Guías de intake recibidas</H5>
+          <div className="group-box">{p.intakes.map((intake) => <div key={intake.url} className="grid gap-2 px-5 py-4">
+            <a className="font-medium text-accent-ink underline underline-offset-4" href={intake.url} target="_blank" rel="noopener noreferrer">{intake.title}</a>
+            <p className="text-sm text-sub">Recibida {fdate(intake.receivedAt)} · {intake.submittedBy}</p>
+            <p className="text-sm text-sub">{intake.note}</p>
+          </div>)}</div>
+        </section>}
+
         <div>
           <H5>Fase · {phaseLabel(p)}</H5>
           <div className="group-box grid grid-cols-5 gap-1.5 px-5 py-[18px]">
