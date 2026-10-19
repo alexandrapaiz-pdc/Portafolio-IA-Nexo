@@ -3,8 +3,12 @@
 #   az acr build --registry <registro> --image nexo-portafolio-ia:<commit> .
 # Pasos completos de despliegue: guía privada en BestPracticesAI (nivel 2.5).
 
+# Registro de las imágenes base. El flujo de GitHub reintenta con mirror.gcr.io/library
+# si el espejo de Amazon limita la descarga (toomanyrequests).
+ARG BASE=public.ecr.aws/docker/library
+
 # 1) La página, compilada en modo Azure (usa la API de la app en lugar del artifact)
-FROM public.ecr.aws/docker/library/node:22-slim AS pagina
+FROM ${BASE}/node:22-slim AS pagina
 WORKDIR /web
 COPY app/package.json app/package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -12,7 +16,7 @@ COPY app/ ./
 RUN npm run build:nexo
 
 # 2) La API (FastAPI) que también entrega la página
-FROM public.ecr.aws/docker/library/python:3.12-slim
+FROM ${BASE}/python:3.12-slim
 RUN useradd --create-home --uid 10001 api
 WORKDIR /srv
 COPY api/requirements.txt .

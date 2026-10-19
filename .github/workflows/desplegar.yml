@@ -96,6 +96,8 @@ jobs:
       - name: Build once and push exact image
         if: steps.current.outputs.current == 'true'
         id: build
+        # Shared runners can hit the public.ecr.aws anonymous data limit; the next step retries.
+        continue-on-error: true
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
@@ -106,10 +108,24 @@ jobs:
             BUILD_TIME=${{ env.BUILD_TIME }}
           cache-from: type=gha,scope=nexo-portafolio-ia
           cache-to: type=gha,mode=max,scope=nexo-portafolio-ia
+      - name: Retry build with the mirror.gcr.io base images
+        if: steps.current.outputs.current == 'true' && steps.build.outcome == 'failure'
+        id: build_mirror
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          push: true
+          tags: crnexoaipdc01.azurecr.io/nexo-portafolio-ia:${{ github.sha }}
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_TIME=${{ env.BUILD_TIME }}
+            BASE=mirror.gcr.io/library
+          cache-from: type=gha,scope=nexo-portafolio-ia
+          cache-to: type=gha,mode=max,scope=nexo-portafolio-ia
       - name: Deploy and wait for healthy revision
         if: steps.current.outputs.current == 'true'
         env:
-          DEPLOY_IMAGE: crnexoaipdc01.azurecr.io/nexo-portafolio-ia@${{ steps.build.outputs.digest }}
+          DEPLOY_IMAGE: crnexoaipdc01.azurecr.io/nexo-portafolio-ia@${{ steps.build.outputs.digest || steps.build_mirror.outputs.digest }}
         run: |
           if [ "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)" != "$GITHUB_SHA" ]; then
             echo 'Skipped deployment: a newer main commit arrived during build.' >> "$GITHUB_STEP_SUMMARY"
