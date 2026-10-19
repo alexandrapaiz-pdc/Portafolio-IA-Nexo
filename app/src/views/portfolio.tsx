@@ -67,7 +67,7 @@ export function Portfolio() {
       <div className="grid gap-10">
       <section className="grid gap-[18px] pb-6 pt-[88px]">
         <h1 className="h-display">Portafolio.</h1>
-        <p className="lead">Tres frentes: Nexo Apps y buenas prácticas, Company Brain y proyectos de agentes con su avance verificado.</p>
+        <p className="lead">Tres frentes: las buenas prácticas, el Company Brain y los proyectos de agentes, que corren en la plataforma de agentes de Vikingo AI.</p>
         <nav aria-label="Secciones del portafolio" className="mt-1.5 flex flex-wrap gap-2">
           {JUMP.map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
         </nav>
@@ -168,7 +168,7 @@ export function Portfolio() {
 
       <Section id="brain">
         <SectionHead title="Company Brain">
-          <SecP>SharePoint y Asana ya alimentan el piloto en Databricks. La carga documental sigue en curso y el acceso permanece limitado a la dueña.</SecP>
+          <SecP>El conocimiento de la empresa, listo para agentes y legible por personas. Los portales son su cara visible.</SecP>
           <div><Button variant="ghost" onClick={() => openProject("companybrain")}>Ver detalle</Button></div>
         </SectionHead>
         <div className="grid gap-[18px]">
@@ -189,7 +189,7 @@ export function Portfolio() {
       </Section>
 
       <Section id="proyectos">
-        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso. Regulatorio y Demografía se incorporan con prioridad por acordar.</SecP></SectionHead>
+        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
         <div className="grid gap-[18px]">
           <AiAgentPipeline />
           <AgentBoard />

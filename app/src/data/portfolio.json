@@ -261,58 +261,52 @@
   },
   {
    "id": "companybrain",
-   "blocker": "Carga inicial de SharePoint en curso; acceso multiusuario y permisos por fuente pendientes.",
+   "blocker": "Acceso multiusuario: hoy solo la dueña puede consultar el Company Brain. Unity Catalog de producción sigue esperando al administrador de la cuenta de Databricks.",
    "bu": "Nexo",
    "discovery": [
     {
-     "label": "Mapa organizacional y estructura de conocimiento en Databricks",
      "done": true,
-     "due": null
+     "due": null,
+     "label": "Glosario y mapa organizacional en GitHub"
     },
     {
-     "label": "Sincronización de SharePoint y Asana implementada",
      "done": true,
-     "due": null
+     "due": "2026-09-30",
+     "label": "Plan de datos en Databricks (borrador)"
     },
     {
-     "label": "MCP personal: listado y lectura autenticada verificados",
      "done": true,
-     "due": null
+     "due": "2026-10-05",
+     "label": "Workspace de Databricks y lago ADLS creados"
     },
     {
-     "label": "Completar carga documental inicial y revisar fallos",
      "done": false,
-     "due": null
+     "due": null,
+     "label": "Revisión del plan con IT y ciberseguridad"
     },
     {
-     "label": "Verificar navegación del portal en navegador",
-     "done": false,
-     "due": null
+     "done": true,
+     "due": null,
+     "label": "Cargar el esquema semantic desde el repositorio"
     },
     {
-     "label": "Autorización por usuario y fuente antes de ampliar acceso",
      "done": false,
-     "due": null
+     "due": null,
+     "label": "Primeros productos gold: Kickoff Avon, Portal de Mundos, Contraloría y STEP"
     }
    ],
    "enabler": true,
    "impactLabel": "Datos y vocabulario para 4 proyectos",
    "kpis": [
     {
-     "id": "sharepoint_sites",
-     "name": "Sitios SharePoint autorizados para sincronización",
-     "current": 4,
-     "unit": "sitios",
-     "note": "Estado documentado el 12 oct; no indica extracción completa.",
-     "updated": "2026-10-12"
-    },
-    {
-     "id": "asana_projects",
-     "name": "Proyectos Asana sincronizados",
-     "current": 2,
-     "unit": "proyectos",
-     "note": "AVON y Nexo Scrum.",
-     "updated": "2026-10-12"
+     "baseline": 0,
+     "current": 0,
+     "id": "sources",
+     "name": "Fuentes del inventario cargadas en Databricks",
+     "note": "Ver inventario_fuentes.yaml en el repositorio.",
+     "target": null,
+     "unit": "",
+     "updated": "2026-10-01"
     }
    ],
    "name": "Company Brain",
@@ -322,7 +316,7 @@
     "controles",
     "github"
    ],
-   "next": "Completar y verificar la extracción inicial de SharePoint; validar navegación del portal y mantener el piloto solo para la dueña.",
+   "next": "Terminar la carga inicial de SharePoint y definir el acceso para más personas.",
    "noAzure": false,
    "pains": [
     "Los agentes no entienden el vocabulario de la empresa ni quién es quién.",
@@ -331,36 +325,35 @@
    ],
    "parts": [
     {
+     "desc": "Glosario, alias y mapa organizacional en GitHub; base del esquema semantic",
      "name": "Vocabulario y ontología",
-     "desc": "Mapa organizacional importado y estructura de conocimiento en Databricks; no es sincronización viva con el directorio.",
      "status": "listo"
     },
     {
+     "desc": "SIGO, políticas y SOPs en SharePoint, consultados en vivo vía Microsoft Graph",
      "name": "Conocimiento documental",
-     "desc": "Cuatro sitios SharePoint autorizados; sincronización cada 15 minutos y carga inicial aún incompleta.",
      "status": "en_curso"
     },
     {
+     "desc": "JD Edwards, STEP, ventas de Avon, Asana y Jira en Databricks",
      "name": "Datos operativos",
-     "desc": "AVON y Nexo Scrum de Asana sincronizados. JDE y ERP Avon pendientes.",
      "status": "en_curso"
     },
     {
+     "desc": "KPIs y líneas base por proyecto y por mundo, para tableros y agentes",
      "name": "Productos de datos",
-     "desc": "MCP personal de solo lectura verificado; datasets tipados de Excel y acceso multiusuario pendientes.",
-     "status": "en_curso"
+     "status": "pendiente"
     }
    ],
    "paused": false,
-   "phase": "piloto",
+   "phase": "construccion",
    "priority": 0.7,
    "program": "brain",
    "savings": {},
    "sponsor": "Alexandra Paiz",
-   "summary": "Company Brain ya opera en Databricks: sincroniza cuatro sitios autorizados de SharePoint y los proyectos AVON y Nexo Scrum de Asana cada 15 minutos. Incluye mapa organizacional y un MCP personal de solo lectura verificado el 12 de octubre. La carga documental inicial sigue en curso; Granola, JDE y el acceso multiusuario aún no están conectados.",
+   "summary": "La capa de conocimiento de Grupo PDC: 1) vocabulario y ontología (451 términos, mundos, áreas y personas cargados en Databricks), 2) documentos de cuatro sitios de SharePoint, sincronizados cada 15 minutos en solo lectura (carga inicial en curso), 3) datos operativos (backlogs de Asana de AVON y Nexo ya sincronizados; JD Edwards y ERP de Avon pendientes) y 4) productos de datos (KPIs y líneas base). Un MCP personal de solo lectura ya responde, y el portal de agentes navega la estructura organizacional.",
    "tagline": "Capa de conocimiento para agentes y personas",
-   "wave": 0,
-   "repo": "https://github.com/alexandrapaiz-pdc/CompanyBrainPDC"
+   "wave": 0
   },
   {
    "id": "contraloria",
@@ -1455,45 +1448,57 @@
   },
   {
    "id": "protocolos",
-   "blocker": "Continúa la revisión de ciberseguridad y la mejora del flujo de publicación.",
+   "blocker": "Revisión de ciberseguridad con Benji: reglas de datos sensibles y retención de los complementos de Office.",
    "bu": "Nexo",
    "discovery": [
     {
-     "label": "Biblioteca de guías y skills accesible desde Nexo Apps",
-     "done": true,
-     "due": null
-    },
-    {
-     "label": "Portafolio publicado desde main y registrado por MCP",
-     "done": true,
-     "due": null
-    },
-    {
-     "label": "Visibilidad Company confirmada en el catálogo",
-     "done": true,
-     "due": null
-    },
-    {
-     "label": "Validar transición automática al catálogo en todos los clientes",
      "done": false,
-     "due": null
+     "due": null,
+     "label": "Definir protocolos de ciberseguridad con Benji"
     },
     {
-     "label": "Completar revisión de ciberseguridad",
+     "done": true,
+     "due": null,
+     "label": "Estándares Tier 1: seguridad, settings recomendados, conectores y plugins"
+    },
+    {
+     "done": true,
+     "due": null,
+     "label": "Estándares Tier 2: portal de Diego Villatoro, GitHub privado, inner source"
+    },
+    {
+     "done": true,
+     "due": null,
+     "label": "Publicar protocolos en GitHub personal y migrar al empresarial"
+    },
+    {
      "done": false,
-     "due": null
+     "due": null,
+     "label": "Modelo escalable de despliegue de agentes: sandbox, portal y guía"
     }
    ],
    "enabler": true,
    "impactLabel": "Uso seguro para todos los usuarios",
    "kpis": [
     {
-     "id": "verified_flow",
-     "name": "Recorridos de publicación verificados en este portafolio",
-     "current": 1,
-     "unit": "app",
-     "note": "Portafolio IA Nexo, 12 oct. No es el total de apps del catálogo.",
-     "updated": "2026-10-12"
+     "baseline": 0,
+     "current": 0,
+     "id": "tier1",
+     "name": "Usuarios Tier 1 con protocolo aplicado",
+     "note": "",
+     "target": null,
+     "unit": "",
+     "updated": "2026-09-30"
+    },
+    {
+     "baseline": 0,
+     "current": 0,
+     "id": "tier2",
+     "name": "Portales Tier 2 en el portal corporativo",
+     "note": "Requiere Entra ID.",
+     "target": null,
+     "unit": "",
+     "updated": "2026-09-30"
     }
    ],
    "levels": [
@@ -1518,27 +1523,29 @@
      "who": "Agentes sobre la plataforma de Vikingo AI · próximamente"
     }
    ],
-   "name": "Nexo Apps · AI Best Practices",
+   "name": "AI Best Practices",
    "needs": [
     "github",
     "controles"
    ],
-   "next": "Validar el recorrido de publicación con nuevos constructores y mejorar la llegada automática al catálogo al terminar.",
-   "noAzure": false,
+   "next": "Cerrar las decisiones pendientes de Nivel 1 y 2 y la revisión de ciberseguridad.",
+   "noAzure": true,
    "pains": [
-    "Las apps necesitan un lugar común para encontrarse y compartirse con la audiencia correcta.",
-    "Los constructores necesitan guías y una ruta reproducible de publicación.",
-    "Credenciales y permisos deben mantenerse fuera del código y aplicarse también en la app."
+    "Usuarios ya crean soluciones con Claude sin documentación ni estándar.",
+    "Riesgo con API keys, secrets y archivos .env.",
+    "El código no debe quedar en repositorios públicos.",
+    "Todo el despliegue no puede centralizarse en el líder de IA."
    ],
    "paused": false,
-   "phase": "piloto",
+   "pendingDecisions": 32,
+   "phase": "construccion",
    "priority": 0.5,
    "program": "practicas",
    "repo": "https://github.com/alexandrapaiz-pdc/BestPracticesAI",
    "savings": {},
    "sponsor": "Benji (ciberseguridad) · Óscar",
-   "summary": "Nexo Apps reúne el catálogo corporativo y las buenas prácticas para usar IA y construir apps. El flujo conecta el proyecto con GitHub, publica en Azure con Microsoft Entra y registra el resultado mediante MCP. El Portafolio IA Nexo ya completó este recorrido: pruebas, despliegue automático desde main y tarjeta con visibilidad Company.",
-   "tagline": "De una idea a una app publicada, con guías y acompañamiento del asistente",
+   "summary": "Nexo Apps es el sitio de despliegue y la guía: ahí vive la biblioteca de buenas prácticas por nivel (1 · Usuario de Claude, activo; 2 · Constructor de apps, activo; 2.5 · Backends, piloto en Azure; 3 · Agentes, próximamente) y ahí se registra, edita y publica cada app, con Entra y a nombre de su autor. Ya incluye el estándar de API y MCP de PDC y un patrón para leer Excel con el acceso de cada persona. Cada guía o skill trae «Hacerlo con mi asistente» para aplicarla con Claude. El código fuente vive en el repositorio BestPracticesAI. Reglas base: agentes solo lectura, sin secretos en código.",
+   "tagline": "Guías por nivel y Nexo Apps, el sitio de despliegue",
    "wave": 0,
    "site": "https://nexo-apps.wittysea-7e111699.eastus.azurecontainerapps.io/"
   },
@@ -1723,7 +1730,7 @@
   },
   {
    "id": "regulatorio",
-   "name": "MegaMás · Motor Regulatorio",
+   "name": "MegaMás · Regulatorio",
    "bu": "Nexo",
    "program": "agentes",
    "phase": "construccion",
@@ -1812,7 +1819,7 @@
     "Seguimiento depende de cada líder de RS; sin trazabilidad en tiempo real.",
     "Pago e ingreso presencial ante MSPAS en Guatemala."
    ],
-   "priority": null,
+   "priority": 7,
    "intake": {
     "status": "completada",
     "date": "2026-10-14",
@@ -2600,12 +2607,12 @@
   },
   {
    "id": "u-1012-brain",
-   "createdAt": "2026-10-12T18:00:00Z",
+   "createdAt": "2026-10-12T16:35:00Z",
    "date": "2026-10-12",
    "kpiId": null,
    "projectId": "companybrain",
    "tag": "Avance",
-   "text": "GitHub confirma sincronización de cuatro sitios SharePoint y dos proyectos Asana, más MCP personal de solo lectura verificado. Carga inicial SharePoint en curso. El portal tiene pruebas de navegación de backend; su verificación final en navegador queda pendiente. Acceso multiusuario, Granola y JDE no están habilitados.",
+   "text": "Primer consumidor en vivo: el portal de agentes ya navega la estructura organizacional del Company Brain para dar contexto a cada agente.",
    "value": null
   },
   {
@@ -2622,7 +2629,7 @@
    "id": "u-1012-proto",
    "date": "2026-10-12",
    "tag": "Avance",
-   "text": "Nexo Apps ya publicó este portafolio desde main: 26 pruebas de backend y 3 de despliegue aprobadas, revisión Azure saludable y registro MCP con visibilidad Company. Se mantiene la mejora del paso final hacia el catálogo.",
+   "text": "Nexo Apps queda como el sitio de despliegue y la guía de buenas prácticas: la biblioteca de guías y skills vive ahí, con «Hacerlo con mi asistente», y el piloto en Azure con Entra registra y publica cada app.",
    "projectId": "protocolos",
    "createdAt": "2026-10-12T18:00:00Z",
    "kpiId": null,

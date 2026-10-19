@@ -1,4 +1,3 @@
-import { IntakeForm } from "@/components/intake-form"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { useState } from "react"
 import { ArrowRight, ChevronRight } from "lucide-react"
@@ -14,6 +13,9 @@ import { Empty, Section, SectionHead, SecP, Stat, StatsRow } from "@/components/
 
 // Self-service roadmap (A largo plazo: autoservicio con guardrails). Hidden until the organization is ready for it.
 const SHOW_SELF_SERVICE = false
+// Intake guide (SharePoint), sent to each requester right after they submit.
+const GUIA_INTAKE = "https://codisaco.sharepoint.com/:w:/r/sites/05ServiciosCompartidos-PlaneacinyGestin/_layouts/15/Doc.aspx?sourcedoc=%7B0DB89966-6CF7-4F19-BCB1-921A69F2BBA2%7D&file=Guia%20de%20intake%20-%20Formato%20limpio.docx&action=default&mobileredirect=true&wdwpf=doclib-t"
+const EMAILS = import.meta.env.MODE === "nexo" // the Azure API emails the guide; the artifact cannot send email
 const AREAS = ["Nexo", "PDC Brands", "Vikingo Distribución", "Vikingo AI", "Mostro", "Corporativo"]
 const TTYPES = ["Automatización o agente", "Portal o tablero", "Análisis de datos", "Licencia o acceso a Claude", "Quiero construirlo yo (autoservicio)", "Otro"]
 const URG = ["Baja", "Media", "Alta"]
@@ -107,30 +109,30 @@ export function Tickets() {
 
 function NewTicket({ onClose }: { onClose: () => void }) {
   const { db, me, toast } = useStore()
-  const [f, setF] = useState({ title: "", area: "", type: "", urgency: "", problem: "", current: "", hours: "", people: "", impact: "", systems: "" })
+  const [f, setF] = useState({ title: "", area: AREAS[0], type: TTYPES[0], urgency: "Media", problem: "", current: "", hours: "", people: "", impact: "", systems: "" })
   const [busy, setBusy] = useState(false)
-  const [sent, setSent] = useState<{ id: string; code: string } | null>(null)
+  const [sent, setSent] = useState<string | null>(null)
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value })
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent key={sent?.id || "new"} title={sent ? "Formulario de intake" : "Nueva solicitud"}>
-        {sent ? <div className="grid gap-5"><p role="status" className="text-accent-ink">Solicitud enviada · {sent.code}</p><IntakeForm id={sent.id} editable /><Button variant="ghost" onClick={onClose}>Cerrar</Button></div> : <>
-        <div className="grid gap-2.5"><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Todos los campos son opcionales. Comparte lo que sepas; completaremos el detalle juntos.</p></div>
-        {!db || !me ? <p className="text-[17px] text-sub">Inicia sesión con tu cuenta de Grupo PDC para enviar una solicitud.</p> : (
+      <DialogContent title="Nueva solicitud">
+        {sent ? <Sent code={sent} onClose={onClose} /> : <>
+        <div className="grid gap-2.5"><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Nueva solicitud</h2><p className="text-[17px] text-sub">Entre más concreto, más rápido se evalúa. Los números aproximados están bien.</p></div>
+        {!db || !me ? <p className="text-[17px] text-sub">Inicia sesión en claude.ai con tu cuenta de Grupo PDC para enviar una solicitud.</p> : (
           <form className="grid gap-3.5" onSubmit={async (e) => {
-            e.preventDefault(); if (busy) return; setBusy(true)
+            e.preventDefault(); if (!f.title.trim() || !f.problem.trim()) return; setBusy(true)
             const n = (v: string) => (v === "" ? null : Number(v))
-            const doc = { code: code(), title: f.title.trim(), area: f.area || null, type: f.type || null, urgency: f.urgency || null, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
-            try { const result = await db.collection("tickets").add(doc); setSent({ id: result.id, code: doc.code }) }
+            const doc = { code: code(), title: f.title.trim(), area: f.area, type: f.type, urgency: f.urgency, problem: f.problem.trim(), current: f.current.trim(), hours: n(f.hours), people: n(f.people), impact: f.impact.trim(), systems: f.systems.trim(), createdBy: me, createdAt: new Date().toISOString() }
+            try { await db.collection("tickets").add(doc); setSent(doc.code) }
             catch (err: unknown) { setBusy(false); toast((err as { code?: string })?.code === "invalid_argument" ? "Tu acceso a esta página es de solo lectura. Pide acceso de colaborador para enviar solicitudes." : "No se pudo enviar. Intenta de nuevo.") }
           }}>
-            <Label>Título<Input maxLength={120} value={f.title} onChange={set("title")} placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra" /></Label>
+            <Label>Título<Input required maxLength={120} value={f.title} onChange={set("title")} placeholder="Ej. Conciliar facturas de Tráfico contra órdenes de compra" /></Label>
             <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
-              <Label>Mundo<NativeSelect value={f.area} onChange={set("area")}><option value="">Por definir</option>{AREAS.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
-              <Label>Tipo<NativeSelect value={f.type} onChange={set("type")}><option value="">Por definir</option>{TTYPES.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
-              <Label>Urgencia<NativeSelect value={f.urgency} onChange={set("urgency")}><option value="">Por definir</option>{URG.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Mundo<NativeSelect value={f.area} onChange={set("area")}>{AREAS.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Tipo<NativeSelect value={f.type} onChange={set("type")}>{TTYPES.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
+              <Label>Urgencia<NativeSelect value={f.urgency} onChange={set("urgency")}>{URG.map((a) => <option key={a}>{a}</option>)}</NativeSelect></Label>
             </div>
-            <Label>¿Qué problema quieres resolver?<Textarea maxLength={4000} value={f.problem} onChange={set("problem")} placeholder="Qué duele hoy y a quién afecta." /></Label>
+            <Label>¿Qué problema quieres resolver?<Textarea required value={f.problem} onChange={set("problem")} placeholder="Qué duele hoy y a quién afecta." /></Label>
             <Label>¿Cómo se hace hoy?<Textarea value={f.current} onChange={set("current")} placeholder="Pasos, herramientas y quién participa." /></Label>
             <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
               <Label>Horas manuales al mes<Input type="number" min={0} step="any" value={f.hours} onChange={set("hours")} placeholder="Ej. 20" /></Label>
@@ -138,8 +140,7 @@ function NewTicket({ onClose }: { onClose: () => void }) {
             </div>
             <Label>¿Cómo sabremos que funcionó?<Input value={f.impact} onChange={set("impact")} placeholder="Ej. Cerrar el mes 3 días antes; 0 facturas vencidas" /></Label>
             <Label>Sistemas y datos<Input value={f.systems} onChange={set("systems")} placeholder="Ej. Excel, JD Edwards, SharePoint, correo" /></Label>
-            <p className="text-xs text-faint">La solicitud queda registrada para IA Nexo y visible para quienes tienen acceso a esta página.</p>
-            {import.meta.env.MODE === "nexo" && <a href="/api/solicitudes/formulario" className="text-sm text-accent-ink underline">Descargar la guía del workflow en Word</a>}
+            <p className="text-xs text-faint">Al enviarla te llegará un correo con la guía de intake para completar el detalle del proceso. La solicitud queda visible para quienes tienen acceso a esta página.</p>
             <div className="flex justify-end gap-2"><Button variant="ghost" type="button" onClick={onClose}>Cancelar</Button><Button variant="accent" type="submit" disabled={busy}>Enviar solicitud</Button></div>
           </form>
         )}
@@ -150,7 +151,7 @@ function NewTicket({ onClose }: { onClose: () => void }) {
 }
 
 function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | null) => string; onClose: () => void }) {
-  const { tickets, triage, canWrite, db, write, me } = useStore()
+  const { tickets, triage, canWrite, db, write } = useStore()
   const t = tickets.find((x) => x.id === id), tr = triage[id] || {}
   const [status, setStatus] = useState(tr.status || "nuevo"), [prio, setPrio] = useState(tr.priority != null ? String(tr.priority) : ""), [note, setNote] = useState(tr.note || ""), [armed, setArmed] = useState(false)
   if (!t) return null
@@ -169,7 +170,6 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
             {F.filter(([, v]) => v).map(([k, v], i) => <div key={k} className="contents"><div className={cn("px-5 py-3 text-[13px] text-sub", i && "border-t border-line")}>{k}</div><div className={cn("whitespace-pre-wrap break-words px-5 py-3 text-sm", i && "border-t border-line max-sm:border-t-0")}>{v}</div></div>)}
           </div>
         </div>
-        <IntakeForm id={id} editable={canWrite || t.createdBy === me} />
         {tr.note && !canWrite && <div><h5 className="mb-2.5 px-1 text-[13px] font-medium tracking-normal text-sub">Comentario de IA Nexo</h5><div className="group-box px-5 py-4">{tr.note}</div></div>}
         {canWrite && (
           <form className="grid gap-3.5 card px-5 py-4" onSubmit={(e) => { e.preventDefault(); write(() => db.doc("triage/" + id).set({ status, priority: prio === "" ? null : Number(prio), note: note.trim(), updatedAt: new Date().toISOString() }), "Evaluación guardada") }}>
@@ -186,5 +186,34 @@ function TicketDetail({ id, who, onClose }: { id: string; who: (id?: string | nu
         )}
       </DialogContent>
     </Dialog>
+  )
+}
+
+// Right after sending: the requester downloads the intake guide, fills it (AI may help) and sends it back.
+const INTAKE_STEPS: [string, string][] = [
+  ["Descarga la guía", "Se abre en SharePoint: Archivo › Descargar."],
+  ["Llénala, con IA si quieres", "Claude puede redactar las respuestas a partir de tus notas. Revisa el resultado."],
+  ["Envíala", "A alexandra.paiz@grupopdc.com, con el código de tu solicitud en el asunto."],
+]
+function Sent({ code, onClose }: { code: string; onClose: () => void }) {
+  const [got, setGot] = useState(false)
+  return (
+    <div className="grid gap-5">
+      <div className="grid gap-2.5"><span className="num text-[13px] font-medium text-faint">{code}</span><h2 className="text-[clamp(26px,4vw,32px)] font-medium leading-[1.1] tracking-[-.03em]">Solicitud enviada.</h2>
+        <p className="text-[17px] text-sub">Falta un paso: completar la guía de intake, para que podamos evaluar el proceso contigo.{EMAILS ? " También te la enviamos por correo." : ""}</p></div>
+      <ol className="group-box m-0 list-none p-0">
+        {INTAKE_STEPS.map(([h, d], i) => (
+          <li key={h} className="row grid-cols-[24px_minmax(0,1fr)_auto] items-center gap-3 max-sm:grid-cols-[24px_minmax(0,1fr)]">
+            <span className="num grid size-6 place-items-center rounded-full bg-accent-soft text-xs font-semibold text-accent-ink">{i + 1}</span>
+            <div className="min-w-0"><div className="text-[15px] font-semibold tracking-[-.01em]">{h}</div><div className="text-[13px] text-sub">{d}</div></div>
+            {i === 0 && <a href={GUIA_INTAKE} target="_blank" rel="noopener" onClick={() => setGot(true)} className="inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-4 text-[13px] font-medium text-white no-underline hover:brightness-105 max-sm:col-start-2 max-sm:justify-self-start">Abrir guía<ArrowRight size={14} /></a>}
+          </li>
+        ))}
+      </ol>
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        {!got && <span className="text-xs text-faint">Descarga la guía antes de cerrar.</span>}
+        <Button variant="ghost" type="button" onClick={onClose}>{got ? "Listo" : "Cerrar"}</Button>
+      </div>
+    </div>
   )
 }
