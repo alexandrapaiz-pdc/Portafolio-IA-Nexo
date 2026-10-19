@@ -87,11 +87,11 @@ export function Portfolio() {
           const [num, label, w] = M[g.id], lead = g.lead ? byId(g.lead) : null
           return (
             <GlowCard key={g.id} glowColor="pdc" backdrop="rgba(248,250,252,.72)" borderColor="rgba(15,23,42,.07)" customSize className="min-w-0 grid-rows-none p-0 shadow-[0_1px_2px_rgba(15,23,42,.04),0_10px_30px_-12px_rgba(15,23,42,.18)]">
-            <button type="button" onClick={() => jump(g.sec)} className="relative grid h-full min-w-0 cursor-pointer content-start gap-2.5 rounded-2xl border-0 bg-transparent p-6 text-left">
+            <button type="button" onClick={() => jump(g.sec)} className="relative flex h-full min-w-0 cursor-pointer flex-col gap-2.5 rounded-2xl border-0 bg-transparent p-6 text-left">
               <span className="text-[clamp(23px,2.4vw,28px)] font-medium leading-[1.1] tracking-[-.03em]">{g.name}</span>
               <h3 className="text-base font-medium leading-snug tracking-[-.015em] text-sub">{g.line}</h3>
               <p className="text-[13px] text-faint">{lead?.blocker ? `Bloqueo: ${lead.blocker}` : g.id === "agentes" && ag[0] ? `Prioridad 1: ${ag[0].name}` : ""}</p>
-              <div className="mt-1.5 flex items-baseline gap-2"><b className="num text-[30px] font-semibold leading-none tracking-[-.04em]">{num}</b><span className="text-[13px] text-faint">{label}</span></div>
+              <div className="mt-auto flex items-baseline gap-2 pt-1.5"><b className="num text-[30px] font-semibold leading-none tracking-[-.04em]">{num}</b><span className="text-[13px] text-faint">{label}</span></div>
               <div className="bar mt-0.5"><i style={{ width: w + "%" }} /></div>
             </button>
             </GlowCard>
