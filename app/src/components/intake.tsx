@@ -95,7 +95,7 @@ export function IntakeBody({ i }: { i?: Intake }) {
       </Block>
 
       {!!i.steps?.length && <Block title="Flujograma" aside={`${i.steps.length} pasos · generado de la guía${i.steps.length > 4 ? " · desliza para ver todos →" : ""}`}><Flowchart steps={i.steps} /></Block>}
-      {!!i.vsm?.steps.length && <Block title="Mapa de flujo de valor" aside={[i.vsm.case, i.vsm.period].filter(Boolean).join(" · ")}><ValueStream v={i.vsm} /></Block>}
+      {!!i.vsm?.steps.length && <Block title="Mapa de flujo de valor" aside={vsmReady(i.vsm) ? [i.vsm.case, i.vsm.period].filter(Boolean).join(" · ") : undefined}><ValueStream v={i.vsm} /></Block>}
 
       {!!i.sources?.length && (
         <Block title="Fuentes y acceso" aside={sourcesLine(i)}>
@@ -193,35 +193,77 @@ export function Flowchart({ steps }: { steps: IntakeStep[] }) {
   )
 }
 
-/** Value stream map: active time per step on one scale, with what gets stuck. Unmeasured steps say so; nothing is guessed. */
+/** A value stream map can be drawn once at least two steps have a measured (not estimated) active time. */
+export const vsmReady = (v?: { steps: VsmRow[] }) => (v?.steps || []).filter((s) => s.lo != null && !s.est).length >= 2
+
+/** Lean value stream map from the guide: process boxes with who, active time and effort, wait triangles,
+    "qué se atasca" under each box, and the wait/active timeline ladder with lead time and flow efficiency.
+    Unmeasured values read "pend." and stay out of the totals; nothing is estimated. */
 export function ValueStream({ v }: { v: { unit: string; steps: VsmRow[] } }) {
-  const max = Math.max(...v.steps.map((s) => s.hi ?? s.lo ?? 0), 0)
-  const measured = v.steps.filter((s) => s.lo != null), lo = measured.reduce((a, s) => a + (s.lo || 0), 0), hi = measured.reduce((a, s) => a + (s.hi ?? s.lo ?? 0), 0)
-  const pending = v.steps.length - measured.length
-  const fmt = (n: number) => nf(n) + " " + v.unit
+  const [hot, setHot] = useState<number | null>(null)
+  if (!vsmReady(v)) return <Pend />
+  const st = v.steps, u = v.unit === "días" ? "d" : v.unit
+  const t = (s: VsmRow) => (s.lo == null ? "pend." : s.hi != null && s.hi !== s.lo ? `${nf(s.lo)}–${nf(s.hi)} ${u}` : `${nf(s.lo)} ${u}`)
+  const waitKnown = (s: VsmRow) => s.wait != null && /^\d+([.,]\d+)?$/.test(s.wait.trim())
+  const BW = 156, BH = 104, G = 46, X0 = 16, TOP = 22, W = X0 * 2 + st.length * BW + (st.length - 1) * G
+  const yStuck = TOP + BH + 16, yLad = yStuck + 62, H = yLad + 54
+  const bx = (i: number) => X0 + i * (BW + G)
+  const measured = st.filter((s) => s.lo != null && !s.est)
+  const aLo = measured.reduce((a, s) => a + (s.lo || 0), 0), aHi = measured.reduce((a, s) => a + (s.hi ?? s.lo ?? 0), 0)
+  const allKnown = st.every((s) => s.lo != null && waitKnown(s))
+  const waitSum = st.reduce((a, s) => a + (waitKnown(s) ? Number(s.wait!.replace(",", ".")) : 0), 0)
+  const range = (a: number, b: number) => (a === b ? `${nf(a)} ${v.unit}` : `${nf(a)}–${nf(b)} ${v.unit}`)
+  const h = hot === null ? null : st[hot]
   return (
-    <div className="group-box">
-      {v.steps.map((s) => (
-        <div key={s.n} className="row grid-cols-[48px_minmax(0,1fr)_minmax(0,1.1fr)] items-start gap-3 max-[720px]:grid-cols-[48px_minmax(0,1fr)]">
-          <b className="num pt-px text-[13px] font-semibold text-accent">{s.n}</b>
-          <div className="grid min-w-0 gap-1.5">
-            <span className="font-medium leading-snug">{s.name}</span>
-            {s.lo != null && max > 0 ? (
-              <div className="flex items-center gap-2">
-                <div className="relative h-2 flex-1 rounded-full bg-group" aria-hidden>
-                  <i className="absolute inset-y-0 left-0 rounded-full bg-accent" style={{ width: `max(4px, ${((s.lo || 0) / max) * 100}%)` }} />
-                  {s.hi != null && s.hi > (s.lo || 0) && <i className="absolute inset-y-0 rounded-r-full bg-accent/35" style={{ left: `${((s.lo || 0) / max) * 100}%`, width: `${((s.hi - (s.lo || 0)) / max) * 100}%` }} />}
-                </div>
-              </div>
-            ) : null}
-            <span className="text-xs text-faint">{s.active || "Tiempo activo: pendiente de data"}{s.wait && s.wait !== "0" ? " · espera: " + s.wait : ""}</span>
+    <div className="group-box min-w-0 overflow-hidden p-0">
+      <div className="max-w-full overflow-x-auto">
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" className="block"
+          aria-label={`Mapa de flujo de valor: ${st.map((s) => `${s.n} ${s.name}, tiempo activo ${t(s)}, espera ${s.wait ?? "pendiente"}`).join("; ")}`}>
+          <defs><marker id="vs-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--faint)" /></marker></defs>
+          {st.map((s, i) => {
+            const x = bx(i), on = hot === i, known = s.lo != null && !s.est
+            return (
+              <g key={s.n} tabIndex={0} role="img" aria-label={`${s.n}. ${s.name}: tiempo activo ${t(s)}; espera ${s.wait ?? "pendiente"}${s.stuck ? "; se atasca: " + s.stuck : ""}`}
+                onMouseEnter={() => setHot(i)} onMouseLeave={() => setHot(null)} onFocus={() => setHot(i)} onBlur={() => setHot(null)} className="outline-none">
+                {s.who && <text x={x} y={TOP - 7} fontSize={10.5} fontWeight={600} fill="var(--sub)">{wrap(s.who, 26, 1)[0]}</text>}
+                <rect x={x} y={TOP} width={BW} height={BH} rx={10} fill="var(--raise)" stroke={on ? "var(--accent)" : "var(--line-2)"} strokeWidth={on ? 1.5 : 1} />
+                <text x={x + 10} y={TOP + 16} fontSize={10} fontWeight={700} fill="var(--accent)">{s.n}</text>
+                {wrap(s.name, 19, 3).map((l, k) => <text key={k} x={x + 10} y={TOP + 31 + k * 13} fontSize={11.5} fontWeight={600} fill="var(--text)">{l}</text>)}
+                <line x1={x} x2={x + BW} y1={TOP + 72} y2={TOP + 72} stroke="var(--line)" />
+                <text x={x + 10} y={TOP + 87} fontSize={10.5} fill="var(--faint)">T. activo <tspan fill={known ? "var(--text)" : "var(--faint)"} fontWeight={600}>{s.est ? "< 1 min (est.)" : t(s)}</tspan></text>
+                <text x={x + 10} y={TOP + 99} fontSize={10.5} fill="var(--faint)">Esfuerzo <tspan fontWeight={600}>{s.effort || "pend."}</tspan></text>
+                {s.stuck && wrap(s.stuck, 27, 3).map((l, k) => <text key={k} x={x + (k ? 12 : 0)} y={yStuck + k * 13} fontSize={10.5} fill="var(--sub)">{k ? l : "⚠ " + l}</text>)}
+                {/* timeline ladder: wait on the upper rail (between boxes), active time on the lower rail (under the box) */}
+                <path d={`M${x},${yLad + 22} H${x + BW}`} stroke={known ? "var(--accent)" : "var(--line-2)"} strokeWidth={known ? 3 : 1.5} strokeDasharray={known ? undefined : "4 4"} />
+                <text x={x + BW / 2} y={yLad + 38} textAnchor="middle" fontSize={10.5} fontWeight={600} fill={known ? "var(--text)" : "var(--faint)"}>{s.est ? "< 1 min" : t(s)}</text>
+              </g>
+            )
+          })}
+          {st.slice(1).map((s, k) => {
+            const x1 = bx(k) + BW, x2 = bx(k + 1), cx = (x1 + x2) / 2, w = waitKnown(s) ? s.wait! + " " + u : "pend."
+            return (
+              <g key={"w" + s.n}>
+                <path d={`M${x1 + 2},${TOP + BH / 2} H${x2 - 2}`} stroke="var(--faint)" strokeWidth={1.25} markerEnd="url(#vs-arrow)" />
+                <path d={`M${cx},${TOP + BH / 2 - 26} l7,12 h-14 z`} fill="none" stroke="var(--faint)" strokeWidth={1.2} />
+                <text x={cx} y={TOP + BH / 2 - 30} textAnchor="middle" fontSize={9.5} fill="var(--faint)">{waitKnown(s) ? w : "espera"}</text>
+                <path d={`M${x1},${yLad + 22} V${yLad} H${x2} V${yLad + 22}`} fill="none" stroke="var(--line-2)" strokeWidth={1.5} strokeDasharray={waitKnown(s) ? undefined : "4 4"} />
+                <text x={cx} y={yLad - 6} textAnchor="middle" fontSize={10} fill="var(--faint)">{w}</text>
+              </g>
+            )
+          })}
+        </svg>
+      </div>
+      <div className="border-t border-line px-5 py-3 text-[13px] text-sub" aria-live="polite">
+        {h ? <><b className="font-semibold text-text">{h.n}. {h.name}</b> · tiempo activo {h.active || "pendiente"}{h.wait ? " · espera " + h.wait : ""}{h.stuck ? " · " + h.stuck : ""}</> : "Pasa el cursor por un paso para ver su detalle. Línea punteada = pendiente de medir."}
+      </div>
+      <div className="grid grid-cols-3 border-t border-line max-sm:grid-cols-1">
+        {[["Tiempo activo medido", range(aLo, aHi), `${measured.length} de ${st.length} pasos con dato`],
+          ["Lead time", allKnown ? range(aLo + waitSum, aHi + waitSum) : "Pendiente de data", allKnown ? "Activo + esperas" : "Faltan esperas por medir"],
+          ["Eficiencia de flujo", allKnown && aHi + waitSum > 0 ? Math.round((aLo / (aLo + waitSum)) * 100) + "%" : "Pendiente de data", "Tiempo activo ÷ lead time"]].map(([k, val, sub], i) => (
+          <div key={k} className={cn("grid gap-0.5 px-5 py-3.5", i && "border-l border-line max-sm:border-l-0 max-sm:border-t")}>
+            <span className="text-xs text-faint">{k}</span><span className="num text-lg font-semibold">{val}</span><span className="text-xs text-faint">{sub}</span>
           </div>
-          <span className="text-[13px] text-sub max-[720px]:col-start-2">{s.stuck ? <><span className="mr-1.5 inline-block size-1.5 -translate-y-px rounded-full bg-accent align-middle" aria-hidden />{s.stuck}</> : <span className="text-faint">Sin atascos reportados</span>}</span>
-        </div>
-      ))}
-      <div className="row grid-cols-1 gap-1 text-[13px] text-sub">
-        <span><b className="font-semibold text-text">Tiempo activo medido:</b> {measured.length ? (lo === hi ? fmt(lo) : `${fmt(lo)} a ${fmt(hi)}`) : "pendiente de data"}{pending ? ` · ${pending} de ${v.steps.length} pasos sin medir` : ""}</span>
-        <span>Eficiencia de flujo (activo ÷ total): pendiente de data, faltan las esperas.</span>
+        ))}
       </div>
     </div>
   )

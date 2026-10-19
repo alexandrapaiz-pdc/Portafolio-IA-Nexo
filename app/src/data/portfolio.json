@@ -855,7 +855,8 @@
        "hi": null,
        "wait": null,
        "effort": null,
-       "stuck": "Si el código no coincide, vuelve a llenar todo el formulario."
+       "stuck": "Si el código no coincide, vuelve a llenar todo el formulario.",
+       "who": "Colaborador"
       },
       {
        "n": "2",
@@ -865,7 +866,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": null
+       "stuck": null,
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "3",
@@ -875,7 +878,8 @@
        "hi": null,
        "wait": null,
        "effort": null,
-       "stuck": "Espera la respuesta del colaborador; si marca «incorrectos», se repite el caso."
+       "stuck": "Espera la respuesta del colaborador; si marca «incorrectos», se repite el caso.",
+       "who": "Colaborador"
       },
       {
        "n": "4",
@@ -885,7 +889,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "La lista de excepciones está escrita a mano en el flujo."
+       "stuck": "La lista de excepciones está escrita a mano en el flujo.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "5",
@@ -895,7 +901,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "Un error de fechas repite el caso completo."
+       "stuck": "Un error de fechas repite el caso completo.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "6",
@@ -905,7 +913,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "Tickets duplicados (el No. 39 aparece 3 veces)."
+       "stuck": "Tickets duplicados (el No. 39 aparece 3 veces).",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "7",
@@ -915,7 +925,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "Sin fila de gozados: se rechaza y debe reenviar."
+       "stuck": "Sin fila de gozados: se rechaza y debe reenviar.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "8",
@@ -925,7 +937,8 @@
        "hi": null,
        "wait": "Espera del líder · pendiente",
        "effort": null,
-       "stuck": "Aprobaciones sin respuesta vencen a los 30 días sin aviso; Cayalá se queda aquí."
+       "stuck": "Aprobaciones sin respuesta vencen a los 30 días sin aviso; Cayalá se queda aquí.",
+       "who": "Líder"
       },
       {
        "n": "9",
@@ -935,7 +948,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "Sobrescritura si hay dos aprobaciones del mismo colaborador."
+       "stuck": "Sobrescritura si hay dos aprobaciones del mismo colaborador.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "10",
@@ -945,7 +960,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "Archivo temporal con nombre fijo: riesgo de mezclar constancias."
+       "stuck": "Archivo temporal con nombre fijo: riesgo de mezclar constancias.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "11",
@@ -955,7 +972,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "Todas las tareas van a la misma persona."
+       "stuck": "Todas las tareas van a la misma persona.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "12",
@@ -965,7 +984,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": "No se ejecuta si falla Asana, y no avisa."
+       "stuck": "No se ejecuta si falla Asana, y no avisa.",
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "13",
@@ -975,7 +996,9 @@
        "hi": 0.5,
        "wait": null,
        "effort": null,
-       "stuck": null
+       "stuck": null,
+       "est": true,
+       "who": "Power Automate"
       },
       {
        "n": "14",
@@ -985,7 +1008,8 @@
        "hi": null,
        "wait": "Espera de firma · pendiente",
        "effort": null,
-       "stuck": "22 de 84 tareas abiertas al 8 oct; algunas vencidas desde agosto."
+       "stuck": "22 de 84 tareas abiertas al 8 oct; algunas vencidas desde agosto.",
+       "who": "Responsable de firma"
       }
      ]
     },
@@ -1985,7 +2009,8 @@
        "hi": null,
        "wait": "0",
        "effort": null,
-       "stuck": "Solicitudes informales, datos incompletos."
+       "stuck": "Solicitudes informales, datos incompletos.",
+       "who": "Marca · Líder SR"
       },
       {
        "n": "3–5",
@@ -1995,7 +2020,8 @@
        "hi": null,
        "wait": null,
        "effort": null,
-       "stuck": "Sin estándar, revisión subjetiva."
+       "stuck": "Sin estándar, revisión subjetiva.",
+       "who": "Regulatorio"
       },
       {
        "n": "6–7",
@@ -2005,7 +2031,8 @@
        "hi": 15,
        "wait": null,
        "effort": null,
-       "stuck": "Documentos incompletos, retrabajo, idas y vueltas."
+       "stuck": "Documentos incompletos, retrabajo, idas y vueltas.",
+       "who": "Regulatorio"
       },
       {
        "n": "8–9",
@@ -2015,7 +2042,8 @@
        "hi": 3,
        "wait": null,
        "effort": null,
-       "stuck": "Desplazamiento físico, cola en MSPAS."
+       "stuck": "Desplazamiento físico, cola en MSPAS.",
+       "who": "Asesor externo"
       },
       {
        "n": "10",
@@ -2025,7 +2053,8 @@
        "hi": 45,
        "wait": "0",
        "effort": null,
-       "stuck": "Proceso externo, sin control interno."
+       "stuck": "Proceso externo, sin control interno.",
+       "who": "MSPAS (externo)"
       },
       {
        "n": "11",
@@ -2035,7 +2064,8 @@
        "hi": null,
        "wait": null,
        "effort": null,
-       "stuck": "Observaciones recurrentes por errores de expediente."
+       "stuck": "Observaciones recurrentes por errores de expediente.",
+       "who": "Regulatorio"
       },
       {
        "n": "12–13",
@@ -2045,7 +2075,8 @@
        "hi": null,
        "wait": null,
        "effort": null,
-       "stuck": "Digitación manual en iComply."
+       "stuck": "Digitación manual en iComply.",
+       "who": "Asesor externo · Regulatorio"
       }
      ]
     },

@@ -18,7 +18,7 @@ export interface Project {
 }
 /** The project's intake guide, kept as the guide gave it (texts as written, numbers only where given). */
 export interface IntakeStep { n: string; name: string; who: string; uses?: string; src?: string[]; out?: string; branch?: string | null }
-export interface VsmRow { n: string; name: string; active?: string | null; lo?: number | null; hi?: number | null; wait?: string | null; effort?: string | null; stuck?: string | null }
+export interface VsmRow { n: string; name: string; who?: string | null; est?: boolean; active?: string | null; lo?: number | null; hi?: number | null; wait?: string | null; effort?: string | null; stuck?: string | null }
 export interface IntakeMetric { key: string; name: string; current?: string | null; target?: string | null; state: "medido" | "estimado" | "pendiente"; source?: string; kpi?: boolean; value?: number | null; unit?: string | null }
 export interface Intake {
   status: "completada" | "pendiente"; date?: string; by?: string; url?: string
