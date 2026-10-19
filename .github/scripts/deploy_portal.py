@@ -37,7 +37,10 @@ def deploy():
         raise ValueError('Deploy only an immutable portal image from the approved ACR')
     if group != 'rg-nexo-ai-core' or app_name != 'nexo-portafolio-ia':
         raise ValueError('Unexpected deployment target')
-    suffix = 'gh' + os.environ['GITHUB_RUN_ID'] + '-' + os.environ['GITHUB_RUN_ATTEMPT']
+    # GitHub Actions names revisions after its run; a direct deploy (scripts/desplegar.sh) passes DEPLOY_SUFFIX.
+    suffix = os.environ.get('DEPLOY_SUFFIX') or 'gh' + os.environ['GITHUB_RUN_ID'] + '-' + os.environ['GITHUB_RUN_ATTEMPT']
+    if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,30}', suffix):
+        raise ValueError('Revision suffix must be lowercase letters, digits and dashes')
     before = az('containerapp', 'show', '-g', group, '-n', app_name)
     auth = az('containerapp', 'auth', 'show', '-g', group, '-n', app_name)
     if not auth['platform']['enabled'] or auth['globalValidation']['unauthenticatedClientAction'] != 'RedirectToLoginPage':
@@ -76,11 +79,14 @@ def deploy():
         raise RuntimeError('New revision is not the latest ready revision')
     if after['properties']['template']['containers'][0]['image'] != image:
         raise RuntimeError('Deployed image differs from the tested image')
-    metadata = {'commit': os.environ['GITHUB_SHA'], 'image': image, 'previous_image': previous,
+    source = (os.environ['GITHUB_SERVER_URL'] + '/' + os.environ['GITHUB_REPOSITORY'] + '/actions/runs/' + os.environ['GITHUB_RUN_ID']
+              if os.environ.get('GITHUB_RUN_ID') else os.environ.get('DEPLOY_SOURCE', 'direct'))
+    metadata = {'commit': os.environ.get('GITHUB_SHA') or os.environ['DEPLOY_COMMIT'], 'image': image, 'previous_image': previous,
                 'revision': revision_name, 'deployed_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
-                'workflow': os.environ['GITHUB_SERVER_URL'] + '/' + os.environ['GITHUB_REPOSITORY'] + '/actions/runs/' + os.environ['GITHUB_RUN_ID']}
+                'workflow': source}
     Path('deployment.json').write_text(json.dumps(metadata, indent=2) + '\n')
-    with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+    if os.environ.get('GITHUB_STEP_SUMMARY'):
+      with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
         summary.write('## Nexo AI published\n\n' + '\n'.join(f'- **{k}:** `{v}`' for k,v in metadata.items()) + '\n')
 
 

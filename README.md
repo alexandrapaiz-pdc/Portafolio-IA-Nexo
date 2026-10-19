@@ -61,6 +61,11 @@ PGHOST=localhost PGUSER=postgres PGDATABASE=apps DEV_USUARIO="tu@correo|Tu nombr
 
 Los datos iniciales se cargan una vez en `/importar` (solo editores) con la exportación de la base de datos del artifact. Los pasos de despliegue con los nombres reales de Azure están en la guía privada de BestPracticesAI.
 
+## Cómo se publica
+
+1. **Automático:** cada push a `main` lo prueba, construye y publica `.github/workflows/desplegar.yml` (GitHub Actions con OIDC, sin contraseñas guardadas).
+2. **A pedido, directo:** `scripts/desplegar.sh` hace lo mismo sin GitHub Actions (imagen construida en Azure con `az acr build`, solo cambia la imagen, espera revisión sana y verifica que Entra y la configuración protegida no cambiaron). Requiere un service principal limitado a esta app y al registro, en variables del entorno (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_SUBSCRIPTION_ID`), y acceso de red a Azure. Solo despliega lo que ya está en `origin/main`.
+
 ## Datos
 
 `seed/` guarda los datos iniciales y las actualizaciones aplicadas a la base de datos del artifact (proyectos, componentes, bitácora, Asana, mapas de valor).
