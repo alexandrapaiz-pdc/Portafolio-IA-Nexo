@@ -199,7 +199,8 @@ class Tabla(Coleccion):
             t=sql.Identifier(self.tabla),
             sets=sql.SQL(", ").join(sql.SQL("{c} = EXCLUDED.{c}").format(c=sql.Identifier(c)) for c in cols),
         )
-        cur.execute(insertar + actualizar, (doc_id, *valores.values(), persona.correo))
+        params = [Jsonb(v) if isinstance(v, (dict, list)) else v for v in valores.values()]  # JSON fields go to jsonb columns
+        cur.execute(insertar + actualizar, (doc_id, *params, persona.correo))
         _historial(cur, self.nombre, doc_id, accion, antes, {k: _json(v) for k, v in valido.items()}, persona)
 
     def eliminar(self, cur, doc_id: str, persona: Persona) -> bool:

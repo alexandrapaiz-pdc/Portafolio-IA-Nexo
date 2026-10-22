@@ -47,7 +47,11 @@ export interface Component { id: string; name: string; owner?: string; note?: st
 export interface QuarterMetrics {
   id: string; quarter: string; daysToValue?: number | null; liveWithUsers?: number | null; pilots?: number | null
   pilotsToProduction?: number | null; savingsUsd?: number | null; hoursSaved?: number | null; daysBlocked?: number | null; note?: string | null
+  /** Values with a comment per metric card (e.g. 24 días · Avon); the quarter value is derived from them. */
+  entries?: Partial<Record<string, MetricEntry[]>> | null
 }
+/** One submitted value: `v` (days, US$, hours), its comment, and `prod` for a pilot that reached production. */
+export interface MetricEntry { v?: number | null; note?: string; prod?: boolean | null }
 export const quarterOf = (d = new Date()) => `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
 export interface Update { id: string; projectId: string; date: string; tag?: string; text: string; kpiId?: string | null; value?: number | null; createdAt?: string }
 export interface Ticket { id: string; code?: string; title: string; area?: string; type?: string; urgency?: string; problem?: string; current?: string; hours?: number | null; people?: number | null; wanted?: string | null; impact?: string; systems?: string; createdBy?: string | null; createdAt?: string }

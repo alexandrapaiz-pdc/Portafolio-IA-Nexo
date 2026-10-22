@@ -121,6 +121,22 @@ def test_metricas_trimestrales_solo_editores(cliente):
     assert len(sql("SELECT 1 FROM historial WHERE coleccion = 'metricas'")) == 2
 
 
+def test_metricas_por_entradas(cliente):
+    q = {"quarter": "2027-Q1", "daysToValue": 99, "entries": {
+        "ttv": [{"v": 24, "note": "Avon"}, {"v": 11, "note": "Vacaciones"}],
+        "live": [{"note": "Avon"}], "conv": [{"note": "Avon", "prod": True}, {"note": "Regulatorio", "prod": False}],
+        "usd": [{"v": 500, "note": "Avon"}, {"v": 250.5, "note": "GH"}], "blk": []}}
+    r = cliente.put("/api/c/metricas/2027-Q1", json=q, headers=EDITORA)
+    assert r.status_code == 200, r.text
+    doc = cliente.get("/api/c/metricas/2027-Q1", headers=PERSONA).json()["datos"]
+    # El valor del trimestre sale de las entradas, no del número que mande el navegador.
+    assert (doc["daysToValue"], doc["liveWithUsers"], doc["pilots"], doc["pilotsToProduction"], doc["savingsUsd"]) == (17.5, 1, 2, 1, 750.5)
+    assert "daysBlocked" not in doc and doc["entries"]["ttv"][0] == {"v": 24, "note": "Avon", "prod": None}
+    malo = {**q, "entries": {"ttv": [{"v": -1, "note": "x"}]}}
+    assert cliente.put("/api/c/metricas/2027-Q1", json=malo, headers=EDITORA).status_code == 422
+    assert cliente.put("/api/c/metricas/2027-Q1", json={**q, "entries": {"otra": []}}, headers=EDITORA).status_code == 422
+
+
 def test_solicitud_invalida_no_se_guarda(cliente):
     for malo in ({"urgency": "Urgente"}, {"hours": -1}, {"title": "x" * 121}, {"area": "Marte"}, {"extra": "x"}):
         r = cliente.post("/api/c/tickets", json={**SOLICITUD, "code": "SOL-1007-ZZ", **malo}, headers=PERSONA)

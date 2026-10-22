@@ -1,25 +1,29 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
-import { quarterOf, type QuarterMetrics } from "@/lib/domain"
+import { quarterOf, type MetricEntry, type QuarterMetrics } from "@/lib/domain"
 import { isNum, nf } from "@/lib/format"
 import { useStore } from "@/lib/store"
 import { Input, Textarea } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Section, SectionHead, SecP } from "@/components/shared"
 
 // Quarterly deployment metrics for my FDE work (not the agents' own KPIs).
 // Read by everyone; only editors change them, with autosave. Empty = not measured yet.
-type Field = Exclude<keyof QuarterMetrics, "id" | "quarter" | "note">
-type Card = { id: string; k: string; unit?: string; sub: string; lower?: boolean; fields: [Field, string][]; value: (m: Partial<QuarterMetrics>) => number | null; fmt?: (n: number) => string }
+type Field = Exclude<keyof QuarterMetrics, "id" | "quarter" | "note" | "entries">
+// How a card's entries become the quarter value (same rules as the API, which recomputes them):
+// avg = average, sum = total, count = one entry per deployment, pilot = pilots and how many reached production.
+type Kind = "avg" | "sum" | "count" | "pilot"
+type Card = { id: string; k: string; unit?: string; sub: string; lower?: boolean; kind: Kind; fields: [Field, string][]; value: (m: Partial<QuarterMetrics>) => number | null; fmt?: (n: number) => string }
 
 const pct = (m: Partial<QuarterMetrics>) => (isNum(m.pilots) && isNum(m.pilotsToProduction) ? (m.pilots > 0 ? Math.round((m.pilotsToProduction / m.pilots) * 100) : 0) : null)
 const val = (f: Field) => (m: Partial<QuarterMetrics>) => (isNum(m[f]) ? (m[f] as number) : null)
 const CARDS: Card[] = [
-  { id: "ttv", k: "Tiempo al primer valor", unit: "días", lower: true, sub: "Promedio desde la solicitud hasta algo funcionando con datos reales del equipo.", fields: [["daysToValue", "Días (promedio)"]], value: val("daysToValue") },
-  { id: "live", k: "Despliegues con usuarios reales", sub: "Apps o agentes que usa su audiencia, no solo yo.", fields: [["liveWithUsers", "Despliegues"]], value: val("liveWithUsers") },
-  { id: "conv", k: "Pilotos → producción", unit: "%", sub: "Pilotos que llegaron a producción: suplente, audiencia abierta, checklist y forma de revertir.", fields: [["pilots", "Pilotos"], ["pilotsToProduction", "A producción"]], value: pct },
-  { id: "usd", k: "Ahorro verificado", unit: "US$", sub: "Costo evitado, medido contra una línea base tomada antes de construir.", fields: [["savingsUsd", "US$"]], value: val("savingsUsd") },
-  { id: "hrs", k: "Horas manuales liberadas", unit: "h", sub: "Medidas después del lanzamiento, no estimadas.", fields: [["hoursSaved", "Horas"]], value: val("hoursSaved") },
-  { id: "blk", k: "Días bloqueado por dependencias", unit: "días", lower: true, sub: "Promedio por proyecto activo: tiempo esperando a TI, accesos o administradores.", fields: [["daysBlocked", "Días"]], value: val("daysBlocked") },
+  { id: "ttv", kind: "avg", k: "Tiempo al primer valor", unit: "días", lower: true, sub: "Promedio desde la solicitud hasta algo funcionando con datos reales del equipo.", fields: [["daysToValue", "Días (promedio)"]], value: val("daysToValue") },
+  { id: "live", kind: "count", k: "Despliegues con usuarios reales", sub: "Apps o agentes que usa su audiencia, no solo yo.", fields: [["liveWithUsers", "Despliegues"]], value: val("liveWithUsers") },
+  { id: "conv", kind: "pilot", k: "Pilotos → producción", unit: "%", sub: "Pilotos que llegaron a producción: suplente, audiencia abierta, checklist y forma de revertir.", fields: [["pilots", "Pilotos"], ["pilotsToProduction", "A producción"]], value: pct },
+  { id: "usd", kind: "sum", k: "Ahorro verificado", unit: "US$", sub: "Costo evitado, medido contra una línea base tomada antes de construir.", fields: [["savingsUsd", "US$"]], value: val("savingsUsd") },
+  { id: "hrs", kind: "sum", k: "Horas manuales liberadas", unit: "h", sub: "Medidas después del lanzamiento, no estimadas.", fields: [["hoursSaved", "Horas"]], value: val("hoursSaved") },
+  { id: "blk", kind: "avg", k: "Días bloqueado por dependencias", unit: "días", lower: true, sub: "Promedio por proyecto activo: tiempo esperando a TI, accesos o administradores.", fields: [["daysBlocked", "Días"]], value: val("daysBlocked") },
 ]
 
 // Goals agreed in Oct 2026. A number is a target (at most, for "lower" metrics); text is a goal
@@ -37,17 +41,30 @@ const met = (c: Card, v: number, g: number) => (c.lower ? v <= g : v >= g)
 const prevQuarter = (q: string) => { const [y, n] = q.split("-Q").map(Number); return n === 1 ? `${y - 1}-Q4` : `${y}-Q${n - 1}` }
 const label = (q: string) => q.replace("-", " · ")
 type Save = "idle" | "pending" | "saving" | "saved" | "error" | "invalid"
-type Raw = Partial<Record<Field | "note", string>>
+type Raw = Partial<Record<Field | "note", string>> & { entries?: Entries }
+type Entries = Partial<Record<string, MetricEntry[]>>
 const FIELDS = CARDS.flatMap((c) => c.fields.map(([f]) => f))
 
 // Text in the inputs -> the record saved for a quarter (empty = not measured).
 function toDoc(q: string, raw: Raw): QuarterMetrics {
   const doc: QuarterMetrics = { id: q, quarter: q, note: raw.note?.trim() || null }
   for (const f of FIELDS) { const t = (raw[f] ?? "").trim(), n = Number(t); doc[f] = t !== "" && Number.isFinite(n) && n >= 0 ? n : null }
+  // A card with entries takes its value from them; one without keeps its direct value (earlier quarters).
+  const entries = raw.entries || {}
+  if (Object.keys(entries).length) doc.entries = entries
+  for (const c of CARDS) { const list = entries[c.id]; if (list) Object.assign(doc, summarize(c, list)) }
   return doc
 }
+function summarize(c: Card, list: MetricEntry[]): Partial<QuarterMetrics> {
+  const f = c.fields[0][0], nums = list.map((e) => e.v).filter(isNum)
+  if (c.kind === "count") return { [f]: list.length || null }
+  if (c.kind === "pilot") return { pilots: list.length || null, pilotsToProduction: list.length ? list.filter((e) => e.prod).length : null }
+  if (!nums.length) return { [f]: null }
+  const total = nums.reduce((a, b) => a + b, 0)
+  return { [f]: c.kind === "sum" ? Math.round(total * 100) / 100 : Math.round((total / nums.length) * 10) / 10 }
+}
 const toRaw = (m?: QuarterMetrics): Raw => {
-  const r: Raw = { note: m?.note || "" }
+  const r: Raw = { note: m?.note || "", entries: m?.entries || {} }
   for (const f of FIELDS) r[f] = isNum(m?.[f]) ? String(m![f]) : ""
   return r
 }
@@ -93,6 +110,12 @@ function useAutosave(db: { doc: (p: string) => { set: (d: unknown) => Promise<un
     setRaw(s.raw); setState("pending")
     window.clearTimeout(s.timer); s.timer = window.setTimeout(run, 800)
   }
+  const setEntries = (id: string, list: MetricEntry[]) => {
+    const s = st.current
+    s.raw = { ...s.raw, entries: { ...s.raw.entries, [id]: list } }; s.rev++
+    setRaw(s.raw); setState("pending")
+    window.clearTimeout(s.timer); s.timer = window.setTimeout(run, 400)
+  }
   const flush = () => { run() }
   const editing = () => st.current.rev !== st.current.savedRev
 
@@ -118,7 +141,7 @@ function useAutosave(db: { doc: (p: string) => { set: (d: unknown) => Promise<un
     window.addEventListener("beforeunload", warn); window.addEventListener("online", online); document.addEventListener("visibilitychange", hidden)
     return () => { window.removeEventListener("beforeunload", warn); window.removeEventListener("online", online); document.removeEventListener("visibilitychange", hidden); if (editing()) run() }
   }, [run])
-  return { raw, edit, state, flush, editing }
+  return { raw, edit, setEntries, state, flush, editing }
 }
 
 export function Metrics() {
@@ -128,7 +151,7 @@ export function Metrics() {
   const [q, setQ] = useState(now)
   const byQ = (x: string) => metrics.find((m) => m.id === x)
   const saved = byQ(q)
-  const { raw, edit, state, flush } = useAutosave(db, q, saved)
+  const { raw, edit, setEntries, state, flush } = useAutosave(db, q, saved)
   const draft = toDoc(q, raw)
   const pick = (x: string) => { if (x !== q) { flush(); setQ(x) } }
 
@@ -167,19 +190,12 @@ export function Metrics() {
                   : <><span className="num text-[38px] font-semibold leading-none tracking-[-.04em]">{c.unit === "US$" ? "US$" + nf(v) : nf(v)}</span>{c.unit && c.unit !== "US$" && <small className="text-lg font-medium text-faint">{c.unit}</small>}</>}
               </div>
               {c.id === "conv" && isNum(shown.pilots) && <span className="num text-xs text-faint">{shown.pilotsToProduction ?? 0} de {shown.pilots} pilotos</span>}
+              {c.kind === "avg" && (shown.entries?.[c.id]?.filter((e) => isNum(e.v)).length ?? 0) > 1 && <span className="num text-xs text-faint">Promedio de {shown.entries![c.id]!.filter((e) => isNum(e.v)).length} entradas</span>}
               {d !== null && d !== 0 && <span className={cn("num text-xs font-medium", good ? "text-strong" : "text-accent-ink")}>{d > 0 ? "+" : "−"}{nf(Math.abs(d))}{c.unit && c.unit !== "US$" ? " " + c.unit : ""} vs. {label(prevQuarter(q))}</span>}
               {(() => { const g = goalOf(c, q); if (g === undefined) return null; const ok = typeof g === "number" && v !== null && met(c, v, g)
                 return <span className={cn("text-xs", ok ? "font-medium text-strong" : "text-sub")}>Meta {label(q)}: {fmtGoal(c, g)}{ok ? " · cumplida" : ""}</span> })()}
               <p className="text-[13px] leading-snug text-faint">{c.sub}</p>
-              {canWrite && (
-                <div className={cn("mt-1 grid gap-2 border-t border-line pt-3", c.fields.length > 1 && "grid-cols-2")}>
-                  {c.fields.map(([f, l]) => (
-                    <label key={f} className="grid gap-1 text-xs text-sub">{l}
-                      <Input type="number" inputMode="decimal" min={0} step="any" value={raw[f] ?? ""} placeholder="Sin medir" onChange={(e) => edit(f, e.target.value)} />
-                    </label>
-                  ))}
-                </div>
-              )}
+              <Entries card={c} list={(canWrite ? raw.entries : saved?.entries)?.[c.id] || []} direct={(canWrite ? raw.entries : saved?.entries)?.[c.id] ? null : v} canWrite={canWrite} onChange={(l) => setEntries(c.id, l)} />
             </div>
           )
         })}
@@ -279,5 +295,58 @@ function Trend({ card, domain, pts }: { card: Card; domain: string[]; pts: { q: 
         </div>
       )}
     </figure>
+  )
+}
+
+const ENTRY: Record<Kind, { verb: string; num?: string }> = {
+  avg: { verb: "Agregar", num: "Valor" }, sum: { verb: "Agregar", num: "Valor" },
+  count: { verb: "Agregar despliegue" }, pilot: { verb: "Agregar piloto" },
+}
+
+// The values behind a card, each with its comment (e.g. 24 días · Avon). Editors add and remove them.
+function Entries({ card: c, list, direct, canWrite, onChange }: { card: Card; list: MetricEntry[]; direct: number | null; canWrite: boolean; onChange: (l: MetricEntry[]) => void }) {
+  const [v, setV] = useState(""), [note, setNote] = useState(""), [prod, setProd] = useState(false)
+  const cfg = ENTRY[c.kind], n = Number(v)
+  const ok = cfg.num ? v.trim() !== "" && Number.isFinite(n) && n >= 0 : note.trim() !== ""
+  const add = () => {
+    if (!ok) return
+    onChange([...list, { v: cfg.num ? n : null, note: note.trim().slice(0, 200), prod: c.kind === "pilot" ? prod : null }])
+    setV(""); setNote(""); setProd(false)
+  }
+  if (!canWrite && !list.length) return null
+  return (
+    <div className="mt-1 grid gap-2 border-t border-line pt-3">
+      {/* A value typed before entries existed: it counts until removed or replaced by the first entry. */}
+      {canWrite && direct !== null && (
+        <div className="flex items-center gap-2 text-[13px]">
+          <span className="min-w-0 flex-1 text-faint">Valor directo, sin comentario: <span className="num font-semibold text-sub">{fmtV(c, direct)}</span></span>
+          <button type="button" aria-label="Quitar valor directo" onClick={() => onChange([])} className="rounded border-0 bg-transparent px-1 text-faint hover:text-text">×</button>
+        </div>
+      )}
+      {list.length > 0 && (
+        <ul className="m-0 grid list-none gap-1 p-0">
+          {list.map((e, i) => (
+            <li key={i} className="flex items-center gap-2 text-[13px]">
+              {isNum(e.v) && <span className="num font-semibold">{fmtV(c, e.v)}</span>}
+              <span className="min-w-0 flex-1 truncate text-sub" title={e.note}>{isNum(e.v) && e.note ? "· " : ""}{e.note || (isNum(e.v) ? "" : "Sin comentario")}</span>
+              {c.kind === "pilot" && (canWrite
+                ? <label className="flex items-center gap-1 text-xs text-faint"><input type="checkbox" checked={!!e.prod} onChange={(x) => onChange(list.map((y, j) => (j === i ? { ...y, prod: x.target.checked } : y)))} />En producción</label>
+                : e.prod && <span className="text-xs font-medium text-strong">En producción</span>)}
+              {canWrite && <button type="button" aria-label={`Quitar ${e.note || "entrada"}`} onClick={() => onChange(list.filter((_, j) => j !== i))} className="rounded border-0 bg-transparent px-1 text-faint hover:text-text">×</button>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {canWrite && (
+        <form className="flex flex-wrap items-end gap-2" onSubmit={(e) => { e.preventDefault(); add() }}>
+          {cfg.num && <label className="grid w-24 gap-1 text-xs text-sub">{c.unit === "US$" ? "US$" : c.unit === "h" ? "Horas" : c.unit ? c.unit[0].toUpperCase() + c.unit.slice(1) : cfg.num}
+            <Input type="number" inputMode="decimal" min={0} step="any" value={v} onChange={(e) => setV(e.target.value)} /></label>}
+          <label className="grid min-w-[8rem] flex-1 gap-1 text-xs text-sub">Comentario
+            <Input value={note} maxLength={200} placeholder="p. ej. Avon" onChange={(e) => setNote(e.target.value)} /></label>
+          {c.kind === "pilot" && <label className="flex items-center gap-1 pb-2 text-xs text-sub"><input type="checkbox" checked={prod} onChange={(e) => setProd(e.target.checked)} />En producción</label>}
+          <Button type="submit" variant="ghost" disabled={!ok}>{cfg.verb}</Button>
+        </form>
+      )}
+    </div>
   )
 }

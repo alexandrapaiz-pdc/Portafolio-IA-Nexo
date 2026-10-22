@@ -49,6 +49,22 @@ SOLICITUDES = {
     "impact": "impacto", "systems": "sistemas", "createdBy": "creado_por", "createdAt": "creado_en",
 }
 
+class Entrada(BaseModel):
+    """Un valor con su comentario, p. ej. 24 días · Avon. `prod` marca un piloto que llegó a producción."""
+
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    v: float | None = Field(default=None, ge=0, le=1_000_000_000)
+    note: str = Field(default="", max_length=200)
+    prod: bool | None = None
+
+
+# Cómo se resume cada métrica a partir de sus entradas: promedio (tiempos), suma (valor),
+# conteo (una entrada = un despliegue) o pilotos (conteo y cuántos llegaron a producción).
+RESUMEN = {"ttv": ("promedio", "daysToValue"), "live": ("conteo", "liveWithUsers"), "conv": ("pilotos", "pilots"),
+           "usd": ("suma", "savingsUsd"), "hrs": ("suma", "hoursSaved"), "blk": ("promedio", "daysBlocked")}
+
+
 class MetricaTrimestre(BaseModel):
     """Métricas de despliegue de un trimestre. Vacío = aún no medido (nunca un valor inventado)."""
 
@@ -63,6 +79,24 @@ class MetricaTrimestre(BaseModel):
     hoursSaved: float | None = Field(default=None, ge=0, le=10_000_000)
     daysBlocked: float | None = Field(default=None, ge=0, le=36500)
     note: str | None = Field(default=None, max_length=2000)
+    entries: dict[Literal["ttv", "live", "conv", "usd", "hrs", "blk"], Annotated[list[Entrada], Field(max_length=100)]] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def resumir_entradas(self):
+        # The server derives each value from its entries, so a stale total from the browser never sticks.
+        for clave, lista in self.entries.items():
+            tipo, campo = RESUMEN[clave]
+            nums = [e.v for e in lista if e.v is not None]
+            if tipo == "conteo":
+                self.liveWithUsers = len(lista) if lista else None
+            elif tipo == "pilotos":
+                self.pilots = len(lista) if lista else None
+                self.pilotsToProduction = sum(1 for e in lista if e.prod) if lista else None
+            elif tipo == "suma":
+                setattr(self, campo, round(sum(nums), 2) if nums else None)
+            else:
+                setattr(self, campo, round(sum(nums) / len(nums), 1) if nums else None)
+        return self
 
     @model_validator(mode="after")
     def produccion_no_supera_pilotos(self):
@@ -74,7 +108,7 @@ class MetricaTrimestre(BaseModel):
 METRICAS = {
     "quarter": "trimestre", "daysToValue": "dias_primer_valor", "liveWithUsers": "despliegues_con_usuarios",
     "pilots": "pilotos", "pilotsToProduction": "pilotos_a_produccion", "savingsUsd": "ahorro_usd",
-    "hoursSaved": "horas_liberadas", "daysBlocked": "dias_bloqueado", "note": "nota",
+    "hoursSaved": "horas_liberadas", "daysBlocked": "dias_bloqueado", "note": "nota", "entries": "entradas",
 }
 
 COLECCIONES = {
