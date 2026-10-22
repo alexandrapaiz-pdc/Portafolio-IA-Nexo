@@ -325,7 +325,7 @@
    ],
    "parts": [
     {
-     "desc": "Glosario, alias y mapa organizacional en GitHub; base del esquema semantic",
+     "desc": "Glosario, alias y mapa organizacional en GitHub; base del esquema semantic. El organigrama de octubre 2026 ya se consulta desde Claude con un MCP de solo lectura.",
      "name": "Vocabulario y ontología",
      "status": "listo"
     },
@@ -2356,11 +2356,11 @@
   {
    "id": "containerapps",
    "name": "Azure Container Apps: LiteLLM, Langfuse, Presidio y servidores MCP",
-   "note": "Entorno de Container Apps arriba. LiteLLM corriendo con tres niveles de modelo. Portal de agentes en piloto (solo la dueña, con inicio de sesión Entra y datos en PostgreSQL). Faltan Langfuse, Presidio y los servidores MCP.",
+   "note": "Entorno de Container Apps arriba. LiteLLM corriendo con tres niveles de modelo. Portal de agentes en piloto (solo la dueña, con inicio de sesión Entra y datos en PostgreSQL). Primer servidor MCP publicado: organigrama del Company Brain (solo lectura). Faltan Langfuse y Presidio.",
    "order": 12,
    "owner": "Alexandra",
    "status": "en_curso",
-   "updated": "2026-10-08"
+   "updated": "2026-10-22"
   },
   {
    "id": "controles",
@@ -2734,6 +2734,16 @@
    "createdAt": "2026-10-09T18:00:00Z",
    "kpiId": null,
    "value": null
+  },
+  {
+   "id": "u-1022-infra",
+   "projectId": "companybrain",
+   "date": "2026-10-22",
+   "createdAt": "2026-10-22T23:55:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "MCP de organigrama publicado en Azure Container Apps: expone en solo lectura el organigrama de octubre 2026 (mundos, áreas, unidades de negocio y líderes) y lo usa el portal «Mapa de empresas PDC» como conector de Claude. Es público por decisión de la dueña; para cerrarlo al tenant se puede poner el inicio de sesión de Entra delante."
   }
  ],
  "snapshotAt": "2026-10-12"
