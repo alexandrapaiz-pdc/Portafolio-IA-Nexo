@@ -19,8 +19,20 @@ const CARDS: Card[] = [
   { id: "conv", k: "Pilotos → producción", unit: "%", sub: "Pilotos que llegaron a producción: suplente, audiencia abierta, checklist y forma de revertir.", fields: [["pilots", "Pilotos"], ["pilotsToProduction", "A producción"]], value: pct },
   { id: "usd", k: "Ahorro verificado", unit: "US$", sub: "Costo evitado, medido contra una línea base tomada antes de construir.", fields: [["savingsUsd", "US$"]], value: val("savingsUsd") },
   { id: "hrs", k: "Horas manuales liberadas", unit: "h", sub: "Medidas después del lanzamiento, no estimadas.", fields: [["hoursSaved", "Horas"]], value: val("hoursSaved") },
-  { id: "blk", k: "Días bloqueado por dependencias", unit: "días", lower: true, sub: "Tiempo esperando a TI, accesos o administradores.", fields: [["daysBlocked", "Días"]], value: val("daysBlocked") },
+  { id: "blk", k: "Días bloqueado por dependencias", unit: "días", lower: true, sub: "Promedio por proyecto activo: tiempo esperando a TI, accesos o administradores.", fields: [["daysBlocked", "Días"]], value: val("daysBlocked") },
 ]
+
+// Goals agreed in Oct 2026. A number is a target (at most, for "lower" metrics); text is a goal
+// that can't be a number until the first deployment is measured.
+type Goal = number | string
+const GOALS: Record<string, Partial<Record<string, Goal>>> = {
+  "2026-Q4": { ttv: 30, live: 2, conv: 50, usd: "Primer número verificado", hrs: "Primer número medido (Vacaciones)", blk: "Registrar la línea base" },
+  "2027-Q1": { ttv: 21, live: 4, conv: 60, usd: "50% del costo en alcance de los proyectos en vivo", hrs: "50% de las horas-persona al mes en alcance de los proyectos en vivo", blk: 10 },
+  "2027-Q2": { ttv: 14, live: 6, conv: 60, usd: "75% del costo en alcance de los proyectos en vivo", hrs: "75% de las horas-persona al mes en alcance de los proyectos en vivo", blk: 7 },
+}
+const goalOf = (c: Card, q: string) => GOALS[q]?.[c.id]
+const numGoal = (c: Card, q: string) => { const g = goalOf(c, q); return typeof g === "number" ? g : null }
+const met = (c: Card, v: number, g: number) => (c.lower ? v <= g : v >= g)
 
 const prevQuarter = (q: string) => { const [y, n] = q.split("-Q").map(Number); return n === 1 ? `${y - 1}-Q4` : `${y}-Q${n - 1}` }
 const label = (q: string) => q.replace("-", " · ")
@@ -156,6 +168,8 @@ export function Metrics() {
               </div>
               {c.id === "conv" && isNum(shown.pilots) && <span className="num text-xs text-faint">{shown.pilotsToProduction ?? 0} de {shown.pilots} pilotos</span>}
               {d !== null && d !== 0 && <span className={cn("num text-xs font-medium", good ? "text-strong" : "text-accent-ink")}>{d > 0 ? "+" : "−"}{nf(Math.abs(d))}{c.unit && c.unit !== "US$" ? " " + c.unit : ""} vs. {label(prevQuarter(q))}</span>}
+              {(() => { const g = goalOf(c, q); if (g === undefined) return null; const ok = typeof g === "number" && v !== null && met(c, v, g)
+                return <span className={cn("text-xs", ok ? "font-medium text-strong" : "text-sub")}>Meta {label(q)}: {fmtGoal(c, g)}{ok ? " · cumplida" : ""}</span> })()}
               <p className="text-[13px] leading-snug text-faint">{c.sub}</p>
               {canWrite && (
                 <div className={cn("mt-1 grid gap-2 border-t border-line pt-3", c.fields.length > 1 && "grid-cols-2")}>
@@ -178,12 +192,12 @@ export function Metrics() {
       ) : saved?.note && <p className="mt-5 rounded-r-sm bg-group px-4 py-3 text-sm text-sub">{saved.note}</p>}
 
       <Section>
-        <SectionHead title="Tendencia por métrica"><SecP>Cada métrica trimestre a trimestre, desde el primer trimestre guardado hasta el actual.</SecP></SectionHead>
+        <SectionHead title="Tendencia por métrica"><SecP>Cada métrica trimestre a trimestre, desde el primer trimestre guardado. La línea punteada es la meta.</SecP></SectionHead>
         {(() => {
           // Every quarter from the first saved one to the current one, so gaps show as gaps.
           const first = [...history.map((m) => m.id), now].sort()[0]
-          const domain: string[] = []
-          for (let x = now; ; x = prevQuarter(x)) { domain.unshift(x); if (x <= first) break }
+          const end = [now, ...Object.keys(GOALS)].sort().reverse()[0], domain: string[] = []
+          for (let x = end; ; x = prevQuarter(x)) { domain.unshift(x); if (x <= first) break }
           return (
             <div className="grid grid-cols-3 gap-3.5 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
               {CARDS.map((c) => <Trend key={c.id} card={c} domain={domain} pts={domain.flatMap((q) => { const m = byQ(q), v = m ? c.value(m) : null; return v === null ? [] : [{ q, v }] })} />)}
@@ -213,6 +227,7 @@ export function Metrics() {
   )
 }
 
+const fmtGoal = (c: Card, g: Goal) => (typeof g === "string" ? g : (c.lower ? "≤ " : "≥ ") + fmtV(c, g))
 const fmtV = (c: Card, v: number) => (c.unit === "US$" ? "US$" + nf(v) : nf(v) + (c.unit ? (c.unit === "%" ? "%" : " " + c.unit) : ""))
 const niceMax = (v: number) => { if (v <= 0) return 1; const e = 10 ** Math.floor(Math.log10(v)), f = v / e; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e }
 
@@ -220,7 +235,8 @@ const niceMax = (v: number) => { if (v <= 0) return 1; const e = 10 ** Math.floo
 function Trend({ card, domain, pts }: { card: Card; domain: string[]; pts: { q: string; v: number }[] }) {
   const [hot, setHot] = useState<number | null>(null)
   const W = 320, H = 132, L = 36, R = 16, T = 18, B = 26
-  const max = card.unit === "%" ? 100 : Math.max(2, niceMax(Math.max(0, ...pts.map((p) => p.v)))) // >= 2 keeps ticks whole for counts
+  const goals = domain.flatMap((q) => { const g = numGoal(card, q); return g === null ? [] : [{ q, v: g }] })
+  const max = card.unit === "%" ? 100 : Math.max(2, niceMax(Math.max(0, ...pts.map((p) => p.v), ...goals.map((g) => g.v)))) // >= 2 keeps ticks whole for counts
   const xq = (q: string) => { const i = domain.indexOf(q); return domain.length === 1 ? (L + W - R) / 2 : L + (i * (W - L - R)) / (domain.length - 1) }
   const x = (i: number) => xq(pts[i].q)
   const y = (v: number) => T + (1 - v / max) * (H - T - B)
@@ -228,11 +244,12 @@ function Trend({ card, domain, pts }: { card: Card; domain: string[]; pts: { q: 
   const area = pts.length > 1 ? `${line} L${x(pts.length - 1).toFixed(1)},${y(0)} L${x(0).toFixed(1)},${y(0)} Z` : ""
   const last = pts[pts.length - 1], h = hot === null ? null : pts[hot]
   const segs = pts.length > 1 ? line : ""
+  const goalLine = goals.map((g, i) => `${i ? "L" : "M"}${xq(g.q).toFixed(1)},${y(g.v).toFixed(1)}`).join(" ")
   return (
     <figure className="card relative m-0 grid min-w-0 content-start gap-1 p-5">
-      <figcaption className="grid gap-0.5"><span className="text-[13px] font-medium text-sub">{card.k}</span><span className="text-[11px] text-faint">{card.lower ? "Menos es mejor" : "Más es mejor"}</span></figcaption>
+      <figcaption className="grid gap-0.5"><span className="text-[13px] font-medium text-sub">{card.k}</span><span className="flex items-center gap-1.5 text-[11px] text-faint">{card.lower ? "Menos es mejor" : "Más es mejor"}{goals.length > 0 && <><svg width="14" height="2" aria-hidden><line x1="0" x2="14" y1="1" y2="1" stroke="var(--sub)" strokeWidth={1.5} strokeDasharray="3 2" /></svg>Meta</>}</span></figcaption>
       <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full overflow-visible" role="img"
-        aria-label={`${card.k}: ${pts.length ? pts.map((p) => `${label(p.q)} ${fmtV(card, p.v)}`).join(", ") : "pendiente de data"}`} onMouseLeave={() => setHot(null)}>
+        aria-label={`${card.k}: ${pts.length ? pts.map((p) => `${label(p.q)} ${fmtV(card, p.v)}`).join(", ") : "pendiente de data"}${goals.length ? ". Metas: " + goals.map((g) => `${label(g.q)} ${fmtGoal(card, g.v)}`).join(", ") : ""}`} onMouseLeave={() => setHot(null)}>
         {[0, max / 2, max].map((t) => (
           <g key={t}>
             <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} />
@@ -241,7 +258,9 @@ function Trend({ card, domain, pts }: { card: Card; domain: string[]; pts: { q: 
         ))}
         {pts.length > 1 && <path d={area} fill="var(--accent)" opacity={0.1} />}
         {domain.map((q, i) => <text key={q} x={xq(q)} y={H - 8} textAnchor={domain.length > 1 && i === 0 ? "start" : domain.length > 1 && i === domain.length - 1 ? "end" : "middle"} fontSize={10} fill="var(--faint)">{q.slice(5)} {q.slice(2, 4)}</text>)}
-        {!pts.length && <text x={(L + W - R) / 2} y={(T + H - B) / 2} textAnchor="middle" fontSize={12} fill="var(--faint)">Pendiente de data</text>}
+        {goals.length > 1 && <path d={goalLine} fill="none" stroke="var(--sub)" strokeWidth={1.5} strokeDasharray="4 3" />}
+        {goals.map((g) => <circle key={g.q} cx={xq(g.q)} cy={y(g.v)} r={2.5} fill="var(--raise)" stroke="var(--sub)" strokeWidth={1.5} />)}
+        {!pts.length && <text x={goals.length ? L + 6 : (L + W - R) / 2} y={goals.length ? T + 8 : (T + H - B) / 2} textAnchor={goals.length ? "start" : "middle"} fontSize={goals.length ? 11 : 12} fill="var(--faint)">Pendiente de data</text>}
         <path d={segs} fill="none" stroke="var(--accent)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
         {h && <line x1={x(hot!)} x2={x(hot!)} y1={T} y2={y(0)} stroke="var(--line-2)" strokeWidth={1} />}
         {pts.map((p, i) => (
