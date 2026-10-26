@@ -2340,6 +2340,63 @@
      "due": null
     }
    ]
+  },
+  {
+   "id": "nomina",
+   "name": "MegaMás · Nómina",
+   "bu": "MegaMás",
+   "program": "agentes",
+   "phase": "descubrimiento",
+   "priority": null,
+   "paused": false,
+   "sponsor": "Pedro Marroquin",
+   "tagline": "Agentes sobre el proceso de nómina",
+   "summary": "Piloto de agentes sobre un subproceso manual de nómina con mucha carga de horas, primero en Guatemala, montado sobre el proceso actual (Excel y la app de Power Apps) sin reemplazar lo que ya funciona.",
+   "pains": [
+    "Cuatro sistemas distintos para pagar nómina: HTS (Guatemala), UUR (países Avon), Human (República Dominicana) y Excel manual (Perú).",
+    "El contrato con HTS (~US$160,000 al año) vence en septiembre 2027 y no se renovará.",
+    "El motor de cálculo en Excel ya pagó la nómina de Guatemala en septiembre, pero el equipo de compensaciones no tiene perfil técnico para mantener una plataforma propia.",
+    "Las bases de datos en SharePoint de la app de Power Apps están vacías: el histórico tendría que cargarse a mano.",
+    "La fecha de entrega para Guatemala ya se movió de diciembre a enero."
+   ],
+   "discovery": [
+    {
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Reunión 1:1 con Diego para entender la app de Power Apps y su documentación",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Alinear con Óscar: dueño técnico de la plataforma y alcance de mi rol",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Elegir el subproceso manual para el piloto de agentes",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "VAP para mapear los procesos de nómina",
+     "due": null,
+     "done": false
+    }
+   ],
+   "kpis": [],
+   "needs": [
+    "stack",
+    "licencias"
+   ],
+   "blocker": "Falta definir con Óscar quién es dueño técnico de la plataforma de nómina y si se replantea Power Apps.",
+   "next": "Diego llena el formulario de mapeo de procesos y agenda la 1:1; el Team Charter de Q4 se entrega el miércoles.",
+   "savings": {
+    "note": "Horas del subproceso piloto: línea base pendiente."
+   },
+   "wave": 2
   }
  ],
  "components": [
@@ -2744,6 +2801,16 @@
    "kpiId": null,
    "value": null,
    "text": "MCP de organigrama publicado en Azure Container Apps: expone en solo lectura el organigrama de octubre 2026 (mundos, áreas, unidades de negocio y líderes) y lo usa el portal «Mapa de empresas PDC» como conector de Claude. Es público por decisión de la dueña; para cerrarlo al tenant se puede poner el inicio de sesión de Entra delante."
+  },
+  {
+   "id": "u-1019-nomina",
+   "projectId": "nomina",
+   "date": "2026-10-19",
+   "createdAt": "2026-10-19T20:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Workshop con Pedro Marroquin, Walter Escobar (nuevo líder del área), Diego Coronado y Daniela Veras. La app de Power Apps va al 50% del MVP de Guatemala; no se decidió si se mantiene. Propuesta: piloto de agentes en un subproceso manual sobre el proceso actual, con rollout por país de enero a junio 2027."
   }
  ],
  "snapshotAt": "2026-10-12"
