@@ -2397,6 +2397,61 @@
     "note": "Horas del subproceso piloto: línea base pendiente."
    },
    "wave": 2
+  },
+  {
+   "id": "cdc",
+   "name": "MegaMás · Centro de Contacto (CDC)",
+   "bu": "MegaMás",
+   "program": "agentes",
+   "phase": "descubrimiento",
+   "priority": null,
+   "paused": false,
+   "tagline": "Atención agéntica por defecto, humana por excepción",
+   "summary": "Agentes para el Centro de Contacto: primero ventas outbound y desviaciones de CDM, con FAQs y consultas simples como quick wins en paralelo. Los procesos que son errores de proceso se corrigen antes de agentizarlos.",
+   "pains": [
+    "80–90% de las gestiones son repetitivas: soporte interno a distribución y equipos comerciales.",
+    "Volumen mensual: ~4,000 llamadas y ~2,500 conversaciones de WhatsApp (PC y Avon), más ~11,000 gestiones del bot Vela de Avon.",
+    "El bot de PC solo levanta datos y pasa a un agente humano, sin autogestión.",
+    "Varios procesos no deberían pasar por el CDC: verificación de cheques, gastos extra de transporte, devoluciones (deberían vivir en TMS), consulta de saldo (app) y cancelación de pedidos (los vendedores ya pueden en FFA)."
+   ],
+   "discovery": [
+    {
+     "label": "Guía de intake completada",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Enviar a Erick el template de EXO para mapeo de procesos",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "One-pager del framework con porcentajes verificados y organigrama del CDC",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Grabaciones de llamadas de los workflows priorizados",
+     "due": null,
+     "done": false
+    },
+    {
+     "label": "Conversación con Sergio, David y Carlos sobre los procesos que son errores de proceso",
+     "due": null,
+     "done": false
+    }
+   ],
+   "kpis": [],
+   "needs": [
+    "stack",
+    "licencias"
+   ],
+   "blocker": "Definir con Sergio, David y Carlos qué procesos se corrigen en origen antes de agentizar; la instancia de agentes de Vikingo AI abre después del piloto con EXO (~1 dic).",
+   "next": "Enviar el template de mapeo a Erick y preparar el one-pager del framework.",
+   "savings": {
+    "note": "Gestiones automatizadas del CDC: línea base pendiente."
+   },
+   "wave": 2
   }
  ],
  "components": [
@@ -2811,6 +2866,16 @@
    "kpiId": null,
    "value": null,
    "text": "Workshop con Pedro Marroquin, Walter Escobar (nuevo líder del área), Diego Coronado y Daniela Veras. La app de Power Apps va al 50% del MVP de Guatemala; no se decidió si se mantiene. Propuesta: piloto de agentes en un subproceso manual sobre el proceso actual, con rollout por país de enero a junio 2027."
+  },
+  {
+   "id": "u-1023-cdc",
+   "projectId": "cdc",
+   "date": "2026-10-23",
+   "createdAt": "2026-10-23T18:00:00Z",
+   "tag": "Avance",
+   "kpiId": null,
+   "value": null,
+   "text": "Workshop inicial con Óscar Mejía, Jacobo Girón y Erick Gómez. Se mapearon procesos por tipo de cliente (transportistas ~40%, representantes ~40%, vendedores ~10%). Prioridad: ventas outbound y desviaciones de CDM; no se agentizan procesos que son errores de proceso."
   }
  ],
  "snapshotAt": "2026-10-12"
