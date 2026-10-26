@@ -68,8 +68,8 @@ export const VMODES: Record<Mode, string> = { manual: "Manual", mixto: "Humano +
 export const PROGRAMS = [
   // Nexo AI Stack: hidden, agents run on the Vikingo AI agent platform. Kept for history.
   { id: "stack", hidden: true, name: "Nexo AI Stack", lead: "infra", sec: "stack-sec", line: "Azure, agentes, datos y controles: la base de todo." },
-  { id: "practicas", name: "AI Best Practices", lead: "protocolos", sec: "practicas", line: "Nexo Apps: las guías por nivel y el sitio donde se publica cada app." },
   { id: "agentes", name: "AI Agent Projects", lead: null as string | null, sec: "proyectos", line: "Automatizaciones con dueño, línea base y KPI." },
+  { id: "practicas", name: "AI Best Practices", lead: "protocolos", sec: "practicas", line: "Nexo Apps: las guías por nivel y el sitio donde se publica cada app." },
   { id: "brain", name: "Company Brain", lead: "companybrain", sec: "brain", line: "Databricks, datos de la empresa y portales como Portal de Mundos." },
 ]
 

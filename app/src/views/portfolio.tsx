@@ -17,7 +17,7 @@ import { StackDiagram } from "@/components/stack-diagram"
 
 // Nexo AI Stack hidden: agents run on the Vikingo AI agent platform instead.
 const SHOW_STACK = false
-const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["practicas", "Buenas prácticas"], ["proyectos", "Agentes"], ["brain", "Company Brain"]]
+const JUMP = [...(SHOW_STACK ? [["stack-sec", "Stack"]] : []), ["proyectos", "Agentes"], ["practicas", "Buenas prácticas"], ["brain", "Company Brain"]]
 const SHOW_LOG = false // Bitácora hidden for now; updates still live in each project sheet
 const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
 
@@ -67,7 +67,7 @@ export function Portfolio() {
       <div className="grid gap-10">
       <section className="grid gap-[18px] pb-6 pt-[88px]">
         <h1 className="h-display">Portafolio.</h1>
-        <p className="lead">Tres frentes: las buenas prácticas, el Company Brain y los proyectos de agentes, que corren en la plataforma de agentes de Vikingo AI.</p>
+        <p className="lead">Tres frentes: los proyectos de agentes, que corren en la plataforma de agentes de Vikingo AI, las buenas prácticas y el Company Brain.</p>
         <nav aria-label="Secciones del portafolio" className="mt-1.5 flex flex-wrap gap-2">
           {JUMP.map(([id, l]) => <button key={id} type="button" onClick={() => jump(id)} className="whitespace-nowrap rounded-full border-0 bg-group px-3.5 py-[7px] text-[13px] font-medium hover:bg-line">{l}</button>)}
         </nav>
@@ -131,6 +131,18 @@ export function Portfolio() {
       </Section>
       )}
 
+      <Section id="proyectos">
+        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
+        <div className="grid gap-[18px]">
+          <AiAgentPipeline />
+          <AgentBoard />
+          <details className="group">
+            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
+            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={p.priority == null ? undefined : String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
+          </details>
+        </div>
+      </Section>
+
       <Section id="practicas">
         <SectionHead title="Nexo Apps · AI Best Practices">
           <SecP>Nexo Apps es el sitio de despliegue y la guía: las buenas prácticas por nivel viven ahí, y ahí se registra y publica cada app, con Entra.</SecP>
@@ -162,18 +174,6 @@ export function Portfolio() {
           <details className="group">
             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver los {lv.length} niveles <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
             <div className="group-box mt-3">{lv.length ? lv.map((x, i) => <LevelRow key={i} x={x} pid="protocolos" field="levels" i={i} />) : <Empty>{loaded.p ? "Sin niveles registrados." : "Cargando…"}</Empty>}</div>
-          </details>
-        </div>
-      </Section>
-
-      <Section id="proyectos">
-        <SectionHead title="AI Agent Projects"><SecP>Cada agente se construye junto al equipo dueño del proceso, en orden de prioridad.</SecP></SectionHead>
-        <div className="grid gap-[18px]">
-          <AiAgentPipeline />
-          <AgentBoard />
-          <details className="group">
-            <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium text-accent-ink [&::-webkit-details-marker]:hidden">Ver el detalle de los {ag.length} proyectos <ChevronRight size={14} className="transition-transform group-open:rotate-90" /></summary>
-            <div className="group-box mt-3">{ag.length ? ag.map((p, i) => <ProjectRow key={p.id} p={p} rank={p.priority == null ? undefined : String(i + 1)} />) : <Empty>{loaded.p ? "Todavía no hay proyectos." : "Cargando proyectos…"}</Empty>}</div>
           </details>
         </div>
       </Section>
