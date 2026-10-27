@@ -23,6 +23,9 @@ const KINDS: [NonNullable<ProjectLink["kind"]>, string][] = [["repo", "GitHub"],
 const label = <T extends string>(opts: readonly (readonly [T, string])[], v?: T | null) => opts.find((o) => o[0] === v)?.[1]
 const tone: Record<string, string> = { alta: "bg-accent/12 text-accent-ink", alto: "bg-accent/12 text-accent-ink", media: "bg-group text-text", medio: "bg-group text-text", baja: "bg-group text-sub", bajo: "bg-group text-sub", agente: "bg-strong/10 text-strong", no: "bg-group text-sub", pendiente: "bg-group text-sub" }
 
+// Table order: urgency first (alta, media, baja, then untriaged), then priority, unset last.
+const urgRank = (b?: Board) => ({ alta: 0, media: 1, baja: 2 } as Record<string, number>)[b?.urgency || ""] ?? 3
+const prRank = (p: Project, b?: Board) => { const v = b?.priority ?? p.priority; return isNum(v) ? v : 999 }
 const days = (a: string, b?: string | null) => Math.round((Date.parse(b || today()) - Date.parse(a)) / 864e5)
 const phaseOf = (p: Project, b?: Board) => (b && b.phase !== undefined ? b.phase : defaultPhase(p))
 const linksOf = (p: Project, b?: Board) => (b?.links ? b.links : p.links || [])
@@ -77,7 +80,7 @@ export function Dashboard() {
     const ph = phaseOf(p, board[p.id])
     if (phase === "none" ? ph != null : phase != null && ph !== phase) return false
     return !q || (p.name + " " + (p.sponsor || "") + " " + (p.bu || "")).toLowerCase().includes(q.toLowerCase())
-  })
+  }).sort((a, b) => urgRank(board[a.id]) - urgRank(board[b.id]) || prRank(a, board[a.id]) - prRank(b, board[b.id]))
   const counts = FASES.map((_, i) => agents.filter((p) => phaseOf(p, board[p.id]) === i).length)
   const unset = agents.filter((p) => phaseOf(p, board[p.id]) == null).length
   const untriaged = agents.filter((p) => !board[p.id]?.urgency || !board[p.id]?.risk).length
@@ -130,7 +133,7 @@ export function Dashboard() {
       </Section>
 
       <Section>
-        <SectionHead title="Proyectos"><SecP>En orden de prioridad. Abre un proyecto para ver su flujo de valor, enlaces y bitácora.</SecP></SectionHead>
+        <SectionHead title="Proyectos"><SecP>Ordenados por urgencia y, dentro de cada urgencia, por prioridad. Abre un proyecto para ver su flujo de valor, enlaces y bitácora.</SecP></SectionHead>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar proyecto, BU o patrocinador" className="h-9 max-w-[320px]" />
           {(phase !== null || q) && <Button variant="ghost" onClick={() => { setPhase(null); setQ("") }}>Quitar filtros</Button>}
