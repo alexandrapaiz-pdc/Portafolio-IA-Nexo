@@ -157,3 +157,25 @@
 /* Company Brain diagram: data flowing along the connectors */
 .cb-flow { stroke-dasharray: 2 18; animation: cbFlow 2.2s linear infinite; }
 @keyframes cbFlow { to { stroke-dashoffset: -40; } }
+/* Methodology docs read inside the Tablero (exported from Claude Docs) */
+.mdoc { font-size: 15px; line-height: 1.6; color: var(--text); }
+.mdoc > * + * { margin-top: .75em; }
+.mdoc h1 { font-size: 26px; font-weight: 600; letter-spacing: -.025em; line-height: 1.2; }
+.mdoc h2 { font-size: 20px; font-weight: 600; letter-spacing: -.02em; margin-top: 1.6em; }
+.mdoc h3 { font-size: 16px; font-weight: 600; margin-top: 1.3em; }
+.mdoc p, .mdoc li { color: var(--text); }
+.mdoc ul, .mdoc ol { padding-left: 1.3em; }
+.mdoc ul { list-style: disc; } .mdoc ol { list-style: decimal; }
+.mdoc li + li { margin-top: .25em; }
+.mdoc li > p { margin: 0; }
+.mdoc li[data-checked] { list-style: none; margin-left: -1.3em; }
+.mdoc input[type=checkbox] { margin-right: .4em; accent-color: var(--accent); vertical-align: -1px; }
+.mdoc a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.mdoc strong { font-weight: 600; }
+.mdoc .mdoc-table { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+.mdoc table { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.45; }
+.mdoc th { text-align: left; font-weight: 500; color: var(--faint); font-size: 12px; background: var(--group); }
+.mdoc th, .mdoc td { padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line); min-width: 90px; }
+.mdoc tr:first-child th, .mdoc thead + tbody tr:first-child td { border-top: 0; }
+.mdoc .mdoc-photo { display: inline-block; font-size: 12px; color: var(--faint); background: var(--group); border-radius: 8px; padding: 4px 10px; }
+.mdoc time { font-variant-numeric: tabular-nums; }

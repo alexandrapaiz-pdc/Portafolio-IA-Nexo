@@ -9,6 +9,8 @@ import { Input, NativeSelect, Textarea } from "@/components/ui/input"
 import { Section, SectionHead, SecP, Stat, StatsRow, H5, Empty } from "@/components/shared"
 import { Flowchart, ValueStream } from "@/components/intake"
 import { VsmDiagram } from "@/components/vsm"
+import { DocReader } from "@/components/doc-reader"
+import { hasDocs } from "@/lib/metodologia"
 
 // Agent projects dashboard: triage (phase, urgency, risk, go/no-go), value stream and links per project.
 // Rows come from the portfolio snapshot; triage, links and notes live in the "tablero" collection,
@@ -67,6 +69,7 @@ export function Dashboard() {
   const [phase, setPhase] = useState<number | "none" | null>(null)
   const [q, setQ] = useState("")
   const [open, setOpen] = useState<string | null>(null)
+  const [tab, setTab] = useState<"proyectos" | "metodologia">("proyectos")
   const agents = agentsOf(projects)
   const last = useMemo(() => { const m: Record<string, string> = {}; updates.forEach((u) => { if (!m[u.projectId] || u.date > m[u.projectId]) m[u.projectId] = u.date }); return m }, [updates])
 
@@ -88,6 +91,17 @@ export function Dashboard() {
         <p className="lead">Triage, fase de la metodología, flujo de valor, dependencias y enlaces de cada proyecto en un solo lugar. {canWrite ? "Los cambios se guardan al instante y quedan en el historial del proyecto." : "Solo los editores cambian el triage."}</p>
       </section>
 
+      <div className="seg mb-6" role="group" aria-label="Vista del tablero">
+        <button type="button" aria-pressed={tab === "proyectos"} onClick={() => setTab("proyectos")}>Proyectos</button>
+        <button type="button" aria-pressed={tab === "metodologia"} onClick={() => setTab("metodologia")}>Metodología</button>
+      </div>
+
+      {tab === "metodologia" ? (
+        <Section>
+          <SectionHead title="Metodología de AI Forward Deployment"><SecP>Cómo llevamos un caso de uso desde la solicitud de la BU hasta un agente autónomo, medido y con soporte, en siete fases. Tomada del documento de MegaMás Regulatorio, el primer proyecto que la sigue completa.</SecP></SectionHead>
+          <DocReader project="regulatorio" only={["metodologia"]} />
+        </Section>
+      ) : <>
       <StatsRow>
         <Stat k="Proyectos de agentes" v={agents.length} sub={`${unset} sin fase confirmada`} />
         <Stat k="Sin triage completo" v={untriaged} sub="Falta urgencia o riesgo" accent={untriaged > 0} />
@@ -131,7 +145,7 @@ export function Dashboard() {
                 return (
                   <tr key={r.id} onClick={() => setOpen(r.id)} className="cursor-pointer border-t border-line align-top hover:bg-group/60">
                     <td className="num px-4 py-3 font-semibold">{isNum(pr) ? nf(pr) : "—"}</td>
-                    <td className="w-[36%] px-4 py-3"><div className="font-semibold">{r.name}</div><div className="text-xs text-faint">{r.sponsor || "Patrocinador por definir"}</div><div className="mt-1.5 line-clamp-2 text-[13px] text-sub">{r.next || "—"}</div>{r.blocker && <div className="mt-1 line-clamp-1 text-xs text-accent-ink" title={r.blocker}>Bloqueo: {r.blocker}</div>}</td>
+                    <td className="w-[36%] px-4 py-3"><div className="font-semibold">{r.name}{hasDocs(r.id) && <span className="ml-2 rounded-full bg-strong/10 px-2 py-0.5 align-[2px] text-[11px] font-medium text-strong">Metodología</span>}</div><div className="text-xs text-faint">{r.sponsor || "Patrocinador por definir"}</div><div className="mt-1.5 line-clamp-2 text-[13px] text-sub">{r.next || "—"}</div>{r.blocker && <div className="mt-1 line-clamp-1 text-xs text-accent-ink" title={r.blocker}>Bloqueo: {r.blocker}</div>}</td>
                     <td className="px-3 py-3"><PhasePick value={phaseOf(r, b)} edit={canWrite} onPick={(v) => save(r, { phase: v }, `Fase: ${v == null ? "por confirmar" : `${v} · ${FASES[v]}`}`)} /></td>
                     <td className="px-4 py-3"><Pick value={b?.urgency} opts={URG} edit={canWrite} empty="Urgencia" onPick={(v) => save(r, { urgency: v }, `Urgencia: ${label(URG, v) || "sin definir"}`)} /></td>
                     <td className="px-4 py-3"><Pick value={b?.risk} opts={RISK} edit={canWrite} empty="Riesgo" onPick={(v) => save(r, { risk: v }, `Riesgo: ${label(RISK, v) || "sin definir"}`)} /></td>
@@ -150,6 +164,7 @@ export function Dashboard() {
         <SectionHead title="Dependencias"><SecP>Accesos de los que depende el trabajo. Días calendario desde el pedido; las abiertas siguen contando.</SecP></SectionHead>
         <Deps deps={dependencies} projects={projects} />
       </Section>
+      </>}
       <div className="pb-11" />
 
       {p && <Detail p={p} onClose={() => setOpen(null)} />}
@@ -223,6 +238,13 @@ function Detail({ p, onClose }: { p: Project; onClose: () => void }) {
           <div className="group-box p-5"><H5>Siguiente paso</H5><p>{p.next || "—"}</p></div>
           <div className="group-box p-5"><H5>Bloqueo</H5><p className={p.blocker ? "text-accent-ink" : ""}>{p.blocker || "Sin bloqueo"}</p></div>
         </div>
+
+        {hasDocs(p.id) && (
+          <div>
+            <H5>Documentos de la metodología</H5>
+            <DocReader project={p.id} start="vap" />
+          </div>
+        )}
 
         <div>
           <H5>Mapa de flujo de valor</H5>
