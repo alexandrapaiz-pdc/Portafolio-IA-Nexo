@@ -338,7 +338,9 @@ function Entries({ card: c, list, direct, canWrite, onChange }: { card: Card; li
         </ul>
       )}
       {canWrite && (
-        <form className="flex flex-wrap items-end gap-2" onSubmit={(e) => { e.preventDefault(); add() }}>
+        // Typed but not added: it is added when focus leaves the form, so nothing typed is lost.
+        <form className="flex flex-wrap items-end gap-2" onSubmit={(e) => { e.preventDefault(); add() }}
+          onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) add() }}>
           {cfg.num && <label className="grid w-24 gap-1 text-xs text-sub">{c.unit === "US$" ? "US$" : c.unit === "h" ? "Horas" : c.unit ? c.unit[0].toUpperCase() + c.unit.slice(1) : cfg.num}
             <Input type="number" inputMode="decimal" min={0} step="any" value={v} onChange={(e) => setV(e.target.value)} /></label>}
           <label className="grid min-w-[8rem] flex-1 gap-1 text-xs text-sub">Comentario
