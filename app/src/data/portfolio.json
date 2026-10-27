@@ -194,7 +194,34 @@
     "tobeNote": "Propuesta: de la base de ventas a KPIs sin extracción manual. Depende de confirmar Vikingo Planeación como fuente To-Be.",
     "updated": "2026-10-01"
    },
-   "wave": 1
+   "wave": 1,
+   "links": [
+    {
+     "label": "GitHub · AvonAI",
+     "url": "https://github.com/alexandrapaiz-pdc/AvonAI",
+     "kind": "repo"
+    },
+    {
+     "label": "GitHub · APT",
+     "url": "https://github.com/alexandrapaiz-pdc/APT",
+     "kind": "repo"
+    },
+    {
+     "label": "App · Workspace de planeación",
+     "url": "https://ca-avonai.wittysea-7e111699.eastus.azurecontainerapps.io/app",
+     "kind": "app"
+    },
+    {
+     "label": "Granola · Planeación kick off C7 (25 sep)",
+     "url": "https://notes.granola.ai/d/510e839b-6821-4a87-a414-a5c4e6441524",
+     "kind": "notas"
+    },
+    {
+     "label": "Granola · Despliegue Sprint 2Q4 (19 oct)",
+     "url": "https://notes.granola.ai/d/bab86005-be8d-4dec-ad0a-a5cf444076c2",
+     "kind": "notas"
+    }
+   ]
   },
   {
    "id": "cerebro",
@@ -561,7 +588,14 @@
     "tobeNote": "Propuesta: el agente lee JD Edwards en solo lectura; el registro en el ERP lo hace una persona tras aprobar.",
     "updated": "2026-10-01"
    },
-   "wave": 1
+   "wave": 1,
+   "links": [
+    {
+     "label": "Granola · Toque de base Contraloría (29 sep)",
+     "url": "https://notes.granola.ai/d/ab600dc6-b24c-4e44-a63c-379fa2440e84",
+     "kind": "notas"
+    }
+   ]
   },
   {
    "id": "gh",
@@ -1176,7 +1210,14 @@
      }
     ],
     "folder": "05 Relaciones Laborales › 3. Relaciones Laborales › Proyectos › Vacaciones"
-   }
+   },
+   "links": [
+    {
+     "label": "Granola · Toque de base Portal GH (28 sep)",
+     "url": "https://notes.granola.ai/d/c1bd17af-e5d6-449d-ba36-efb03d1a837a",
+     "kind": "notas"
+    }
+   ]
   },
   {
    "id": "infra",
@@ -1364,7 +1405,14 @@
    "sponsor": "Jackeline Luna",
    "summary": "Base de conocimiento de soporte IT para que los agentes resuelvan tickets sin buscar entre documentos. El más fácil de arrancar cuando exista la capa de datos.",
    "tagline": "Menos urgente según prioridad del 30 sep",
-   "wave": 2
+   "wave": 2,
+   "links": [
+    {
+     "label": "Granola · Toque de base Lexy (28 sep)",
+     "url": "https://notes.granola.ai/d/22cdc3ba-974d-4295-bd91-1e1c9a408366",
+     "kind": "notas"
+    }
+   ]
   },
   {
    "id": "mundos",
@@ -1738,7 +1786,7 @@
    "sponsor": "Alejandra Álvarez · Silvia Ramírez (Gestión de Riesgos)",
    "summary": "Coordinación de Registros Sanitarios (nuevos, renovaciones y actualizaciones) para marcas propias y representadas en 7 países. Hoy las solicitudes llegan por correo, WhatsApp o de palabra, sin formato ni trazabilidad, y los requisitos se revisan varias veces. El proyecto (1.4 Fase 2) busca una entrada única, checklist automático, expediente digital, alertas por excepción y cierre automático. Piloto: Guatemala.",
    "tagline": "Registros Sanitarios de punta a punta, piloto Guatemala",
-   "next": "Sprint 4: motor automático de checklist (Sprint 3, entrada única de solicitudes, en desarrollo).",
+   "next": "Completar el Task Register y VSM por país, el eval set y el contrato de éxito tras el VAP del 26 oct.",
    "blocker": "Habilitar la carpeta de expedientes en SharePoint, la ubicación de comprobantes de pago y el acceso a iComply/CADD.",
    "needs": [],
    "savings": {
@@ -2296,7 +2344,24 @@
      }
     ],
     "folder": "SOLICITUDES RS GT AUTOMATIZADAS"
-   }
+   },
+   "links": [
+    {
+     "label": "GitHub · regulatorio-rs-portal",
+     "url": "https://github.com/alexandrapaiz-pdc/regulatorio-rs-portal",
+     "kind": "repo"
+    },
+    {
+     "label": "Doc · Metodología MegaMás Regulatorio",
+     "url": "https://claude.ai/artifact/StKwkdfZDz4R4KBcpT3EgL",
+     "kind": "doc"
+    },
+    {
+     "label": "Granola · Megamas Regulatorio (8 oct)",
+     "url": "https://notes.granola.ai/d/8d73f3ed-c855-4390-9037-6b049644b3da",
+     "kind": "notas"
+    }
+   ]
   },
   {
    "id": "demografia",
@@ -2338,6 +2403,13 @@
      "label": "Documentar flujo y métricas del agente futuro",
      "done": false,
      "due": null
+    }
+   ],
+   "links": [
+    {
+     "label": "Granola · Megamas demografía (9 oct)",
+     "url": "https://notes.granola.ai/d/5721620e-5f6b-484a-abbb-820f4260f053",
+     "kind": "notas"
     }
    ]
   },
@@ -2396,7 +2468,14 @@
    "savings": {
     "note": "Horas del subproceso piloto: línea base pendiente."
    },
-   "wave": 2
+   "wave": 2,
+   "links": [
+    {
+     "label": "Granola · Workshop Megamás Nómina (19 oct)",
+     "url": "https://notes.granola.ai/d/ed78791e-bdb3-41ec-a205-93d4c76592da",
+     "kind": "notas"
+    }
+   ]
   },
   {
    "id": "cdc",
@@ -2451,7 +2530,14 @@
    "savings": {
     "note": "Gestiones automatizadas del CDC: línea base pendiente."
    },
-   "wave": 2
+   "wave": 2,
+   "links": [
+    {
+     "label": "Granola · Workshop inicial Megamás CDC (23 oct)",
+     "url": "https://notes.granola.ai/d/bd94d7f9-d9fe-4c19-8d66-d99f1d6e59cf",
+     "kind": "notas"
+    }
+   ]
   }
  ],
  "components": [
@@ -2878,5 +2964,62 @@
    "text": "Workshop inicial con Óscar Mejía, Jacobo Girón y Erick Gómez. Se mapearon procesos por tipo de cliente (transportistas ~40%, representantes ~40%, vendedores ~10%). Prioridad: ventas outbound y desviaciones de CDM; no se agentizan procesos que son errores de proceso."
   }
  ],
- "snapshotAt": "2026-10-12"
+ "snapshotAt": "2026-10-12",
+ "dependencies": [
+  {
+   "id": "jde",
+   "name": "ERP PDC (JD Edwards)",
+   "asked": "2026-09-22",
+   "granted": null,
+   "with": "JP · Julio Vásquez",
+   "projects": [
+    "contraloria",
+    "step"
+   ],
+   "note": "Solo lectura; requiere VPN entre Azure y JD Edwards."
+  },
+  {
+   "id": "gavon",
+   "name": "ERP Avon (GAVON, Oracle)",
+   "asked": "2026-09-25",
+   "granted": null,
+   "with": "Julio Vásquez · Alexander González",
+   "projects": [
+    "avon"
+   ],
+   "note": "Acceso directo de solo lectura a producción; ticket a IT reenviado el 15 oct."
+  },
+  {
+   "id": "azure",
+   "name": "Azure",
+   "asked": "2026-09-18",
+   "granted": "2026-10-05",
+   "with": "Diego Villatoro · Luis Carlos Hurtado",
+   "projects": [],
+   "note": "Suscripción NEXO."
+  },
+  {
+   "id": "claude",
+   "name": "Claude admin",
+   "asked": "2026-09-29",
+   "granted": "2026-10-15",
+   "with": "Luis Carlos Hurtado",
+   "projects": [
+    "avon"
+   ],
+   "note": "Necesario para conectores propios (MCP de Avon)."
+  },
+  {
+   "id": "sharepoint",
+   "name": "SharePoint (lectura)",
+   "asked": "2026-10-05",
+   "granted": "2026-10-09",
+   "with": "Diego Villatoro",
+   "projects": [
+    "regulatorio",
+    "companybrain"
+   ],
+   "note": "Acceso a algunos sitios, no a todos."
+  }
+ ]
 }

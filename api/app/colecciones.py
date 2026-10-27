@@ -120,6 +120,8 @@ COLECCIONES = {
     # Métricas trimestrales de despliegue: todos leen, solo editores escriben.
     "metricas": Tabla(tabla="metricas_fde", modelo=MetricaTrimestre, columnas=METRICAS),
     "triage": Documentos(),
+    # Tablero de proyectos de agentes: triage, enlaces y notas por proyecto; todos leen, solo editores escriben.
+    "tablero": Documentos(),
     "intakes": Documentos(modelo=Intake),
     # Cualquier persona de PDC puede enviar una solicitud; solo editores la cambian o la borran.
     # Quién la envía y cuándo los pone el servidor.

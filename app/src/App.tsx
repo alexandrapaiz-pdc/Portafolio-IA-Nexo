@@ -8,6 +8,7 @@ import { Home } from "@/views/home"
 import { Portfolio } from "@/views/portfolio"
 import { Tickets } from "@/views/tickets"
 import { Metrics } from "@/views/metrics"
+import { Dashboard } from "@/views/dashboard"
 
 // Full-screen shader welcome ("Bienvenido al futuro de Nexo"): off, the motion was dizzying.
 const SHOW_INTRO = false
@@ -26,6 +27,7 @@ function Shell() {
       <Nav />
       {view === "inicio" && <Home />}
       {view === "portafolio" && <Portfolio />}
+      {view === "tablero" && <Dashboard />}
       {view === "metricas" && <Metrics />}
       {view === "solicitudes" && <Tickets />}
       <ProjectSheet />

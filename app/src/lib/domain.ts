@@ -14,7 +14,7 @@ export interface Project {
   phase?: string; blocker?: string; next?: string; impactLabel?: string
   pains?: string[]; needs?: string[]; discovery?: Milestone[]; kpis?: Kpi[]
   savings?: { baseline?: number | null; current?: number | null; target?: number | null; unit?: string; note?: string }
-  vsm?: Vsm; intake?: Intake; levels?: Level[]; parts?: Level[]; repo?: string; pendingDecisions?: number
+  vsm?: Vsm; intake?: Intake; links?: ProjectLink[]; levels?: Level[]; parts?: Level[]; repo?: string; pendingDecisions?: number
 }
 /** The project's intake guide, kept as the guide gave it (texts as written, numbers only where given). */
 export interface IntakeStep { n: string; name: string; who: string; uses?: string; src?: string[]; out?: string; branch?: string | null }
@@ -99,3 +99,17 @@ export function vsmStats(st: VsmStep[]) {
   const rca = caAll ? st.reduce((a, x) => a * (x.ca as number) / 100, 1) * 100 : null
   return { n, timed, full, pt, lt, eff: full && lt ? (pt / lt) * 100 : null, rca, ag: st.filter((x) => x.mode === "agente" || x.mode === "mixto").length }
 }
+
+/** A link on the agent dashboard (repo, doc, notes, app, folder). */
+export interface ProjectLink { label: string; url: string; kind?: "repo" | "doc" | "notas" | "app" | "carpeta" | "otro" }
+/** An access the work waits on; open while `granted` is null. Days are calendar days. */
+export interface Dependency { id: string; name: string; asked: string; granted: string | null; with?: string; projects: string[]; note?: string }
+/** Dashboard triage for one agent project, edited by editors (collection "tablero", id = project id). */
+export interface Board {
+  phase?: number | null; urgency?: "alta" | "media" | "baja" | null; risk?: "bajo" | "medio" | "alto" | null
+  decision?: "agente" | "no" | "pendiente" | null; priority?: number | null; links?: ProjectLink[] | null; notes?: string | null
+  log?: { at: string; by?: string | null; what: string }[] | null
+}
+export const FASES = ["Intake y triage", "Discovery", "Build", "Evaluación", "Autonomía", "Adopción", "Operación"] as const
+/** Default methodology phase from the portfolio data, before anyone triages it on the dashboard. */
+export const defaultPhase = (p: Project): number | null => (p.intake?.status === "completada" ? 1 : p.phase === "descubrimiento" ? 0 : null)
